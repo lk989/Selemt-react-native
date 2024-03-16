@@ -2,6 +2,7 @@ import { View, Text, Image, FlatList, TouchableOpacity, Button } from "react-nat
 import SText from "../../components/SText";
 import LastUpdateCard from "../../components/home/LastUpdateCard";
 import PieChart from 'react-native-pie-chart';
+import { Icon } from 'react-native-elements'
 
 
 function Home() {
@@ -9,11 +10,11 @@ function Home() {
       <View className="p-4 gap-8">
         <View className="flex-row justify-between">
           <View className="bg-white rounded-md flex-row px-3 py-1">
-            <Image source={require("../../assets/images/location.png")} className="w-4 h-4 object-contain"/>
+            <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
             <Text className="px-3">مكة المكرمة</Text>
           </View>
           <View className="bg-white rounded-md flex-row px-3 py-1">
-            <Image source={require("../../assets/images/calendar.png")} className="w-4 h-4 object-contain"/>
+            <Icon name='calendar-outline' type='ionicon' color='#ABC7BD' size={18} />
             <Text className="px-3">الاثنين</Text>
             <Text>03/01/2024</Text>
           </View>
@@ -71,23 +72,15 @@ function Home() {
           </View>
           <View className="flex-row gap-5">
             <View className="flex-1">
-              <View className="bg-white rounded-lg p-4">
-                <View className="flex-row items-center">
-                  <View className="bg-light-green p-3 rounded-full">
-                    <Image source={require("../../assets/images/info.png")} className="w-6 h-6" />
-                  </View>
-                </View>
-                <SText text='reports' classes="text-xl py-2"/>
+              <View className="bg-white rounded-lg p-3">
+                <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
+                <SText text='reports' classes="text-xl px-2 py-1"/>
               </View>
             </View>
             <View className="flex-1">
-              <View className="bg-white rounded-lg p-4">
-                <View className="flex-row items-center">
-                  <View className="bg-light-green p-3 rounded-full">
-                    <Image source={require("../../assets/images/info.png")} className="w-6 h-6" />
-                  </View>
-                </View>
-                <SText text='objections' classes="text-xl py-2"/>
+              <View className="bg-white rounded-lg p-3">
+                <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
+                <SText text='objections' classes="text-xl px-2 py-1"/>
               </View>
             </View>
           </View>
