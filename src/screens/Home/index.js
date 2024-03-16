@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity, Button } from "react-native";
-import SText from "../components/SText";
-import LastUpdateCard from "../components/home/LastUpdateCard";
+import SText from "../../components/SText";
+import LastUpdateCard from "../../components/home/LastUpdateCard";
 import PieChart from 'react-native-pie-chart';
 
 
