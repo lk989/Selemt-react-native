@@ -11,8 +11,9 @@ i18n.locale = Localization.locale;
 i18n.enableFallback = true;
 
 const SText = (props) => {
+    let params = props.params;
     return ( 
-        <Text className={props.classes}>{i18n.t(props.text)}</Text>
+        <Text className={props.classes}>{i18n.t(props.text, {params})}</Text>
     );
 }
  

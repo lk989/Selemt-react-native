@@ -3,5 +3,8 @@
     "objections": "الاعتراضات",
     "last-updates": "آخر التحديثات",
     "accident-evaluation": "تقدير الحادث",
-    "view-report-det": "مشاهدة تفاصيل البلاغ"
+    "view-report-det": "مشاهدة تفاصيل البلاغ",
+    "generate-barcode": "انشئ الباركود",
+    "scan-barcode": "اسحب الباركود",
+    "hello": "مرحبًا {{params}}!"
 }
