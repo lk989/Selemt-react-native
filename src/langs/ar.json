@@ -6,5 +6,7 @@
     "view-report-det": "مشاهدة تفاصيل البلاغ",
     "generate-barcode": "انشئ الباركود",
     "scan-barcode": "اسحب الباركود",
-    "hello": "مرحبًا {{params}}!"
+    "hello": "مرحبًا {{params}}!",
+    "sign-in": "سجل الدخول ",
+    "or-signup": "أو أنشئ حساب جديد"
 }

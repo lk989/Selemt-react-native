@@ -6,5 +6,8 @@
     "view-report-det": "View report details",
     "generate-barcode": "Generate a barcode",
     "scan-barcode": "Scan a barcode",
-    "hello": "Hello {{params}}!"
+    "hello": "Hello {{params}}!",
+    "sign-in": "Sign in ",
+    "or-signup": "or Signup"
+
 }
