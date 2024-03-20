@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements'
 import { useState } from "react";
 
 
-function Login() {
+function Login({ navigation }) {
   const [cleanNumber, setCleanNumber] = useState('');
   const handleNumberChange = (number) => {
     let cleanedNumber = number.replace(/\D/g, "");
@@ -37,7 +37,7 @@ function Login() {
             />
           </View>
         </View>
-        <TouchableOpacity className="bg-green rounded-md">
+        <TouchableOpacity className="bg-green rounded-md" onPress={() => navigation.navigate('OTP')}>
         <SText text='sign-in' classes="text-white text-center text-xl p-2"/>
         </TouchableOpacity>
       </View>

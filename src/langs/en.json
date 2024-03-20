@@ -8,6 +8,8 @@
     "scan-barcode": "Scan a barcode",
     "hello": "Hello {{params}}!",
     "sign-in": "Sign in ",
-    "or-signup": "or Signup"
-
+    "or-signup": "or Signup",
+    "validate-phone": "Validate phone number",
+    "enter-otp": "Enter otp that was send to phone",
+    "validate": "Validate"
 }
