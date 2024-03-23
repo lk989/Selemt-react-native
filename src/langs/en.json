@@ -11,5 +11,9 @@
     "or-signup": "or Signup",
     "validate-phone": "Validate phone number",
     "enter-otp": "Enter otp that was send to phone",
+    "new-signup": "Signup new user",
+    "name": "Name",
+    "phone": "Phone number",
+    "signup": "Signup",
     "validate": "Validate"
 }
