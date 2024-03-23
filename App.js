@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import OTP from './src/screens/OTP';
-import GenerateBarcode from './src/screens/GenerateBarcode';
+// import GenerateBarcode from './src/screens/GenerateBarcode';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +17,7 @@ function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
+        {/* <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
