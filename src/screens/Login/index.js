@@ -1,18 +1,18 @@
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from "react-native";
 import SText from "../../components/SText";
-import PieChart from 'react-native-pie-chart';
-import { Icon } from 'react-native-elements'
 import { useState } from "react";
 
 
 function Login({ navigation }) {
   const [cleanNumber, setCleanNumber] = useState('');
+  const [loginDisabled, setLoginDisabled] = useState(true);
   const handleNumberChange = (number) => {
     let cleanedNumber = number.replace(/\D/g, "");
     if (cleanedNumber.charAt(0) !== "5") {
       cleanedNumber = cleanedNumber.substring(1);
     }
     setCleanNumber(cleanedNumber);
+    setLoginDisabled(cleanedNumber.length != 9)
   };
     return (
       <View className="p-4 space-y-8 my-auto">
@@ -37,7 +37,7 @@ function Login({ navigation }) {
             />
           </View>
         </View>
-        <TouchableOpacity className="bg-green rounded-md" onPress={() => navigation.navigate('OTP')}>
+        <TouchableOpacity className={`${loginDisabled ? 'bg-light-green' : 'bg-green'} rounded-md`} onPress={() => navigation.navigate('OTP')} disabled={loginDisabled}>
         <SText text='sign-in' classes="text-white text-center text-xl p-2"/>
         </TouchableOpacity>
       </View>
