@@ -15,5 +15,7 @@
     "name": "Name",
     "phone": "Phone number",
     "signup": "Signup",
+    "initiate-report": "Initiate a new report",
+    "initiate-report-description": "To initiate a new report, one accident party should generate a QR code. Then show it to the other party to scan it from his device.",
     "validate": "Validate"
 }

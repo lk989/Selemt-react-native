@@ -1,12 +1,13 @@
-import { View, Text, Image, FlatList, TouchableOpacity, Button } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, Button, Modal } from "react-native";
 import SText from "../../components/SText";
-import LastUpdateCard from "../../components/home/LastUpdateCard";
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements'
 import Header from "../../components/Header";
+import { useState } from "react";
 
 
 function Home({ navigation }) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
     return (
       <View>
         <Header/>
@@ -91,21 +92,34 @@ function Home({ navigation }) {
 
           {/* need to be in a modal later */}
           <View>
-          <TouchableOpacity
-              className="bg-green mx-6 rounded"
-              underlayColor='#fff'
-              onPress={() => navigation.navigate('GenerateBarcode')}>
-              <SText text='generate-barcode' classes="text-center text-white py-2"/>
-          </TouchableOpacity>
-          <TouchableOpacity
-              className="border border-green mx-6 rounded"
-              underlayColor='#fff'>
-              <SText text='scan-barcode' classes="text-center text-green py-2"/>
+          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+              <Icon name='plus' type='feather' color='#016E46' size={18} reverse/>
           </TouchableOpacity>
           </View>
-
-
         </View>
+        <Modal
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+          animationType="slide"
+          transparent>
+          <View className="relative flex justify-end h-full" style={{backgroundColor:'rgba(0,0,0,0.25)'}}>
+            <View className="bg-white rounded-t-2xl shadow-lg flex p-2">
+              <SText text='initiate-report' classes="text-black py-2 font-bold text-lg text-center mt-8"/>
+              <SText text='initiate-report-description' classes="text-black py-2 text-center"/>
+              <TouchableOpacity
+              className="bg-green mx-6 my-2 rounded"
+              underlayColor='#fff'>
+                  <SText text='generate-barcode' classes="text-center text-white py-2"/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                  className="border border-green mx-6 mb-8 rounded"
+                  underlayColor='#fff'>
+                  <SText text='scan-barcode' classes="text-center text-green py-2"/>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        {/* <NewReport/> */}
       </View>
     );
 }
