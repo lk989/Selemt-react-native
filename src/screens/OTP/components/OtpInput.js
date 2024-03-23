@@ -48,7 +48,7 @@ const OtpInput = () => {
           onChangeText={(value) => handleOtpChange(index, value)}
           keyboardType="numeric"
           maxLength={1}
-          className={`border ${activeIndex === index ? 'border-green text-green' : 'border-light-green text-light-green'} font-bold rounded-md px-4 py-3 mx-2`}
+          className={`border ${activeIndex === index ? 'border-green text-green' : 'border-light-green text-light-green'} bg-white font-bold rounded-md px-4 py-3 mx-2`}
           placeholder='X'
           placeholderTextColor="#ABC7BD"
           editable={activeIndex === index} // Enable/disable input based on activeIndex
