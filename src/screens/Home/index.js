@@ -105,7 +105,8 @@ function Home({ navigation }) {
               <SText text='initiate-report-description' classes="text-black py-2 text-center"/>
               <TouchableOpacity
               className="bg-green mx-6 my-2 rounded"
-              underlayColor='#fff'>
+              underlayColor='#fff'
+              onPress={() => {setIsModalVisible(false); navigation.navigate('GenerateBarcode')}}>
                   <SText text='generate-barcode' classes="text-center text-white py-2"/>
               </TouchableOpacity>
               <TouchableOpacity
