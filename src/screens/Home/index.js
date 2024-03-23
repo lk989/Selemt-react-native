@@ -2,16 +2,14 @@ import { View, Text, Image, FlatList, TouchableOpacity, Button, Modal } from "re
 import SText from "../../components/SText";
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements'
-import Header from "../../components/Header";
+import Layout from "../../components/Layout";
 import { useState } from "react";
 
 
 function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
     return (
-      <View>
-        <Header/>
-        <View className="p-4 gap-8">
+      <Layout>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-3 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
@@ -96,7 +94,6 @@ function Home({ navigation }) {
               <Icon name='plus' type='feather' color='#016E46' size={18} reverse/>
           </TouchableOpacity>
           </View>
-        </View>
         <Modal
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
@@ -119,8 +116,7 @@ function Home({ navigation }) {
             </View>
           </View>
         </Modal>
-        {/* <NewReport/> */}
-      </View>
+      </Layout>
     );
 }
 export default Home;
