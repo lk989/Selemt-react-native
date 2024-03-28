@@ -16,6 +16,7 @@ function editProfile({ navigation }) {
     insuranceOwned: '',
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
+  let Name = "محمد";
 
   const handleInputChange = (name, value) => {
     setFormData(prevFormData => ({
@@ -40,7 +41,7 @@ function editProfile({ navigation }) {
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
         <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
+        <Text style={styles.welcomeText}>اهلا بك {Name}!</Text>
       </View>
 
       <ScrollView style={styles.container}>
