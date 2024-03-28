@@ -11,5 +11,13 @@
     "or-signup": "or Signup",
     "validate-phone": "Validate phone number",
     "enter-otp": "Enter otp that was send to phone",
+    "new-signup": "Signup new user",
+    "name": "Name",
+    "phone": "Phone number",
+    "signup": "Signup",
+    "initiate-report": "Initiate a new report",
+    "initiate-report-description": "To initiate a new report, one accident party should generate a QR code. Then show it to the other party to scan it from his device.",
+    "share-barcode": "Share the QR code with the other accident party",
+    "share-barcode-description": "The other accident party should choose scan the barcode option to be able to scan this one",
     "validate": "Validate"
 }
