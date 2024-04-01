@@ -19,5 +19,12 @@
     "initiate-report-description": "To initiate a new report, one accident party should generate a QR code. Then show it to the other party to scan it from his device.",
     "share-barcode": "Share the QR code with the other accident party",
     "share-barcode-description": "The other accident party should choose scan the barcode option to be able to scan this one",
-    "validate": "Validate"
+    "validate": "Validate",
+    "download-report": "Download accident report",
+    "Raise-objection":"Raise an objection",
+    "Objection-reason": "Objection reason",
+    "upload-file":"Upload file",
+    "back-to-objections":"Back to objections",
+    "raise-objection":"Rasie the objection"
+
 }

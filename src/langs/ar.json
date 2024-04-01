@@ -19,5 +19,11 @@
     "initiate-report-description": "لرفع بلاغ يجب على أحد الطرفين أن يقوم بإنشاء باركود ويريه للطرف الآخر ليقرأه من جهازه",
     "share-barcode": "قم بمشاركة الباركود مع الطرف الثاني",
     "share-barcode-description": "يجب على الطرف الثاني الضغط على خيار اسحب الباركود ليتمكن من قراءته",
-    "validate": "التحقق"
+    "validate": "التحقق",
+    "download-report": "تحميل تقرير الحادث",
+    "Raise-objection":"رفع اعتراض",
+    "Objection-reason": "سبب الاعتراض",
+    "upload-file":"رفع ملف ",
+    "back-to-objections":"الرجوع للاعتراضات",
+    "raise-objection":"رفع الاعتراض"
 }
