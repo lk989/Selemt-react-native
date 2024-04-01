@@ -17,10 +17,10 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-      {/*<Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="OTP" component={OTP} />*/}
+      <Stack.Screen name="OTP" component={OTP} />
       <Stack.Screen name="ReportDetails" component={ReportDetails} />
       </Stack.Navigator>
     </NavigationContainer>
