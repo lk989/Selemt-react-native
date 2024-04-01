@@ -63,6 +63,7 @@ function ReportDetails({ navigation }) {
     setConfirmationModalVisible(false);
   };
 
+  
   return (
     <Layout>
       <View className="bg-white rounded-2xl gap-6 pb-6">
