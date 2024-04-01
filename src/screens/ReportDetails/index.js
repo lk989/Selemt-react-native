@@ -139,8 +139,8 @@ function ReportDetails({ navigation }) {
                 multiline
                 onChangeText={handleTextInputChange}
                 value={textInput}
-                placeholder="Enter your objection here"
-                style={{ borderWidth: 1, borderColor: "gray", padding: 90, width: '100%', marginBottom: 20 }}
+                placeholder="اكتب سبب الاعتراض"
+                style={{ borderWidth: 1, borderColor: "gray", padding: 10, width: '100%', marginBottom: 20 }}
               />
 
               <TouchableOpacity onPress={handleImageUpload} style={{ marginBottom: 20 }}>
