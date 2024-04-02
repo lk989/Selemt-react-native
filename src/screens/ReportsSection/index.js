@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const SegmentedControl = ({ navigation }) => {
-  const [activeSegment, setActiveSegment] = useState('data'); // 'data' or 'objections'
+  const [activeSegment, setActiveSegment] = useState('Reports'); // 'data' or 'objections'
   const listItems = [
     { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ'},
     { id: '#0002', time: '00:51 AM', date: '23 / 01 / 2024', text: 'Some other text' },
@@ -26,7 +26,10 @@ const SegmentedControl = ({ navigation }) => {
               styles.segmentButton,
               activeSegment === 'objections' ? styles.activeSegment : {},
             ]}
-            onPress={() => setActiveSegment('objections')}
+            onPress={() => {
+              setActiveSegment('objections');
+              navigation.navigate('ObjectionsSection');
+            }}
           >
             <Text
               style={[
@@ -43,7 +46,10 @@ const SegmentedControl = ({ navigation }) => {
               styles.segmentButton,
               activeSegment === 'Reports' ? styles.activeSegment : {},
             ]}
-            onPress={() => setActiveSegment('Reports')}
+            onPress={() => {
+              setActiveSegment('Reports');
+              navigation.navigate('ReportsSection');
+            }}
           >
             <Text
               style={[
