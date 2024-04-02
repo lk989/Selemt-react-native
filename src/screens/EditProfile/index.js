@@ -6,7 +6,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 function EditProfile({ navigation }) {
-    
   const [formData, setFormData] = useState({
     name: '',
     dateOfBirth: new Date(),
@@ -37,7 +36,6 @@ function EditProfile({ navigation }) {
 
   return (
     <>
-
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
         <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
@@ -45,7 +43,6 @@ function EditProfile({ navigation }) {
       </View>
 
       <ScrollView style={styles.container}>
-
       <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>البيانات الشخصية</Text>
         <View style={styles.formGroup}>
@@ -121,7 +118,6 @@ function EditProfile({ navigation }) {
           <Text style={styles.buttonText}>التالي</Text>
         </TouchableOpacity>
       </ScrollView>
-      
     </>
   );
 };
@@ -211,8 +207,6 @@ const styles = StyleSheet.create({
     height: 10, // Set your desired height
     width: '100%', // Ensure the Picker fills the container width
   },
-  placeholder : {
-    textAlign:'right',
 
   },
 

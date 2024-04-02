@@ -22,7 +22,6 @@ function App() {
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
-        <Stack.Screen name="ReportsSection" component={ReportsSection} />
       </Stack.Navigator>
     </NavigationContainer>
   );
