@@ -7,9 +7,8 @@ import OTP from './src/screens/OTP';
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
-//import EditProfile from './src/screens/EditProfile';
+import GenerateBarcode from './src/screens/GenerateBarcode';
 import ReportDetails from './src/screens/ReportDetails';
-
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +19,8 @@ function App() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="OTP" component={OTP} />
       <Stack.Screen name="ReportDetails" component={ReportDetails} />
+      <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
       </Stack.Navigator>
     </NavigationContainer>
   );
