@@ -9,7 +9,17 @@ const SegmentedControl = ({ navigation }) => {
     { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ'},
     { id: '#0002', time: '00:51 AM', date: '23 / 01 / 2024', text: 'Some other text' },
     // ... other items
+    
   ];
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const meridiem = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    const formattedMinute = minute < 10 ? `0${minute}` : minute;
+    return `${formattedHour}:${formattedMinute} ${meridiem}`;
+  };
 
   return (
     <>
@@ -69,7 +79,7 @@ const SegmentedControl = ({ navigation }) => {
         <Text style={styles.headerText}>حالة البلاغ</Text>
       </View>
       <Text style={styles.contentText}>{item.text}</Text>
-      <Text style={styles.timeText}>{item.time}</Text>
+      <Text style={styles.timeText}>{}</Text>
       <Text style={styles.dateText}>{item.date}</Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
