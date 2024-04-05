@@ -83,7 +83,7 @@ function accidentInformation({ navigation }) {
       <StatusBar barStyle="dark-content" />
       <View className="bg-white p-4 pt-15 flex-row justify-between items-center" />
       <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
+        <Icon name="bars" size={24} color="#000" style={styles.menuIcon } onPress={() => navigation.openDrawer()} />
         <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
       </View>
 
