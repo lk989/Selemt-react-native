@@ -1,6 +1,5 @@
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OTP from './src/screens/OTP';
@@ -12,7 +11,6 @@ import ObjectionDetails from './src/screens/ObjectionDetails';
 
 
 
-const Stack = createNativeStackNavigator();
 
 function App() {
   return (
