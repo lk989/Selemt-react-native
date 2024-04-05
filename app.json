@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Selemt-react-native",
-    "slug": "Selemt-react-native",
+    "name": "Selemt",
+    "slug": "Selemt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
@@ -27,7 +27,21 @@
       "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Selemt to use your location."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Selemt to access your camera",
+          "microphonePermission": "Allow Selemt to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
     ]
   }
 }
