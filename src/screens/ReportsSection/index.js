@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, StatusBar } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 
-
-const SegmentedControl = ({navigation}) => {
+const SegmentedControl = ({ navigation }) => {
   const [activeSegment, setActiveSegment] = useState('Reports'); // 'data' or 'objections'
   const listItems = [
-    { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ' },
+    { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ'},
     { id: '#0002', time: '00:51 AM', date: '23 / 01 / 2024', text: 'Some other text' },
     // ... other items
-
+    
   ];
   const getCurrentTime = () => {
     const date = new Date();
@@ -22,18 +21,17 @@ const SegmentedControl = ({navigation}) => {
     return `${formattedHour}:${formattedMinute} ${meridiem}`;
   };
 
-
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Icon name="bars" size={24} color="#000" style={styles.menuIcon}  onPress={() => navigation.openDrawer()}  ></Icon>
-          <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-        </View>
+    <StatusBar barStyle="dark-content" />
+    <ScrollView  style={styles.container}>
+      <View style={styles.header}>
+        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
+        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
+      </View>
 
-        <View style={styles.segmentedControlContainer}>
-          <TouchableOpacity
+      <View style={styles.segmentedControlContainer}>  
+      <TouchableOpacity
             style={[
               styles.segmentButton,
               activeSegment === 'objections' ? styles.activeSegment : {},
@@ -72,25 +70,25 @@ const SegmentedControl = ({navigation}) => {
               البلاغات
             </Text>
           </TouchableOpacity>
-        </View>
+    </View>
 
-        {listItems.map((item, index) => (
-          <View key={index} style={styles.card}>
-            <View style={styles.cardContent}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.headerText}>حالة البلاغ</Text>
-              </View>
-              <Text style={styles.contentText}>{item.text}</Text>
-              <Text style={styles.timeText}>{item.time }</Text>
-              <Text style={styles.dateText}>{item.date}</Text>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.idText}>{item.id}</Text>
-          </View>
+    {listItems.map((item, index) => (
+  <View key={index} style={styles.card}>
+    <View style={styles.cardContent}>
+      <View style={styles.cardHeader}>
+        <Text style={styles.headerText}>حالة البلاغ</Text>
+      </View>
+      <Text style={styles.contentText}>{item.text}</Text>
+      <Text style={styles.timeText}>{}</Text>
+      <Text style={styles.dateText}>{item.date}</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
+      </TouchableOpacity>
+    </View>
+    <Text style={styles.idText}>{item.id}</Text>
+  </View>
         ))}
-
+   
       </ScrollView >
       <TouchableOpacity style={styles.addButton}>
         <Icon name="plus" size={24} color="#FFF" />
@@ -101,7 +99,7 @@ const SegmentedControl = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0F0F0',
+  backgroundColor:'#F0F0F0',
   },
 
 
@@ -114,23 +112,23 @@ const styles = StyleSheet.create({
   },
   menuIcon: {
     marginRight: 16,
-    color: '#016E46',
+    color : '#016E46',
     marginTop: 16,
   },
   welcomeText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#016E46',
+    color : '#016E46',
     marginTop: 20,
   },
 
 
-  segmentedControlContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'white', // The base color of the segmented control
-    borderRadius: 20, // Makes the entire control rounded
-    margin: 16,
-    overflow: 'hidden',
+    segmentedControlContainer: {
+      flexDirection: 'row',
+      backgroundColor: 'white', // The base color of the segmented control
+      borderRadius: 20, // Makes the entire control rounded
+      margin: 16,
+      overflow: 'hidden',
   },
   segmentButton: {
     flex: 1, // Each button will take up half of the space
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
   },
   activeSegment: {
     backgroundColor: '#ABC7BD', // Active segment background color
-    borderRadius: 20
+    borderRadius:20
 
   },
   segmentText: {
@@ -180,14 +178,14 @@ const styles = StyleSheet.create({
     marginRight: 10, // If you wan
   },
   contentText: {
-    marginBottom: 15,
+   marginBottom : 15,
   },
   timeText: {
-
+   
   },
   dateText: {
-    marginBottom: 10,
-
+    marginBottom : 10, 
+  
   },
   idText: {
     fontWeight: 'bold',
@@ -200,32 +198,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  buttonText: {
+  buttonText:{
     fontWeight: 'bold',
   },
   cardContent: {
     flex: 1, // Take up all available space
     marginRight: 10,
   },
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#016E46',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+ addButton: {
+  position: 'absolute',
+  bottom: 20,
+  left: 20,
+  width: 56,
+  height: 56,
+  borderRadius: 28,
+  backgroundColor: '#016E46',
+  justifyContent: 'center',
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
+},
 });
 
 
