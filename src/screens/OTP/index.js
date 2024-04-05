@@ -8,7 +8,7 @@ import {extractCleanNumber} from '../../utils/utils';
 import { useState } from "react";
 
 function OTP({ route, navigation }) {
-  const { otpData, message } = route.params;
+  const { otpData, message, screen } = route.params;
 
   const [otp, setOtp] = useState(''); 
 
@@ -25,7 +25,6 @@ function OTP({ route, navigation }) {
   }
 
   const validateOtp = () => {
-    console.log(otp)
     axios.post(`${BASE_URL}login`, {
       phone: otpData.phone,
       otp: otp
@@ -38,8 +37,14 @@ function OTP({ route, navigation }) {
       // setDisabledLogin(true);
     });
   };
+  const handleGoBack = () => {
+    navigation.navigate(screen);
+  }
     return (
       <View className="h-full">
+        <TouchableOpacity className="absolute top-20 mx-8" onPress={handleGoBack}>
+        <Icon name='chevron-back-outline' type='ionicon' color='#016E46' size={20} />
+        </TouchableOpacity>
         <View className="p-4 space-y-8 my-auto">
           <View className="items-center space-y-5">
             <SText text='validate-phone' classes="text-green font-bold text-xl pb-4"/>
