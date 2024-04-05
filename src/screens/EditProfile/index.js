@@ -15,6 +15,7 @@ import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 function EditProfile({ navigation }) {
+
 const [formData, setFormData] = useState({
     name: "",
     dateOfBirth: new Date(),
@@ -59,7 +60,7 @@ const [formData, setFormData] = useState({
     <>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
+        <Icon name="bars" size={24} color="#000" style={styles.menuIcon}  onPress={() => navigation.openDrawer()} />
         <Text style={styles.welcomeText}>اهلا بك {Name}!</Text>
       </View>
 
