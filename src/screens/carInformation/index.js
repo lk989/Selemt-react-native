@@ -6,7 +6,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 
 function carInformation({ navigation }) {
-    
+     //عشان يجيكم
   const [formData, setFormData] = useState({
     companyCar: '',
     modeal: '',
