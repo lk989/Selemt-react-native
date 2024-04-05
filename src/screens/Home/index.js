@@ -9,7 +9,7 @@ import { useState } from "react";
 function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
     return (
-      <Layout>
+      <Layout navigation={navigation}>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-3 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
@@ -111,7 +111,8 @@ function Home({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                   className="border border-green mx-6 mb-8 rounded"
-                  underlayColor='#fff'>
+                  underlayColor='#fff'
+                  onPress={() => {setIsModalVisible(false); navigation.navigate('ScanBarcode')}}>
                   <SText text='scan-barcode' classes="text-center text-green py-2"/>
               </TouchableOpacity>
             </View>

@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^7.6.3",
+    "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.14",
     "@react-navigation/native-stack": "^6.9.22",
     "axios": "^1.6.8",
     "expo": "~50.0.13",
+    "expo-camera": "~14.1.1",
     "expo-localization": "~14.8.3",
+    "expo-location": "~16.5.5",
     "expo-status-bar": "~1.11.1",
     "i18n-js": "^4.4.3",
     "nativewind": "^2.0.11",
@@ -28,8 +31,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-toast-message": "^2.2.0",
-    "expo-location": "~16.5.5",
-    "expo-camera": "~14.1.1"
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-reanimated": "~3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

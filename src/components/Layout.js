@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import Header from "./Header";
 
-const Layout = ({ children }) => {
+const Layout = ({ navigation, children }) => {
     return ( 
         <View>
-            <Header/>
+            <Header navigation={navigation}/>
             <View className="p-4 gap-8">
                 { children }
             </View>
