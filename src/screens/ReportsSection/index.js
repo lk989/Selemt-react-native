@@ -1,112 +1,232 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-function ReportSection({ navigation }) {
-    
+
+
+const SegmentedControl = ({navigation}) => {
+  const [activeSegment, setActiveSegment] = useState('Reports'); // 'data' or 'objections'
+  const listItems = [
+    { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ' },
+    { id: '#0002', time: '00:51 AM', date: '23 / 01 / 2024', text: 'Some other text' },
+    // ... other items
+
+  ];
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const meridiem = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    const formattedMinute = minute < 10 ? `0${minute}` : minute;
+    return `${formattedHour}:${formattedMinute} ${meridiem}`;
+  };
+
+
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
-          {/* Icon would be here, use an image or an icon library */}
-          <Text>Menu</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>اهلا بك عبد!</Text>
-        <TouchableOpacity style={styles.addButton}>
-          {/* Plus icon */}
-          <Text>+</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Tabs */}
-      <View style={styles.tabs}>
-        <TouchableOpacity style={styles.tab}>
-          <Text>البيانات</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text>الإعدادات</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* List of Items */}
-      <ScrollView style={styles.itemList}>
-        {/* Repeat this View for each item in your data array */}
-        <View style={styles.itemCard}>
-          <Text style={styles.itemText}>
-            {/* Insert text here */}
-            وصف البيان وصف البيان وصف البيان وصف البيان وصف البيان
-          </Text>
-          <Text style={styles.itemTime}>00:51AM</Text>
-          <Text style={styles.itemDate}>23 / 01 / 2024</Text>
-          <Text style={styles.itemNumber}>#0001</Text>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Icon name="bars" size={24} color="#000" style={styles.menuIcon}  onPress={() => navigation.openDrawer()}  ></Icon>
+          <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
         </View>
-        {/* ... other items */}
-      </ScrollView>
-    </View>
+
+        <View style={styles.segmentedControlContainer}>
+          <TouchableOpacity
+            style={[
+              styles.segmentButton,
+              activeSegment === 'objections' ? styles.activeSegment : {},
+            ]}
+            onPress={() => {
+              setActiveSegment('objections');
+              navigation.navigate('ObjectionsSection');
+            }}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                activeSegment === 'objections' ? styles.activeSegmentText : {},
+              ]}
+            >
+              الإعتراضات
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.segmentButton,
+              activeSegment === 'Reports' ? styles.activeSegment : {},
+            ]}
+            onPress={() => {
+              setActiveSegment('Reports');
+              navigation.navigate('ReportsSection');
+            }}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                activeSegment === 'Reports' ? styles.activeSegmentText : {},
+              ]}
+            >
+              البلاغات
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {listItems.map((item, index) => (
+          <View key={index} style={styles.card}>
+            <View style={styles.cardContent}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.headerText}>حالة البلاغ</Text>
+              </View>
+              <Text style={styles.contentText}>{item.text}</Text>
+              <Text style={styles.timeText}>{item.time }</Text>
+              <Text style={styles.dateText}>{item.date}</Text>
+              <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.idText}>{item.id}</Text>
+          </View>
+        ))}
+
+      </ScrollView >
+      <TouchableOpacity style={styles.addButton}>
+        <Icon name="plus" size={24} color="#FFF" />
+      </TouchableOpacity>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F0F0F0',
   },
+
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 30,
+    backgroundColor: '#fff',
+  },
+  menuIcon: {
+    marginRight: 16,
+    color: '#016E46',
+    marginTop: 16,
+  },
+  welcomeText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#016E46',
+    marginTop: 20,
+  },
+
+
+  segmentedControlContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'white', // The base color of the segmented control
+    borderRadius: 20, // Makes the entire control rounded
+    margin: 16,
+    overflow: 'hidden',
+  },
+  segmentButton: {
+    flex: 1, // Each button will take up half of the space
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeSegment: {
+    backgroundColor: '#ABC7BD', // Active segment background color
+    borderRadius: 20
+
+  },
+  segmentText: {
+    fontSize: 14,
+    textAlign: 'center',
+    fontWeight: 'bold',
+
+  },
+  card: {
+    flexDirection: 'row', // Align card children in a row
+    justifyContent: 'space-between', // Space between the children
+    alignItems: 'center', // Align children vertically in the center
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+  },
+  headerText: {
+    backgroundColor: '#ABC7BD',
+    fontWeight: 'bold',
+    paddingHorizontal: 10, // Horizontal padding for left and right
+    paddingVertical: 5, // Vertical padding for top and bottom
+    borderRadius: 5, // Rounded corners for the highlight effect
+    overflow: 'hidden', // Ensures the background does not bleed outside the border radius
+    alignSelf: 'flex-start', // Ensures the background only covers the text plus padding
+    marginRight: 10, // If you wan
+  },
+  contentText: {
+    marginBottom: 15,
+  },
+  timeText: {
+
+  },
+  dateText: {
+    marginBottom: 10,
+
+  },
+  idText: {
+    fontWeight: 'bold',
+
+  },
+  button: {
+    backgroundColor: '#ABC7BD', // Green background for the button
     padding: 10,
-    backgroundColor: '#F8F8F8',
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
   },
-  menuButton: {
-    // styling for the menu button
-  },
-  addButton: {
-    // styling for the add button
-  },
-  headerTitle: {
-    fontSize: 20,
+  buttonText: {
     fontWeight: 'bold',
   },
-  tabs: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: '#E8E8E8',
+  cardContent: {
+    flex: 1, // Take up all available space
+    marginRight: 10,
   },
-  tab: {
-    // styling for tabs
-  },
-  itemList: {
-    flex: 1,
-  },
-  itemCard: {
-    margin: 10,
-    padding: 10,
-    backgroundColor: '#FFF',
-    borderRadius: 5,
-    elevation: 3,
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  itemText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  itemTime: {
-    fontSize: 14,
-    color: '#666',
-  },
-  itemDate: {
-    fontSize: 14,
-    color: '#666',
-  },
-  itemNumber: {
-    fontSize: 14,
-    color: '#666',
-    alignSelf: 'flex-end',
+  addButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#016E46',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
-export default ReportSection;
+
+export default SegmentedControl;
