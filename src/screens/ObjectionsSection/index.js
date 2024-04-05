@@ -16,7 +16,7 @@ const SegmentedControl = ({ navigation }) => {
     <StatusBar barStyle="dark-content" />
     <ScrollView  style={styles.container}>
       <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
+        <Icon name="bars" size={24} color="#000" style={styles.menuIcon}  onPress={() => navigation.openDrawer()}/>
         <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
       </View>
 
