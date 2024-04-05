@@ -15,7 +15,6 @@ function carInformation({ navigation }) {
 
   });
 
-
   const handleInputChange = (name, value) => {
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -110,7 +109,7 @@ function carInformation({ navigation }) {
    
       </ScrollView>
       
-      
+
     </>
   );
 };
