@@ -11,9 +11,11 @@ function OTP({ route, navigation }) {
   const { otpData, message, screen } = route.params;
 
   const [otp, setOtp] = useState(''); 
+  const [otpDisabled, setOtpDisabled] = useState(true); 
 
   const handleOtp = (otp) => {
     setOtp(extractCleanNumber(otp));
+    setOtpDisabled(otp.length != 4);
   };
 
   const showErrorOtpToast = (message) => {
@@ -34,7 +36,7 @@ function OTP({ route, navigation }) {
     })
     .catch(function (error) {
       showErrorOtpToast(error.response.data.message);
-      // setDisabledLogin(true);
+      setOtpDisabled(true);
     });
   };
   const handleGoBack = () => {
@@ -42,7 +44,7 @@ function OTP({ route, navigation }) {
   }
     return (
       <View className="h-full">
-        <TouchableOpacity className="absolute top-20 mx-8" onPress={handleGoBack}>
+        <TouchableOpacity className='absolute top-20 mx-8' onPress={handleGoBack}>
         <Icon name='chevron-back-outline' type='ionicon' color='#016E46' size={20} />
         </TouchableOpacity>
         <View className="p-4 space-y-8 my-auto">
@@ -63,7 +65,7 @@ function OTP({ route, navigation }) {
             />
             </View>
           </View>
-          <TouchableOpacity className="bg-green rounded-md" onPress={() => validateOtp()}>
+          <TouchableOpacity className={`${otpDisabled ? 'bg-light-green' : 'bg-green'} rounded-md`} onPress={() => validateOtp()} disabled={otpDisabled}>
             <SText text='validate' classes="text-white text-center text-xl p-2"/>
           </TouchableOpacity>
         </View>
