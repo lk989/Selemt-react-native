@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {
   StyleSheet, View, Text, TextInput, TouchableOpacity,
-  ScrollView, StatusBar, Image
-} from 'react-native';
+  ScrollView, StatusBar, Image,Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import RNPickerSelect from 'react-native-picker-select';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -15,6 +14,9 @@ function accidentInformation({ navigation }) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formData, setFormData] = useState({});
   const [imageUri, setImageUri] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+
 
   const options = [
     'المقدمة',
@@ -26,6 +28,7 @@ function accidentInformation({ navigation }) {
    ' الجانب الخلفي الايمن',
    ' الجانب الخلفي الايسر',
   ];
+
 
   const handlePress = (option) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -49,9 +52,11 @@ function accidentInformation({ navigation }) {
   };
 
 
-  const handleSubmit = () => {
-    console.log(formData);
-  };
+const handleSubmit = () => {
+  console.log(formData);
+  // After submitting your form data, you'd set the modal to be visible.
+  setModalVisible(true);
+};
 
 
   const handleChoosePhoto = () => {
@@ -59,6 +64,7 @@ function accidentInformation({ navigation }) {
       mediaType: 'photo',
       quality: 1,
     };
+
   
     launchImageLibrary(options)
       .then(response => {
@@ -204,6 +210,28 @@ function accidentInformation({ navigation }) {
               )}
             </TouchableOpacity>
           </View>
+
+
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => setModalVisible(false)}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Icon name='check-circle' size={60} color='green' />
+                    <Text style={styles.modalText}>تم رفع البلاغ بنجاح</Text>
+                    <Text style={styles.modalSubText}>رقم البلاغ: #0001</Text>
+                    <TouchableOpacity
+                      style={styles.buttonClose}
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Text style={styles.textStyle}>الرجوع للبلاغات</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
 
          
         </View>
@@ -419,6 +447,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+
+  // for conformaiton model
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  modalSubText: {
+    marginBottom: 15,
+    textAlign: "center",
+    color: 'gray'
+  }
+
 });
 
 export default accidentInformation;
