@@ -3,22 +3,27 @@ import SText from "../../components/SText";
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements'
 import Layout from "../../components/Layout";
-import { useState } from "react";
+import CurrDay from "../../components/CurrDay";
+import CurrDate from '../../components/CurrDate'
+import CurrLocation from '../../components/CurrLocation'
+import React, { useState, useEffect } from 'react';
+import * as Location from 'expo-location';
 
 
 function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-    return (
-      <Layout>
-          <View className="flex-row justify-between">
-            <View className="bg-white rounded-md flex-row px-3 py-1">
-              <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
-              <Text className="px-3">مكة المكرمة</Text>
-            </View>
+
+  return (
+    <Layout>
+      <View className="flex-row justify-between">
+        <View className="bg-white rounded-md flex-row px-3 py-1">
+          <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
+          <Text className="px-3"><CurrLocation/></Text>
+        </View>
             <View className="bg-white rounded-md flex-row px-3 py-1">
               <Icon name='calendar-outline' type='ionicon' color='#ABC7BD' size={18} />
-              <Text className="px-3">الاثنين</Text>
-              <Text>03/01/2024</Text>
+              <Text className="px-3"><CurrDate/></Text>
+              <CurrDay/>
             </View>
           </View>
           <View className="bg-white rounded-2xl gap-6 pb-6">

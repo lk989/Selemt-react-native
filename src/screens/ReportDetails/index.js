@@ -4,6 +4,8 @@ import SText from "../../components/SText";
 import Layout from "../../components/Layout";
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon } from 'react-native-elements'
+import CurrTime from '../../components/CurrTime'
+import CurrDate from "../../components/CurrDate";
 
 
 function ReportDetails({ navigation }) {
@@ -18,16 +20,6 @@ function ReportDetails({ navigation }) {
     { label: "Code 2", value: "code2" },
     { label: "Code 3", value: "code3" },
   ];
-
-  const getCurrentTime = () => {
-    const date = new Date();
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-    const meridiem = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    const formattedMinute = minute < 10 ? `0${minute}` : minute;
-    return `${formattedHour}:${formattedMinute} ${meridiem}`;
-  };
 
   const handleRaiseObjection = () => {
     setModalVisible(true);
@@ -76,19 +68,19 @@ function ReportDetails({ navigation }) {
         <Text className="text-lg font-semibold">0001# رمز البلاغ</Text>
         </View>
 
-        {/* for "وقت البلاغ" and time */}
+        {/* for time */}
         <View>
           <Text>وقت البلاغ</Text>
-          <Text>{getCurrentTime()}</Text>
+          <Text><CurrTime/></Text>
         </View>
 
-        {/* for "تاريخ البلاغ" and date */}
+        {/* for "تاريخ البلاغ" */}
         <View>
           <Text>تاريخ البلاغ</Text>
-          <Text>{new Date().toLocaleDateString()}</Text>
+          <Text><CurrDate/></Text>
         </View>
 
-        {/* for "تاريخ البلاغ" and date */}
+        {/* for وصف البلاغ */}
         <View>
           <Text >وصف البلاغ</Text>
           <Text>وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ</Text>
