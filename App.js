@@ -15,7 +15,7 @@ import ObjectionDetails from './src/screens/ObjectionDetails';
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ObjectionDetails" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />

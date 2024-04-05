@@ -8,3 +8,7 @@ export function extractCleanPhone(phone){
 export function validPhone(phone){
     return extractCleanPhone(phone).length == 9;
 }
+export function extractCleanNumber(number){
+  let cleanNumber = number.replace(/\D/g, "");
+  return cleanNumber;
+}
