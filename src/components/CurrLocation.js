@@ -5,7 +5,13 @@ import * as Location from 'expo-location';
 const CurrLocation = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState({
+      city: null,
+      district: null,
+      country: null,
+      region: null,
+      streetNumber: null
+  });
 
   useEffect(() => {
     (async () => {
@@ -35,19 +41,24 @@ const CurrLocation = () => {
           });
 
           if (reverseGeocode && reverseGeocode.length > 0) {
-            const { city, region } = reverseGeocode[0];
-            setUserLocation(`${city}, ${region}`);
+            const { city, region, country, district, streetNumber } = reverseGeocode[0];
+            setUserLocation({
+              city: city,
+              region: region,
+              country: country,
+              district: district,
+              streetNumber: streetNumber
+            });
           }
         } catch (error) {
           console.error('Error fetching user location:', error);
-          setUserLocation('Unknown Location');
+          setCity('Unknown Location');
         }
       })();
     }
   }, [location]);
-
   return (
-      <Text>{userLocation || 'Waiting...'}</Text>
+      <Text>{userLocation.city || 'Waiting...'}</Text>
   );
 };
 
