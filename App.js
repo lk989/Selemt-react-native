@@ -17,6 +17,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 // import EditProfile from './src/screens/EditProfile';
 import ReportsSection from './src/screens/ReportsSection';
+// import CustomDrawerContent from './src/components/CustomDrawerContent';
 
 
 const Stack = createNativeStackNavigator();
@@ -42,10 +43,8 @@ function App() {
           drawerActiveTintColor: 'black',
           drawerActiveBackgroundColor: '#ABC7BD',
           drawerItemStyle: { marginVertical: 5 },
-          drawerLabelStyle: {
-          textAlign: 'right',
-          },
         }}
+        // drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <Drawer.Screen
           name="الصفحة الرئيسيه"
