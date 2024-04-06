@@ -26,6 +26,8 @@
     "upload-file":"Upload file",
     "back-to-objections":"Back to objections",
     "raise-objection":"Rasie the objection",
-    "have-account": "Already have an account? "
+    "have-account": "Already have an account? ",
+    "choose-operation": "Choose the desired operation"
+
 
 }

@@ -32,7 +32,7 @@ function App() {
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="DrawerRoute" component={DrawerRoute} />
+        {/* {<Stack.Screen name="DrawerRoute" component={DrawerRoute} />} */}
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         {/*<Stack.Screen name="ScanBarcode" component={ScanBarcode} />*/}
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}

@@ -7,6 +7,7 @@ import CurrDay from "../../components/CurrDay";
 import CurrDate from '../../components/CurrDate'
 import CurrLocation from '../../components/CurrLocation'
 import React, { useState, useEffect } from 'react';
+import PlusButton from "../../components/PlusButton";
 import * as Location from 'expo-location';
 
 
@@ -90,38 +91,8 @@ function Home({ navigation }) {
                 </View>
               </View>
             </View>
+          <PlusButton navigation={navigation}/>
           </View>
-
-          {/* need to be in a modal later */}
-          <View>
-          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-              <Icon name='plus' type='feather' color='#016E46' size={18} reverse/>
-          </TouchableOpacity>
-          </View>
-        <Modal
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-          animationType="slide"
-          transparent>
-          <View className="relative flex justify-end h-full" style={{backgroundColor:'rgba(0,0,0,0.25)'}}>
-            <View className="bg-white rounded-t-2xl shadow-lg flex p-2">
-              <SText text='initiate-report' classes="text-black py-2 font-bold text-lg text-center mt-8"/>
-              <SText text='initiate-report-description' classes="text-black py-2 text-center"/>
-              <TouchableOpacity
-              className="bg-green mx-6 my-2 rounded"
-              underlayColor='#fff'
-              onPress={() => {setIsModalVisible(false); navigation.navigate('GenerateBarcode')}}>
-                  <SText text='generate-barcode' classes="text-center text-white py-2"/>
-              </TouchableOpacity>
-              <TouchableOpacity
-                  className="border border-green mx-6 mb-8 rounded"
-                  underlayColor='#fff'
-                  onPress={() => {setIsModalVisible(false); navigation.navigate('ScanBarcode')}}>
-                  <SText text='scan-barcode' classes="text-center text-green py-2"/>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       </Layout>
     );
 }
