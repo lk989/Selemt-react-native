@@ -7,6 +7,7 @@ import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import OTP from './src/screens/OTP';
 import GenerateBarcode from './src/screens/GenerateBarcode';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 
 
@@ -16,7 +17,8 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="ProfileScreen" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="Home" component={Home} />
