@@ -1,13 +1,13 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Header from "./Header";
 
 const Layout = ({ children }) => {
     return ( 
         <View>
             <Header/>
-            <View className="p-4 gap-8">
+            <ScrollView className="p-4 gap-8">
                 { children }
-            </View>
+            </ScrollView>
         </View>
     );
 }
