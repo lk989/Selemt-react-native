@@ -86,7 +86,8 @@ const SegmentedControl = ({ navigation }) => {
   </View>
         ))}
    
-   </Layout>      <TouchableOpacity style={styles.addButton}>
+   </Layout>    
+     <TouchableOpacity style={styles.addButton}>
         <Icon name="plus" size={24} color="#FFF" />
       </TouchableOpacity>
     </>
