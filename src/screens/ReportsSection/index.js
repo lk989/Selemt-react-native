@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
+import Layout from "../../components/Layout";
+
 
 
 const SegmentedControl = ({ navigation }) => {
@@ -23,12 +25,7 @@ const SegmentedControl = ({ navigation }) => {
 
   return (
     <>
-    <StatusBar barStyle="dark-content" />
-    <ScrollView  style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-      </View>
+  <Layout>
 
       <View style={styles.segmentedControlContainer}>  
       <TouchableOpacity
@@ -89,8 +86,7 @@ const SegmentedControl = ({ navigation }) => {
   </View>
         ))}
    
-      </ScrollView >
-      <TouchableOpacity style={styles.addButton}>
+   </Layout>      <TouchableOpacity style={styles.addButton}>
         <Icon name="plus" size={24} color="#FFF" />
       </TouchableOpacity>
     </>
