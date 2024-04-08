@@ -5,6 +5,8 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import RNPickerSelect from 'react-native-picker-select';
 import { launchImageLibrary } from 'react-native-image-picker';
+import Layout from "../../components/Layout";
+
 
 
 
@@ -86,15 +88,9 @@ const handleSubmit = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <View className="bg-white p-4 pt-15 flex-row justify-between items-center" />
-      <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-      </View>
 
+<Layout>
 
-      <ScrollView style={styles.container}>
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>بيانات الحادث</Text>
 
@@ -242,8 +238,17 @@ const handleSubmit = () => {
             <Text style={styles.buttonText}>التالي</Text>
           </TouchableOpacity>
           </View>
-      </ScrollView>
-
+          <View>
+      <Text style={styles.hiddenText}></Text>
+    </View>
+    <View>
+      <Text style={styles.hiddenText}></Text>
+    </View>
+    <View>
+      <Text style={styles.hiddenText}></Text>
+    </View>
+  
+          </Layout>
       
     </>
     
@@ -284,6 +289,9 @@ const pickerSelectStyles = StyleSheet.create({
  
   placeholder: {
     color: '#9EA0A4', // Placeholder text color
+  },
+  hiddenText: {
+    display: 'none',
   },
 
   iconContainer: {
@@ -412,8 +420,8 @@ const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: '#FFFFFF',
     borderRadius: 4,
-    margin: 16,
-    padding: 16,
+    margin: 5,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
