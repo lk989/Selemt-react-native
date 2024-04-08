@@ -93,6 +93,7 @@ const handleSubmit = () => {
         <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
       </View>
 
+
       <ScrollView style={styles.container}>
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>بيانات الحادث</Text>
@@ -172,24 +173,24 @@ const handleSubmit = () => {
 
        
           <View style={styles.formGroup}>
-  <Text style={styles.label}>اختر مكان الصدمة</Text>
-  <View style={styles.buttonsContainer}>
-    {options.map((option) => (
-      <TouchableOpacity
-        key={option}
-        style={[
-          styles.optionButton,
-          selectedOptions.includes(option) && styles.selectedOptionButton, // Apply the selected style conditionally
-        ]}
-        onPress={() => handlePress(option)}
-      >
-        <Text style={[
-          styles.buttonText2,
-          selectedOptions.includes(option) && styles.selectedButtonText, // Apply the selected text style conditionally
-        ]}>
-          {option}
-        </Text>
-      </TouchableOpacity>
+            <Text style={styles.label}>اختر مكان الصدمة</Text>
+            <View style={styles.buttonsContainer}>
+              {options.map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={[
+                    styles.optionButton,
+                    selectedOptions.includes(option) && styles.selectedOptionButton, // Apply the selected style conditionally
+                  ]}
+                  onPress={() => handlePress(option)}
+                >
+                  <Text style={[
+                    styles.buttonText2,
+                    selectedOptions.includes(option) && styles.selectedButtonText, // Apply the selected text style conditionally
+                  ]}>
+                    {option}
+                  </Text>
+                </TouchableOpacity>
     ))}
   </View>
 </View>
@@ -235,17 +236,26 @@ const handleSubmit = () => {
 
          
         </View>
+        
+        <View style={{ height: 100}}> 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>التالي</Text>
           </TouchableOpacity>
+          </View>
       </ScrollView>
+
+      
     </>
+    
   );
+  
 };
 
 
 
 const pickerSelectStyles = StyleSheet.create({
+
+
   inputIOS: {
     fontSize: 16,
     height:15,
@@ -286,12 +296,11 @@ const pickerSelectStyles = StyleSheet.create({
 const styles = StyleSheet.create({
 
 
+
   selectedOptionButton: {
     backgroundColor: '#ABC7BD', // Light green background for selected state
  
   },
-
-
 
 
   buttonsContainer: {
@@ -390,7 +399,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'white'
+  
   },
 
   label: {
@@ -476,7 +486,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
+    
+   
+
   },
   textStyle: {
     color: "white",
