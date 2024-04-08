@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Layout from "../../components/Layout";
+
 
 function ProfileScreen() {
     const [profileData, setProfileData] = useState({
@@ -79,23 +81,18 @@ const getLabel = (field) => {
   
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-      </View>
+     <Layout>
 
       <TouchableOpacity onPress={() => console.log('Edit profile image')}>
         <Image
   style={styles.profileImage}
-  source={require('/Users/macpro/Selemt-react-native-1/src/assets/images/profile-image.jpeg')} // Local image require syntax
-/>
+  source={require('../../assets/images/profile-image.jpeg')}
+  />
         </TouchableOpacity>
 
       <ScrollView style={styles.container}>
         <View style={styles.sectionContainer}>
-      <View style={styles.container}>
-        
+      
 
       {Object.entries(profileData).map(([field, value]) => (
                 <View key={field} style={styles.fieldContainer}>
@@ -139,9 +136,10 @@ const getLabel = (field) => {
             </View>
           </View>
         </Modal>
-      </View>
+   
       </View>
       </ScrollView>
+      </Layout>
     </>
   );
 }
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
     
   container: {
     flex: 1,
-    padding: 30,
+    padding: 2,
   },
 
   sectionContainer: {
