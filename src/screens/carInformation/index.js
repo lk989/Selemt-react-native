@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import RNPickerSelect from 'react-native-picker-select';
+import Layout from "../../components/Layout";
+
 
 
 
@@ -30,14 +32,7 @@ function carInformation({ navigation }) {
   return (
     <>
 
-      <StatusBar barStyle="dark-content" />
-      <View className="bg-white p-4 pt-15 flex-row justify-between items-center">
-      </View>
-           
-      <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-      </View>
+      <Layout>
 
       <ScrollView style={styles.container}>
 
@@ -108,6 +103,7 @@ function carInformation({ navigation }) {
         </TouchableOpacity>
    
       </ScrollView>
+      </Layout>
       
 
     </>
