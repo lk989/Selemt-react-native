@@ -11,6 +11,7 @@ const GenerateBarcode = ({navigation}) => {
 
     const [qrCodeImage, setQrCodeImage] = useState(null);
     const [qrCodeId, setQrCodeId] = useState(null);
+    const [qrCodeToken, setQrCodeToken] = useState(null);
     const qrCodeIdRef = useRef(null);
 
     useEffect(() => {
@@ -19,6 +20,7 @@ const GenerateBarcode = ({navigation}) => {
                 let svg = Base64.atob(response.data.qrCode)
                 setQrCodeImage(svg);
                 setQrCodeId(response.data.id);
+                setQrCodeToken(response.data.token);
                 qrCodeIdRef.current = response.data.id;
             })
             .catch(function (error) {

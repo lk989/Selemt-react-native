@@ -10,7 +10,7 @@ import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import GenerateBarcode from './src/screens/GenerateBarcode';
-// import ScanBarcode from './src/screens/ScanBarcode';
+import ScanBarcode from './src/screens/ScanBarcode';
 // import ObjectionDetails from './src/screens/ObjectionDetails';
 import ObjectionsSection from './src/screens/ObjectionsSection';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -34,7 +34,7 @@ function App() {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="DrawerRoute" component={DrawerRoute} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
-        {/*<Stack.Screen name="ScanBarcode" component={ScanBarcode} />*/}
+        <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
     </NavigationContainer>
