@@ -62,6 +62,8 @@ function Login({ navigation }) {
                 maxLength={9}
                 placeholder="5XXXXXXXX"
                 placeholderTextColor="#ABC7BD"
+                returnKeyType='done' // Display "Done" button on the keyboard
+                onSubmitEditing={login} // Call the login function when "Done" is pressed
               />
             </View>
           </View>

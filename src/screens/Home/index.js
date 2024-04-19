@@ -33,7 +33,7 @@ function Home({ navigation }) {
               </View>
             </View>
             <Text className="text-lg font-semibold">رقم الحادث</Text>
-            <TouchableOpacity
+            <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')}
               className="bg-light-green mx-6 rounded"
               underlayColor='#fff'>
               <SText text='view-report-det' classes="text-center py-2"/>

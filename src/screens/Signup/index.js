@@ -70,6 +70,8 @@ function Signup({ navigation }) {
                 value={name}
                 placeholder="محمد إبراهيم "
                 placeholderTextColor="#ABC7BD"
+                returnKeyType='done' // Display "Done" button on the keyboard
+
               />
             </View>
             <View className="w-full space-y-2">
@@ -86,6 +88,8 @@ function Signup({ navigation }) {
                   maxLength={9}
                   placeholder="5XXXXXXXX"
                   placeholderTextColor="#ABC7BD"
+                  returnKeyType='done' // Display "Done" button on the keyboard
+                  onSubmitEditing={signup} 
                 />
               </View>
             </View>
