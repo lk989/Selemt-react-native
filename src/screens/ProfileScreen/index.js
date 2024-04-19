@@ -86,7 +86,8 @@ const getLabel = (field) => {
       <TouchableOpacity onPress={() => console.log('Edit profile image')}>
         <Image
   style={styles.profileImage}
-  source={require('../../assets/images/profile-image.jpeg')}
+  //source={require('../../assets/images/profile-image.jpeg')}
+  source={require('../../assets/images/icon.png')}
   />
         </TouchableOpacity>
 

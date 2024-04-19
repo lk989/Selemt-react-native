@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } fro
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 
+
 const SegmentedControl = ({ navigation }) => {
   const [activeSegment, setActiveSegment] = useState('Reports'); // 'data' or 'objections'
   const listItems = [
@@ -81,7 +82,7 @@ const SegmentedControl = ({ navigation }) => {
       <Text style={styles.contentText}>{item.text}</Text>
       <Text style={styles.timeText}>{}</Text>
       <Text style={styles.dateText}>{item.date}</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')} style={styles.button}>
         <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
       </TouchableOpacity>
     </View>
