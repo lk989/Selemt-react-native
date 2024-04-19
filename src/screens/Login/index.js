@@ -30,6 +30,7 @@ function Login({ navigation }) {
     .then(function (response) {
       let message = response.data.message;
       let otp = response.data.verification;
+      // console.log(response.data)
       navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Login' })
     })
     .catch(function (error) {
