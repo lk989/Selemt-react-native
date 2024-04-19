@@ -27,12 +27,12 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="Home" component={Home} />
-        {/* {<Stack.Screen name="DrawerRoute" component={DrawerRoute} />} */}
+        <Stack.Screen name="DrawerRoute" component={DrawerRoute} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         {/*<Stack.Screen name="ScanBarcode" component={ScanBarcode} />*/}
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
