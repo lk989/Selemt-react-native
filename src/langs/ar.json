@@ -27,5 +27,8 @@
     "back-to-objections":"الرجوع للاعتراضات",
     "raise-objection":"رفع الاعتراض",
     "have-account": "هل لديك حساب؟ ",
-    "choose-operation": "اختر العملية المناسبة"
+    "choose-operation": "اختر العملية المناسبة",
+    "scan-barcode-title": "امسح الباركود",
+    "scan-barcode-description": "يجب عليك مسح الباركود المقدم من الطرف الآخر من خلال تطبيقنا",
+    "scan-again": "انقر للمسح مرة أخرى"
 }
