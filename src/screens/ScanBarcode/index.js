@@ -6,9 +6,45 @@ const ScanBarcode = ({ navigation }) => {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
 
-  const handleBarCodeScanned = ({ data }) => {
-    // Process the scanned QR code data here
-    Alert.alert('Scanned QR Code', `Data: ${data}`, [{ text: 'OK', onPress: () => {} }]);
+  useEffect(() => {
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getCameraPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+      setScanned(true);
+      axios.post(`${BASE_URL}validate-qr-code`, {data: data})
+          .then(function (response) {
+              if (response.data == 1) {
+                navigation.navigate('AccidentPersonalInfo');
+              }
+              else {
+                  alert('Invalid QR code!');
+              }
+        })
+        .catch(function (error) {
+            console.error("Error fetching QR code:", error.response.data.message);
+        });
+      
+    // Check if `data` is a URL. This is a basic check; adjust according to your needs.
+    // const isValidUrl = (url) => {
+    //   let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    //     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    //     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    //     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    //     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    //     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    //   return !!pattern.test(url);
+    // };
+  
+    // if (isValidUrl(data)) {
+    //   Linking.openURL(data).catch(err => console.error('An error occurred', err));
+    // } else {
+    // }
   };
 
   useEffect(() => {

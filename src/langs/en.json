@@ -30,6 +30,13 @@
     "choose-operation": "Choose the desired operation",
     "scan-barcode-title": "Scan the barcode",
     "scan-barcode-description": "The other party should provide you the Qr code by clicking on Generate a barcode option",
-    "scan-again": "Tab to scan again"
+    "scan-again": "Tab to scan again",
+    "personal-information": "Personal information",
+    "birthday": "Birthday",
+    "license-type": "License type",
+    "has-insurance": "Do you have insurance?",
+    "gender": "Gender",
+    "done": "Done",
+    "next": "Next"
 
 }

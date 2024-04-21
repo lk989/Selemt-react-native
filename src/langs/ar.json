@@ -30,5 +30,12 @@
     "choose-operation": "اختر العملية المناسبة",
     "scan-barcode-title": "امسح الباركود",
     "scan-barcode-description": "يجب عليك مسح الباركود المقدم من الطرف الآخر من خلال تطبيقنا",
-    "scan-again": "انقر للمسح مرة أخرى"
+    "scan-again": "انقر للمسح مرة أخرى",
+    "personal-information": "البيانات الشخصية",
+    "birthday": "تاريخ الميلاد",
+    "license-type": "نوع رخصة القيادة",
+    "has-insurance": "هل تملك تأمين؟",
+    "gender": "الجنس",
+    "done": "تم",
+    "next": "التالي"
 }

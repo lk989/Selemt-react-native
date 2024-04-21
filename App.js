@@ -16,7 +16,7 @@ import ObjectionsSection from './src/screens/ObjectionsSection';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import EditProfile from './src/screens/EditProfile';
+import AccidentPersonalInfo from './src/screens/AccidentPersonalInfo';
 import ReportsSection from './src/screens/ReportsSection';
 import ReportDetails from './src/screens/ReportDetails';
 import carInformation from './src/screens/carInformation';
@@ -30,7 +30,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Signup" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
@@ -39,6 +39,7 @@ function App() {
         <Stack.Screen name="DrawerRoute" component={DrawerRoute} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+        <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
     </NavigationContainer>
