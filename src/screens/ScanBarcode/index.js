@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera/next';
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Button, Linking, TouchableOpacity } from 'react-native';
+import { CameraView, Camera } from "expo-camera/next";
+import Layout from "../../components/Layout";
+import SText from "../../components/SText";
+import axios from "axios";
+import { BASE_URL } from '../../config/config';
 
-const ScanBarcode = ({ navigation }) => {
-  const [facing, setFacing] = useState('back');
-  const [permission, requestPermission] = useCameraPermissions();
+const ScanBarcode = ({navigation}) => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -20,10 +24,10 @@ const ScanBarcode = ({ navigation }) => {
       axios.post(`${BASE_URL}validate-qr-code`, {data: data})
           .then(function (response) {
               if (response.data == 1) {
-                navigation.navigate('AccidentPersonalInfo');
+                navigation.navigate('Home');
               }
               else {
-                  alert('Invalid QR code!');
+                  alert(`${data}`);
               }
         })
         .catch(function (error) {
@@ -47,72 +51,45 @@ const ScanBarcode = ({ navigation }) => {
     // }
   };
 
-  useEffect(() => {
-    if (permission && permission.granted) {
-      // Start listening for barcode scans when permission is granted
-      requestPermission();
-    }
-  }, [permission]);
-
-  if (!permission) {
-    return <View />;
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
   }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text>No access to camera</Text>
-      </View>
-    );
-  }
-
-  function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
-  }
-
-  function handleCancel() {
-    navigation.goBack(); // Navigate back to the previous screen
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing} barCodeScannerEnabled={true} onBarCodeScanned={handleBarCodeScanned}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleCancel}>
-            <Text style={styles.text}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
-    </View>
+      <Layout>
+            <View className="p-2 space-y-12">
+                <View className="bg-white rounded-lg shadow-sm w-full aspect-square mt-8">
+                      <CameraView
+                        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+                        barcodeScannerSettings={{
+                        barcodeTypes: ["qr", "pdf417"],
+                        }}
+                          width="100%" height="100%" 
+                    />
+                    
+                </View>
+                <View>
+                    <SText text='scan-barcode-title' classes="text-xl text-black font-bold text-justify" />
+                    <SText text='scan-barcode-description' classes="text-black text-lg font-medium text-justify py-4" />
+                    {scanned && (
+                        <TouchableOpacity onPress={() => setScanned(false)} className="border border-green rounded-md bg-white">
+                            <SText text='scan-again' classes="text-green font-medium text-justify py-3 text-center" />
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
+        </Layout>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,    
-    backgroundColor: 'transparent',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    color: 'white',
+    flexDirection: "column",
+    justifyContent: "center",
   },
 });
 
