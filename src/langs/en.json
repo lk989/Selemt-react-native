@@ -37,6 +37,8 @@
     "has-insurance": "Do you have insurance?",
     "gender": "Gender",
     "done": "Done",
-    "next": "Next"
+    "next": "Next",
+    "no-access-cam":"No access to camera",
+    "Requesting-for-camera-permission":"Requesting for camera permission"
 
 }

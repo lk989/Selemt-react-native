@@ -37,5 +37,8 @@
     "has-insurance": "هل تملك تأمين؟",
     "gender": "الجنس",
     "done": "تم",
-    "next": "التالي"
+    "next": "التالي",
+    "no-access-cam":"لا يمكن الوصول إلى الكاميرا",
+    "Requesting-for-camera-permission":"طلب اذن الوصول الى الكاميرا"
+
 }
