@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, View, Text, TextInput, TouchableOpacity,
-  ScrollView, StatusBar, Image
+  ScrollView, StatusBar, Image, FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import RNPickerSelect from 'react-native-picker-select';
@@ -27,7 +27,6 @@ function AccidentInformation({ navigation }) {
         }));
         setDirectionList(directionOptions);
 
-        console.log(localilzedName)
         const streetTypeOptions = response.data.street_types.map(option => ({
           label: appLocale === 'ar' ? option.name_ar : option.name_en,
           value: option.id,
@@ -43,8 +42,8 @@ function AccidentInformation({ navigation }) {
       .catch(error => console.error('Error fetching options:', error));
     }, []); 
 
-  let selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
-  let descriptionPlaceholder = { label: appLocale == 'ar' ? "اكتب وصف الحادث هنا ..." : "Descripe the accident here ...", value: '' };
+  const selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
+  const descriptionPlaceholder = appLocale == 'ar' ? "اكتب وصف الحادث هنا ..." : "Descripe the accident here ...";
   
   const linesList = [
     { label: '1', value: '1' },
@@ -54,21 +53,23 @@ function AccidentInformation({ navigation }) {
     { label: '5', value: '5' },
     { label: '6', value: '6' },
     { label: '7', value: '7' },
-  ]
+  ];
+
+  const damagedAreasList = [
+    { label: appLocale == 'ar' ? "المقدمة" : "Front", value: 'front' },
+    { label: appLocale == 'ar' ? "المؤخرة" : "Back", value: 'back' },
+    { label: appLocale == 'ar' ? "الجانب الايمن" : "Right", value: 'right' },
+    { label: appLocale == 'ar' ? "الجانب الايسر" : "Left", value: 'left' },
+    { label: appLocale == 'ar' ? "الجانب الامامي الايمن" : "Front right", value: 'front_right' },
+    { label: appLocale == 'ar' ? "الجانب الامامي الايسر" : "Front left", value: 'front_left' },
+    { label: appLocale == 'ar' ? "الجانب الخلفي الايمن" : "Back right", value: 'back_right' },
+    { label: appLocale == 'ar' ? "الجانب الخلفي الايسر" : "Back left", value: 'back_left' },
+  ];
+
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [formData, setFormData] = useState({});
   const [imageUri, setImageUri] = useState(null);
 
-  const options = [
-    'المقدمة',
-    'المؤخرة  ',
-    'الجانب الايمن ',
-    'الجانب الايسر ',
-    ' الجانب الامامي الايمن',
-    ' الجانب الامامي الايسر',
-   ' الجانب الخلفي الايمن',
-   ' الجانب الخلفي الايسر',
-  ];
 
   const handlePress = (option) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -169,7 +170,7 @@ function AccidentInformation({ navigation }) {
             style={styles.textArea}
             onChangeText={(text) => handleInputChange('accidentDetails', text)}
             value={formData.accidentDetails}
-            // placeholder={descriptionPlaceholder}
+            placeholder={descriptionPlaceholder}
             multiline={true}
             numberOfLines={4}
           />
@@ -177,24 +178,28 @@ function AccidentInformation({ navigation }) {
     
         <View style={styles.formGroup}>
           <Text style={styles.label}>اختر مكان الصدمة</Text>
-          <View style={styles.buttonsContainer}>
-            {options.map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.optionButton,
-                  selectedOptions.includes(option) && styles.selectedOptionButton, // Apply the selected style conditionally
-                ]}
-                onPress={() => handlePress(option)}
-              >
-                <Text style={[
-                  styles.buttonText2,
-                  selectedOptions.includes(option) && styles.selectedButtonText, // Apply the selected text style conditionally
-                ]}>
-                  {option}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          <View>
+            <FlatList
+              data={damagedAreasList}
+              numColumns={3} // Render 3 columns per row
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.optionButton,
+                    selectedOptions.includes(item.value) && styles.selectedOptionButton, // Apply the selected style conditionally
+                  ]}
+                  onPress={() => handlePress(item.value)}
+                >
+                  <Text style={[
+                    styles.buttonText2,
+                    selectedOptions.includes(item.value) && styles.selectedButtonText, // Apply the selected text style conditionally
+                  ]}>
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.value.toString()} // Ensure each key is unique
+            />
           </View>
         </View>
 
@@ -298,12 +303,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5, // Add some vertical spacing
     borderRadius: 5, // Slightly rounded corners
-    backgroundColor: '#f9f9f9', // Light grey background
-    color: '#dcdcdc', // Text color
     fontSize: 16,
-    fontFamily: 'Cairo-Regular', // Replace with the font you are using
     textAlignVertical: 'top', // Start the text from the top on Android
-    textAlign: 'right',
     height: 100, // Set a fixed height or make it dynamic as per your needs
   },
   header: {
@@ -391,7 +392,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9', // Light grey background
     color: '#dcdcdc', // Text color
     fontSize: 16,
-    fontFamily: 'Cairo-Regular', // Replace with the font you are using
     textAlign: 'center',
     height: 100, // Set a fixed height or make it dynamic as per your needs
     justifyContent: 'center',
