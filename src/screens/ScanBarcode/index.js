@@ -52,10 +52,10 @@ const ScanBarcode = ({navigation}) => {
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <SText text= 'Requesting-for-camera-permission' classes="text-black py-10 font-bold text-lg text-center mt-8"/>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <SText text='no-access-cam' classes="text-black py-10 font-bold text-lg text-center mt-20"/>;
   }
 
   return (

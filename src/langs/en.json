@@ -42,6 +42,8 @@
     "make": "Make",
     "model": "Model",
     "year": "Year",
-    "plate-type": "Plate type"
+    "plate-type": "Plate type",
+    "no-access-cam":"No access to camera",
+    "Requesting-for-camera-permission":"Requesting for camera permission"
 
 }
