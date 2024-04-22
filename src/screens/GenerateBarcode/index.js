@@ -37,7 +37,7 @@ const GenerateBarcode = ({navigation}) => {
                     .then(function (response) {
                         if (response.data == 1) {
                             console.log(qrCodeId)
-                            navigation.navigate('Home');
+                            navigation.navigate('AccidentPersonalInfo');
                         }
                     })
                     .catch(function (error) {

@@ -37,6 +37,11 @@
     "has-insurance": "Do you have insurance?",
     "gender": "Gender",
     "done": "Done",
-    "next": "Next"
+    "next": "Next",
+    "vehicle-information": "Vehicle Information",
+    "make": "Make",
+    "model": "Model",
+    "year": "Year",
+    "plate-type": "Plate type"
 
 }

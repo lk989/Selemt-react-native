@@ -3,25 +3,51 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Status
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import RNPickerSelect from 'react-native-picker-select';
 import Layout from "../../components/Layout";
+import SText from '../../components/SText';
+import { getLocales } from 'expo-localization';
 
 
 
+function CarInformation({ route, navigation }) {
+  const prevFormData = route.params.formData;
 
-function carInformation({ navigation }) {
+  let appLocale = getLocales()[0].languageCode;
+  let selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
+  let makePlaceholder = appLocale == 'ar' ? 'تويوتا' : 'Toyota';
+  let modelPlaceholder = appLocale == 'ar' ? 'كامري' : 'Camry';
+  let [disabledVehicle, setDisabledVehicle] = useState(true);
+
+  let plateTypeList = [
+    { label: appLocale == 'ar' ? "سيارة خاصة" : "Private car", value: "private_car" },
+    { label: appLocale == 'ar' ? "سيارة عمومية (النقل الخاص)" : "Public transport", value: "public_transport" },
+    { label: appLocale == 'ar' ? "سيارة تجارية" : "Commercial vehicle", value: "commercial_vehicle" },
+    { label: appLocale == 'ar' ? "سيارة دبلوماسية" : "Embassy vehicle", value: "embassy_vehicle" },
+  ];
+
      //عشان يجيكم
   const [formData, setFormData] = useState({
-    companyCar: '',
-    modeal: '',
+    ...{prevFormData},
+    make: '',
+    model: '',
     year: '',
     plateType: '',
-
   });
 
   const handleInputChange = (name, value) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    // setFormData(prevFormData => ({
+    //   ...prevFormData,
+    //   [name]: value
+    // }));
+    let updatedFormData = { ...formData };
+    updatedFormData[name] = value;
+    const allInputsFilled = Object.values(updatedFormData).every(val => {
+      if (typeof val === 'string') {
+        return val.trim() !== '';
+      }
+      return true; // Non-string values are considered filled
+    });
+    setFormData(updatedFormData);
+    setDisabledVehicle(!allInputsFilled);
   };
 
 
@@ -30,115 +56,92 @@ function carInformation({ navigation }) {
   };
 
   return (
-    <>
-
-      <Layout>
+    <Layout>
 
       <ScrollView style={styles.container}>
 
-      <View style={styles.sectionContainer}>
-      <Text style={styles.sectionTitle}>بيانات المركبة</Text>
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>شركة التصنيع</Text>
-          <RNPickerSelect
-              onValueChange={(value) => handleInputChange('companyCar', value)}
-              items={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-              ]}
-              style={pickerSelectStyles}
-              placeholder={{ label: "أختر", value: null }}
+        <View style={styles.sectionContainer}>
+          <SText text='vehicle-information' classes="text-green text-lg font-bold p-4"/>
+            
+            <View style={styles.formGroup}>
+            <SText text='make' classes="font-semibold mb-2"/>
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) => handleInputChange("make", value)}
+              value={formData.make}
+              placeholder={makePlaceholder}
             />
-        </View>
+          </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>الموديل </Text>
-          <RNPickerSelect
-              onValueChange={(value) => handleInputChange('modeal', value)}
-              items={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-              ]}
-              style={pickerSelectStyles}
-              placeholder={{ label: "أختر", value: null }}
+            <View style={styles.formGroup}>
+            <SText text='model' classes="font-semibold mb-2"/>
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) => handleInputChange("model", value)}
+              value={formData.model}
+              placeholder={modelPlaceholder}
             />
-        </View>
+          </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>السنة  </Text>
-          <RNPickerSelect
-              onValueChange={(value) => handleInputChange('year', value)}
-              items={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-              ]}
-              style={pickerSelectStyles}
-              placeholder={{ label: "أختر", value: null }}
+            <View style={styles.formGroup}>
+            <SText text='year' classes="font-semibold mb-2"/>
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) => handleInputChange("year", value)}
+              value={formData.year}
+              placeholder='2024'
+              keyboardType="numeric"
+              maxLength={4}
             />
-          
+            
+          </View>
+
+            <View style={styles.formGroup}>
+            <SText text='plate-type' classes="font-semibold mb-2"/>
+            <RNPickerSelect
+                onValueChange={(value) => handleInputChange('plateType', value)}
+                items={plateTypeList}
+                style={pickerSelectStyles}
+                placeholder={selectPlaceholder}
+              />
+          </View>
+          <TouchableOpacity onPress={handleSubmit} className={`${disabledVehicle ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} disabled={disabledVehicle}>
+            <SText text='next' classes="text-white text-center font-semibold"/>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>نوع اللوحة</Text>
-          <RNPickerSelect
-              onValueChange={(value) => handleInputChange('plateType', value)}
-              items={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-              ]}
-              style={pickerSelectStyles}
-              placeholder={{ label: "أختر", value: null }}
-            />
-        </View>
-
-        
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>التالي</Text>
-        </TouchableOpacity>
    
       </ScrollView>
-      </Layout>
-      
-
-    </>
+    </Layout>
   );
 };
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
       fontSize: 16,
-      height:15,
-      paddingVertical: 12,
+      height: 15,
+      paddingVertical: 18,
       paddingHorizontal: 10,
       borderWidth: 1,
-      borderColor: '#dcdcdc',
+      borderColor: "#dcdcdc",
       borderRadius: 4,
-      color: 'black',
+      color: "black",
       paddingRight: 30, // to ensure the text is never behind the icon
-      backgroundColor: 'white', // match background color
-      textAlign: 'right', // if you want the text aligned to the right
     },
     inputAndroid: {
       fontSize: 16,
       paddingHorizontal: 10,
       paddingVertical: 8,
       borderWidth: 1,
-      borderColor: '#dcdcdc',
+      borderColor: "#dcdcdc",
       borderRadius: 4,
-      color: 'black',
+      color: "black",
       paddingRight: 30, // to ensure the text is never behind the icon
-      backgroundColor: 'white', // match background color
-      textAlign: 'right', // if you want the text aligned to the right
+      textAlign: "right", // if you want the text aligned to the right
     },
-   
+  
     placeholder: {
-      color: '#9EA0A4', // Placeholder text color
+      color: "#9EA0A4", // Placeholder text color
     },
   
     iconContainer: {
@@ -179,13 +182,13 @@ const styles = StyleSheet.create({
     padding: 10,       
   },
   input: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: "#DDD",
     borderRadius: 4,
-    padding: 16,
+    padding: 8,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   button: {
     backgroundColor: '#016E46',
@@ -211,11 +214,11 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   sectionContainer: {
-    backgroundColor: '#FFFFFF',// Choose a suitable background color
-    borderRadius: 4,
-    margin: 16,
-    padding: 16,
-    shadowColor: '#000', // These shadow properties are for iOS
+    backgroundColor: "#FFFFFF", // Choose a suitable background color
+    borderRadius: 8,
+    margin: 'auto',
+    padding: 2,
+    shadowColor: "#000", // These shadow properties are for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -237,4 +240,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default carInformation;
+export default CarInformation;

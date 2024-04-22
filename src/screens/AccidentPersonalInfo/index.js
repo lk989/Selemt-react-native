@@ -35,9 +35,21 @@ function AccidentPersonalInfo({ navigation }) {
   let maximumDate = new Date();
   maximumDate.setFullYear(maximumDate.getFullYear() - 12);
 
+  const dateToString = (date) => {
+    let day = String(date.getDate()).padStart(2, '0'); 
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  const stringToDate = (stringDate) => {
+    const [day, month, year] = stringDate.split('/').map(Number);
+    return new Date(year, month - 1, day); 
+  };
+
   const [formData, setFormData] = useState({
     name: "",
-    dateOfBirth: new Date(),
+    dateOfBirth: dateToString(new Date()),
     phoneNumber: "",
     gender: "",
     drivingLicenceType: "",
@@ -64,13 +76,14 @@ function AccidentPersonalInfo({ navigation }) {
   };
 
   const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || formData.dateOfBirth;
+    // const currentDate = selectedDate || formData.dateOfBirth;
     setShowDatePicker(Platform.OS === "ios");
-    handleInputChange("dateOfBirth", currentDate);
+    handleInputChange("dateOfBirth", dateToString(selectedDate));
   };
 
   const handleSubmit = () => {
     console.log(formData);
+    navigation.navigate('CarInformation', {formData: formData})
   };
   
 
@@ -92,14 +105,14 @@ function AccidentPersonalInfo({ navigation }) {
           <SText text='birthday' classes="font-semibold mb-2"/>
           <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
             <Text style={styles.textInput}>
-              {formData.dateOfBirth.toLocaleDateString('en-US')}
+              {formData.dateOfBirth}
             </Text>
           </TouchableOpacity>
 
           {showDatePicker && (
             <View>
               <DateTimePicker
-                value={formData.dateOfBirth}
+                value={stringToDate(formData.dateOfBirth)}
                 mode="date"
                 display="spinner"
                 onChange={handleDateChange}
