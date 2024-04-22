@@ -20,6 +20,7 @@ import AccidentPersonalInfo from './src/screens/AccidentPersonalInfo';
 import ReportsSection from './src/screens/ReportsSection';
 import ReportDetails from './src/screens/ReportDetails';
 import CarInformation from './src/screens/CarInformation';
+import AccidentInformation from './src/screens/AccidentInformation';
 
 // import CustomDrawerContent from './src/components/CustomDrawerContent';
 
@@ -30,7 +31,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="AccidentPersonalInfo" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="AccidentInformation" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
@@ -41,6 +42,7 @@ function App() {
         <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
         <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
         <Stack.Screen name="CarInformation" component={CarInformation} />
+        <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
     </NavigationContainer>

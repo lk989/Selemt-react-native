@@ -5,7 +5,7 @@ const Layout = ({ navigation, children }) => {
     return ( 
         <View>
             <Header navigation={navigation}/>
-            <ScrollView className="p-4 gap-8"  contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
+            <ScrollView className="p-4 gap-8" keyboardShouldPersistTaps='handled'>
                 { children }
             </ScrollView>
         </View>

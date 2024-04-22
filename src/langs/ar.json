@@ -44,6 +44,12 @@
     "year": "سنة الصنع",
     "plate-type": "نوع لوحة السيارة",
     "no-access-cam":"لا يمكن الوصول إلى الكاميرا",
-    "Requesting-for-camera-permission":"طلب اذن الوصول الى الكاميرا"
+    "Requesting-for-camera-permission":"طلب اذن الوصول الى الكاميرا",
+    "accident-information": "تفاصيل الحادث",
+    "street-type": "نوع الشارع",
+    "direction": "اتجاه السير",
+    "lines-number": "عدد مسارات الشارع",
+    "movement-before": "حركة السيارة قبل الحادث",
+    "accident-description": "وصف الحادث"
 
 }

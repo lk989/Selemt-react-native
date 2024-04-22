@@ -52,7 +52,7 @@ function CarInformation({ route, navigation }) {
 
 
   const handleSubmit = () => {
-    console.log(formData);
+    navigation.navigate('AccidentInformation', {formData: formData})
   };
 
   return (

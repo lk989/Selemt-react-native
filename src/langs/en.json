@@ -44,6 +44,12 @@
     "year": "Year",
     "plate-type": "Plate type",
     "no-access-cam":"No access to camera",
-    "Requesting-for-camera-permission":"Requesting for camera permission"
+    "Requesting-for-camera-permission":"Requesting for camera permission",
+    "accident-information": "Accident details",
+    "direction": "Direction",
+    "street-type": "Street type",
+    "lines-number": "Number of lines",
+    "movement-before": "Movement before crash",
+    "accident-description": "Accident description"
 
 }
