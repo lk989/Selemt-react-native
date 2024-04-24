@@ -21,36 +21,21 @@ const ScanBarcode = ({navigation}) => {
     getCameraPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
-      setScanned(true);
-      axios.post(`${BASE_URL}validate-qr-code`, {data: data})
+  const handleBarCodeScanned = async({ type, data }) => {
+    setScanned(true);
+    const userLocation = await AsyncStorage.getItem('userLocation');
+      axios.post(`${BASE_URL}validate-qr-code`, {data: data, userLocation: userLocation})
           .then(function (response) {
-              if (response.data == 1) {
-                navigation.navigate('Home');
+            if (response.data != 0) {
+                navigation.navigate('AccidentPersonalInfo', {accident_id: response.data, party: '2'});
               }
               else {
-                  alert(`${data}`);
+                  alert('Invalid QR code !');
               }
         })
         .catch(function (error) {
             console.error("Error fetching QR code:", error.response.data.message);
         });
-      
-    // Check if `data` is a URL. This is a basic check; adjust according to your needs.
-    // const isValidUrl = (url) => {
-    //   let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    //     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    //     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    //     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    //     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    //     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    //   return !!pattern.test(url);
-    // };
-  
-    // if (isValidUrl(data)) {
-    //   Linking.openURL(data).catch(err => console.error('An error occurred', err));
-    // } else {
-    // }
   };
 
   if (hasPermission === null) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CurrLocation = () => {
   const [location, setLocation] = useState(null);
@@ -9,7 +10,6 @@ const CurrLocation = () => {
       city: null,
       district: null,
       country: null,
-      region: null,
       streetNumber: null
   });
 
@@ -17,8 +17,12 @@ const CurrLocation = () => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
+        Alert.alert(
+          'Location Not Available',
+          'Please enable location access to use this feature.',
+          [{ text: 'OK' }],
+          { cancelable: false }
+        );
       }
 
       try {
@@ -44,11 +48,16 @@ const CurrLocation = () => {
             const { city, region, country, district, streetNumber } = reverseGeocode[0];
             setUserLocation({
               city: city,
-              region: region,
               country: country,
               district: district,
               streetNumber: streetNumber
             });
+            await AsyncStorage.setItem('userLocation', JSON.stringify({
+              city: city,
+              country: country,
+              district: district,
+              streetNumber: streetNumber
+            }));
           }
         } catch (error) {
           console.error('Error fetching user location:', error);

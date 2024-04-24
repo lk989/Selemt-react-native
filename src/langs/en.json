@@ -53,7 +53,8 @@
     "accident-description": "Accident description",
     "choose-damaged-areas": "Choose damaged areas in the vehicle",
     "choose-more-than-one": "You can choose more than one",
-    "vehicle-image": "Vehicle images after accident"
+    "vehicle-image": "Vehicle images after accident",
+    "tap-to-retake": "Tap the picture to change it"
     
 
 }

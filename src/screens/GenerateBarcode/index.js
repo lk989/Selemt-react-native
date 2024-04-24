@@ -35,16 +35,15 @@ const GenerateBarcode = ({navigation}) => {
             if (currentQrCodeId) {
                 axios.post(`${BASE_URL}check-scanned-qr-code`, {barcode_id: currentQrCodeId})
                     .then(function (response) {
-                        if (response.data == 1) {
-                            console.log(qrCodeId)
-                            navigation.navigate('AccidentPersonalInfo');
+                        if (response.data != 0) {
+                            navigation.navigate('AccidentPersonalInfo', {accident_id: response.data, party: '1'});
                         }
                     })
                     .catch(function (error) {
                         console.error("Error checking boolean data:", error.response.data.message);
                     });
             }
-        }, 3000); 
+        }, 5000); 
         return () => clearInterval(interval);
     }, []);
 

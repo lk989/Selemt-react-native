@@ -26,7 +26,7 @@ function CarInformation({ route, navigation }) {
 
      //عشان يجيكم
   const [formData, setFormData] = useState({
-    ...{prevFormData},
+    ...prevFormData,
     make: '',
     model: '',
     year: '',

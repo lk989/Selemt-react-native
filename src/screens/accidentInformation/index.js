@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  StyleSheet, View, Text, TextInput, TouchableOpacity,
-  ScrollView, StatusBar, Image, FlatList,
-  Modal
+  StyleSheet, View, Text, TextInput, TouchableOpacity, Image, FlatList, Modal
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import RNPickerSelect from 'react-native-picker-select';
@@ -11,66 +9,35 @@ import SText from '../../components/SText';
 import { getLocales } from 'expo-localization';
 import axios from 'axios';
 import { BASE_URL } from '../../config/config';
-// import { launchImageLibrary } from 'react-native-image-picker';
 import { CameraView, Camera } from "expo-camera/next";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function AccidentInformation({ route, navigation }) {
   let appLocale = getLocales()[0].languageCode;
+  let prevFormData = route.params.formData;
+
+  const cameraRef = useRef(null);
+  
   const [directionList, setDirectionList] = useState([]);
   const [streetTypeList, setStreetTypeList] = useState([]);
   const [movementList, setMovementList] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [disabledAccident, setDisabledAccident] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const cameraRef = useRef(null);
-
-  useEffect(() => {
-    const checkPermission = async () => {
-      const permissionStatus = await AsyncStorage.getItem('cameraPermission');
-      setHasPermission(permissionStatus === 'granted');
-    };
-    checkPermission();
-  }, []);
-
-  const launchCamera = async () => {
-    if (hasPermission) {
-      // Launch camera logic
-      setShowCamera(true);
-    } else {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      if (status === 'granted') {
-        setHasPermission(status === "granted");
-        await AsyncStorage.setItem('cameraPermission', status);
-        launchCamera();
-      }
-    }
-  };
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}accident-options`)
-      .then(response => {
-        const directionOptions = response.data.directions.map(option => ({
-          label: appLocale === 'ar' ? option.name_ar : option.name_en,
-          value: option.id,
-        }));
-        setDirectionList(directionOptions);
-
-        const streetTypeOptions = response.data.street_types.map(option => ({
-          label: appLocale === 'ar' ? option.name_ar : option.name_en,
-          value: option.id,
-        }));
-        setStreetTypeList(streetTypeOptions);
-
-        const movementOptions = response.data.movements.map(option => ({
-          label: appLocale === 'ar' ? option.name_ar : option.name_en,
-          value: option.id,
-        }));
-        setMovementList(movementOptions);
-      })
-      .catch(error => console.error('Error fetching options:', error));
-    }, []); 
+  const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState({
+    ...prevFormData.prevFormData,
+    ...prevFormData,
+    direction: '',
+    streetType: '',
+    numberOfLines: '',
+    movement: '',
+    description: '',
+    damagedAreas: [],
+    image: null
+  });
 
   const selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
   const descriptionPlaceholder = appLocale == 'ar' ? "اكتب وصف الحادث هنا ..." : "Descripe the accident here ...";
@@ -96,18 +63,51 @@ function AccidentInformation({ route, navigation }) {
     { label: appLocale == 'ar' ? "الجانب الخلفي الايسر" : "Back left", value: 'back_left' },
   ];
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [formData, setFormData] = useState({
-    // ...{prevFormData},
-    direction: '',
-    streetType: '',
-    numberOfLines: '',
-    movement: '',
-    description: '',
-    damagedAreas: [],
-  });
-  const [imageUri, setImageUri] = useState(null);
+  useEffect(() => {
+    const checkPermission = async () => {
+      const permissionStatus = await AsyncStorage.getItem('cameraPermission');
+      setHasPermission(permissionStatus === 'granted');
+    };
+    checkPermission();
+  }, []);
 
+  useEffect(() => {
+    axios.get(`${BASE_URL}accident-options`)
+      .then(response => {
+        const directionOptions = response.data.directions.map(option => ({
+          label: appLocale === 'ar' ? option.name_ar : option.name_en,
+          value: option.id,
+        }));
+        setDirectionList(directionOptions);
+
+        const streetTypeOptions = response.data.street_types.map(option => ({
+          label: appLocale === 'ar' ? option.name_ar : option.name_en,
+          value: option.id,
+        }));
+        setStreetTypeList(streetTypeOptions);
+
+        const movementOptions = response.data.movements.map(option => ({
+          label: appLocale === 'ar' ? option.name_ar : option.name_en,
+          value: option.id,
+        }));
+        setMovementList(movementOptions);
+      })
+      .catch(error => console.error('Error fetching options:', error));
+  }, []); 
+  
+  const launchCamera = async () => {
+    if (hasPermission) {
+      // Launch camera logic
+      setShowCamera(true);
+    } else {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status === 'granted') {
+        setHasPermission(status === "granted");
+        await AsyncStorage.setItem('cameraPermission', status);
+        launchCamera();
+      }
+    }
+  };
 
   const handlePress = (option) => {
     let updatedOptions = [...selectedOptions];
@@ -126,20 +126,18 @@ function AccidentInformation({ route, navigation }) {
     updatedFormData[name] = value;
     const allInputsFilled = Object.values(updatedFormData).every(val => {
       if (typeof val === 'string') {
-        return val.trim() !== '';
+            return val.trim() !== '';
       }
-      return value.length != 0;
+      if (Array.isArray(val)) {
+          return val.length !== 0;
+      }
+      if (val === null) {
+          return false;
+      }
+      return true;
     });
     setFormData(updatedFormData);
     setDisabledAccident(!allInputsFilled);
-  };
-
-  const handleSubmit = () => {
-    console.log(formData);
-  };
-
-  const handleChoosePhoto = () => {
-    setShowCamera(true);
   };
 
   const handleTakePicture = async () => {
@@ -147,28 +145,15 @@ function AccidentInformation({ route, navigation }) {
       const photo = await cameraRef.current.takePictureAsync();
       setImageUri(photo.uri);
       setShowCamera(false);
+      handleInputChange('image', photo.uri)
     }
   };
 
-  // const handleChoosePhoto = () => {
-  //   const options = {
-  //     mediaType: 'photo',
-  //     quality: 1,
-  //   };
-  
-  //   // launchImageLibrary(options)
-  //   //   .then(response => {
-  //   //     if (response.assets && response.assets.length > 0) {
-  //   //       const source = { uri: response.assets[0].uri };
-  //   //       setImageUri(source.uri);
-  //   //     }
-  //   //   })
-  //   //   .catch(error => {
-  //   //     console.log('Error picking the image: ', error);
-  //   //   });
-      
-  // };
-  
+  const handleSubmit = () => {
+    console.log(formData);
+
+  };
+
   return (
     <Layout>
       <View style={styles.sectionContainer}>
@@ -232,8 +217,8 @@ function AccidentInformation({ route, navigation }) {
         </View>
     
         <View style={styles.formGroup}>
-          <SText text='choose-damaged-areas' classes="font-semibold mb-2"/>
-          <SText text='choose-more-than-one' classes="text-xs text-light-green mb-2"/>
+          <SText text='choose-damaged-areas' classes="font-semibold mb-1"/>
+          <SText text='choose-more-than-one' classes="text-xs text-light-green mb-1"/>
           <View>
             <FlatList
               data={damagedAreasList}
@@ -261,7 +246,8 @@ function AccidentInformation({ route, navigation }) {
 
         {/* Photo Upload */}
         <View style={styles.formGroup}>
-          <SText text='vehicle-image' classes="font-semibold mb-2"/>
+          <SText text='vehicle-image' classes="font-semibold mb-1" />
+          {imageUri && (<SText text='tap-to-retake' classes="text-xs text-light-green mb-1"/>)}
           <TouchableOpacity onPress={launchCamera} style={styles.uploadBox}>
             {imageUri ? (
               <Image source={{ uri: imageUri }} style={styles.imagePreview} />
@@ -294,8 +280,11 @@ function AccidentInformation({ route, navigation }) {
             </TouchableOpacity>
           </View>
           <View style={{ position: 'absolute', bottom: 20, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 20 }}>
-            <TouchableOpacity onPress={handleTakePicture} style={styles.cameraButton}>
-              <Text style={styles.cameraButtonText}>Take Picture</Text>
+            <TouchableOpacity onPress={handleTakePicture}>
+              <TouchableOpacity onPress={handleTakePicture} className="border-4 border-light-gray rounded-full w-20 h-20">
+                <View className="bg-light-gray w-16 h-16 rounded-full my-auto mx-auto">
+                </View>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
         </View>
@@ -469,7 +458,7 @@ const styles = StyleSheet.create({
     color: '#dcdcdc', // Text color
     fontSize: 16,
     textAlign: 'center',
-    height: 100, // Set a fixed height or make it dynamic as per your needs
+    height: 350, // Set a fixed height or make it dynamic as per your needs
     justifyContent: 'center',
   },
   imagePreview: {

@@ -14,7 +14,7 @@ import SText from "../../components/SText";
 import {validPhone, extractCleanPhone} from '../../utils/utils';
 import { getLocales } from 'expo-localization';
 
-function AccidentPersonalInfo({ navigation }) {
+function AccidentPersonalInfo({ route, navigation }) {
   let appLocale = getLocales()[0].languageCode;
   let namePlaceholder = appLocale == 'ar' ? 'محمد أحمد الغامدي' : 'Mohammed Ahmad Alghamdi';
   let selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
@@ -48,6 +48,8 @@ function AccidentPersonalInfo({ navigation }) {
   };
 
   const [formData, setFormData] = useState({
+    accident_id: route.params.accident_id,
+    party: route.params.party,
     name: "",
     dateOfBirth: dateToString(new Date()),
     phoneNumber: "",
