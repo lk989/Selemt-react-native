@@ -50,6 +50,10 @@
     "street-type": "Street type",
     "lines-number": "Number of lines",
     "movement-before": "Movement before crash",
-    "accident-description": "Accident description"
+    "accident-description": "Accident description",
+    "choose-damaged-areas": "Choose damaged areas in the vehicle",
+    "choose-more-than-one": "You can choose more than one",
+    "vehicle-image": "Vehicle images after accident"
+    
 
 }

@@ -50,6 +50,9 @@
     "direction": "اتجاه السير",
     "lines-number": "عدد مسارات الشارع",
     "movement-before": "حركة السيارة قبل الحادث",
-    "accident-description": "وصف الحادث"
+    "accident-description": "وصف الحادث",
+    "choose-damaged-areas": "اختر مكان الضرر في المركبة",
+    "choose-more-than-one": "يمكنك اختيار أكثر من مكان",
+    "vehicle-image": "صور المركبة بعد الحادث"
 
 }

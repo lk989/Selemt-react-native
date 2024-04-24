@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import SText from "../../components/SText";
 import axios from "axios";
 import { BASE_URL } from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ScanBarcode = ({navigation}) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,6 +15,7 @@ const ScanBarcode = ({navigation}) => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
+      await AsyncStorage.setItem('cameraPermission', status);
     };
 
     getCameraPermissions();
