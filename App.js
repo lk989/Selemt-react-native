@@ -19,7 +19,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AccidentPersonalInfo from './src/screens/AccidentPersonalInfo';
 import ReportsSection from './src/screens/ReportsSection';
 import ReportDetails from './src/screens/ReportDetails';
-import CarInformation from './src/screens/CarInformation';
+import carInformation from './src/screens/carInformation';
 import AccidentInformation from './src/screens/AccidentInformation';
 
 // import CustomDrawerContent from './src/components/CustomDrawerContent';
@@ -41,7 +41,7 @@ function App() {
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
         <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
-        <Stack.Screen name="CarInformation" component={CarInformation} />
+        <Stack.Screen name="CarInformation" component={carInformation} />
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
