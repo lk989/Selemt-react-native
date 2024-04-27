@@ -9,12 +9,16 @@ import CurrLocation from '../../components/CurrLocation'
 import React, { useState, useEffect } from 'react';
 import PlusButton from "../../components/PlusButton";
 import * as Location from 'expo-location';
+import { ImportsNotUsedAsValues } from "typescript";
+import PushNotification from "../../components/PushNotification";
+
 
 
 function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
     return (
       <Layout navigation={navigation}>
+        <PushNotification/>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-2 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
