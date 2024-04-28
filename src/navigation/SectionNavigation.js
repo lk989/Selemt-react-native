@@ -11,8 +11,9 @@ const SectionNavigation = ({ route, navigation }) => {
     let initialRouteName = route.params.initialName;
     const reportsLabel = appLocale == 'ar' ? "البلاغات" : "Reports";
     const objectionsLabel = appLocale == 'ar' ? "الاعتراضات" : "Objections";
+    const showPlus = true;
     return (
-        <Layout navigation={navigation}>
+        <Layout navigation={navigation} showPlus={showPlus}>
             <Tab.Navigator
             tabBarOptions={{
                 activeTintColor: '#016E46', 

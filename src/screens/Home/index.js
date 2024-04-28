@@ -18,8 +18,9 @@ import { getLocales } from 'expo-localization';
 function Home({ navigation }) {
   let appLocale = getLocales()[0].languageCode;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const showPlus = true;
     return (
-      <Layout navigation={navigation}>
+      <Layout navigation={navigation} showPlus={showPlus}>
         <PushNotification/>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-2 py-1">
@@ -97,7 +98,6 @@ function Home({ navigation }) {
                 </View>
               </View>
             </View>
-          <PlusButton navigation={navigation}/>
           </View>
       </Layout>
     );
