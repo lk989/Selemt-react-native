@@ -6,8 +6,9 @@ import { getLocales } from 'expo-localization';
 
 const Tab = createMaterialTopTabNavigator();
 
-const SectionNavigation = ({navigation}) => {
+const SectionNavigation = ({ route, navigation }) => {
     let appLocale = getLocales()[0].languageCode;
+    let initialRouteName = route.params.initialName;
     const reportsLabel = appLocale == 'ar' ? "البلاغات" : "Reports";
     const objectionsLabel = appLocale == 'ar' ? "الاعتراضات" : "Objections";
     return (
@@ -27,7 +28,8 @@ const SectionNavigation = ({navigation}) => {
                   backgroundColor: '#016E46', 
                   marginHorizontal: 5
                 },
-              }}>
+              }}
+              initialRouteName={initialRouteName}>
                 <Tab.Screen name={reportsLabel} component={ReportsSection} />
                 <Tab.Screen name={objectionsLabel} component={ObjectionsSection} />
             </Tab.Navigator>

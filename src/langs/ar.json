@@ -56,8 +56,13 @@
     "vehicle-image": "صور المركبة بعد الحادث",
     "tap-to-retake": "اضغط على الصورةة لتغييرها",
     "go-reports": "اذهب إلى قسم البلاغات",
+    "go-objections": "اذهب إلى قسم الاعتراضات",
     "go-home": "العودة إلى الصفحة الرئيسية",
     "code": "الرمز",
-    "view-report-details": "عرض تفاصيل البلاغ"
+    "view-report-details": "عرض تفاصيل البلاغ",
+    "view-objection-details": "عرض تفاصيل الاعتراض",
+    "submit": "تسليم",
+    "choose-report": "اختر البلاغ",
+    "reason-objection": "سبب الاعتراض"
 
 }

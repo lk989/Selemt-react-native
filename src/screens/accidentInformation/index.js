@@ -165,7 +165,6 @@ function AccidentInformation({ route, navigation }) {
   };
 
   const handleSubmit = () => {
-    console.log(formData);
       axios.post(`${BASE_URL}create-accident-statement`,formData, {
         headers: {
           Accept: "application/json",

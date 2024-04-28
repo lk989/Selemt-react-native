@@ -11,10 +11,12 @@ import PlusButton from "../../components/PlusButton";
 import * as Location from 'expo-location';
 import { ImportsNotUsedAsValues } from "typescript";
 import PushNotification from "../../components/PushNotification";
+import { getLocales } from 'expo-localization';
 
 
 
 function Home({ navigation }) {
+  let appLocale = getLocales()[0].languageCode;
   const [isModalVisible, setIsModalVisible] = useState(false);
     return (
       <Layout navigation={navigation}>
@@ -37,7 +39,7 @@ function Home({ navigation }) {
               </View>
             </View>
             <Text className="text-lg font-semibold">رقم الحادث</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')}
+            <TouchableOpacity onPress={() => navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "البلاغات" : "Reports"})}
               className="bg-light-green mx-6 rounded"
               underlayColor='#fff'>
               <SText text='view-report-det' classes="text-center py-2"/>
