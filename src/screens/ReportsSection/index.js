@@ -14,18 +14,10 @@ const SegmentedControl = ({ navigation }) => {
  
   const [reports, setReports] = useState([]);
 
-  const getCurrentTime = (date) => {
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-    const meridiem = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    const formattedMinute = minute < 10 ? `0${minute}` : minute;
-    return `${formattedHour}:${formattedMinute} ${meridiem}`;
-  };
-
   useEffect(() => {
     axios.get(`${BASE_URL}reports`, {
       params: {
+        // !! send a dynamic id here
         user_id: '2'
       }
     })
