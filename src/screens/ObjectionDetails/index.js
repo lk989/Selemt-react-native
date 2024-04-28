@@ -2,88 +2,98 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button } from "react-native";
 import SText from "../../components/SText";
 import Layout from "../../components/Layout";
-import RNPickerSelect from 'react-native-picker-select';
-import { Icon } from 'react-native-elements'
+import { getLocales } from 'expo-localization';
 
 
 function ObjectionDetails({ navigation }) {
+    let appLocale = getLocales()[0].languageCode;
+    const objection = route.params.objection;
 
-
-
-    const reportCodes = [
-        { label: "Code 1", value: "code1" },
-        { label: "Code 2", value: "code2" },
-        { label: "Code 3", value: "code3" },
-    ];
-
-    const getCurrentTime = () => {
-        const date = new Date();
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const meridiem = hour >= 12 ? 'PM' : 'AM';
-        const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-        const formattedMinute = minute < 10 ? `0${minute}` : minute;
-        return `${formattedHour}:${formattedMinute} ${meridiem}`;
+    const formatDate = (dateTimeString) => {
+      const date = new Date(dateTimeString);
+      return date.toDateString(); // Returns the date portion only
     };
-
+    const formatTime = (dateTimeString) => {
+      const date = new Date(dateTimeString);
+      return date.toLocaleTimeString(); // Returns the date portion only
+    };
+    console.log(objection.accident.party_two_name)
+  
     return (
-        <Layout>
-            <View className="bg-white rounded-2xl gap-6 pb-6">
-                <View className="flex-row">
-                    <View className="bg-light-green rounded-full">
-                        <Text className=" px-3 py-1 text-xs">قيد المعالجة</Text>
-                    </View>
-                </View>
-
-                <View >
-                    <Text className="text-lg font-semibold">0001# رمز الاعتراض</Text>
-                </View>
-                <View>
-                    <Text>وقت الاعتراض</Text>
-                    <Text>{getCurrentTime()}</Text>
-                </View>
-                <View>
-                    <Text>تاريخ الاعتراض</Text>
-                    <Text>{new Date().toLocaleDateString()}</Text>
-                </View>
-
-                <View>
-                    <Text >وصف الاعتراض</Text>
-                    <Text>وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ</Text>
-                </View>
-
-                <View>
-                    <Text >اسم الطرف الأول </Text>
-                    <Text> محمد احمد </Text>
-                </View>
-                <View>
-                    <Text >اسم الطرف الثاني </Text>
-                    <Text> محمد احمد </Text>
-                </View>
-                <View>
-                    <Text >نسبة خطأ الطرف الأول </Text>
-                    <Text> 50% </Text>
-                </View>
-                <View>
-                    <Text >نسبة خطأ الطرف الثاني </Text>
-                    <Text> 50% </Text>
-                </View>
-                <View>
-                    <Text >موقع الحادث </Text>
-                    <Text> الشوقية </Text>
-                </View>
-                <View>
-                    <Text >ملاحظات </Text>
-                    <Text> تم قبول </Text>
-                </View>
-
-
-
-
-
-
+      <Layout>
+        <View className="bg-white rounded-2xl space-y-6 p-6">
+          <View className="flex-row justify-between">
+            <View className="flex-row">
+              <SText text='objection-code' classes="text-green font-bold text-lg"/>
+              <Text className="text-green font-bold text-lg mx-2">#{objection.id}</Text>
             </View>
-        </Layout>
+            <View className="rounded-md flex-row items-center" style={{ backgroundColor: objection.status.color}}>
+              <Text className=" px-4 text-xs rounded-sm">{appLocale == 'ar' ? objection.status.name_ar : objection.status.name_en}</Text>
+            </View>
+          </View>
+  
+          <View className="flex-row justify-between">
+            <View className="flex-1 space-y-2">
+              <SText text='objection-time' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{formatTime(objection.created_at)}</Text>
+            </View>
+  
+            <View className="flex-1 space-y-2">
+              <SText text='objection-date' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{formatDate(objection.created_at)}</Text>
+            </View>
+          </View>
+
+          <View className="flex-row justify-between">
+            <View className="flex-1 space-y-2">
+              <SText text='party-one-name' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{objection.accident.party_one_name}</Text>
+            </View>
+  
+            <View className="flex-1 space-y-2">
+              <SText text='party-two-name' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{objection.accident.party_two_name}</Text>
+            </View>
+          </View>
+
+          <View className="flex-row justify-between">
+            <View className="flex-1 space-y-2">
+              <SText text='party-one-percentage' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">%{objection.accident.party_one_percentage}</Text>
+            </View>
+  
+            <View className="flex-1 space-y-2">
+              <SText text='party-two-percentage' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">%{objection.accident.party_two_percentage}</Text>
+            </View>
+          </View>
+  
+          <View>
+            <View className="flex-1 space-y-2">
+              <SText text='accident-location' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{objection.accident.location}</Text>
+            </View>
+          </View>
+
+          <View>
+            <View className="flex-1 space-y-2">
+              <SText text='Objection-reason' classes="font-semibold text-sm text-black"/>
+              <Text className="text-gray">{objection.reason}</Text>
+            </View>
+          </View>
+
+          <View>
+            <View className="flex-1 space-y-2">
+              <SText text='notes' classes="font-semibold text-sm text-black"/>
+              {objection.notes != null ? 
+                <Text className="text-gray">{objection.notes}</Text>
+                :
+                <SText text='no-data' classes="text-gray"/>
+                }
+            </View>
+          </View>
+        </View>
+      </Layout>
     );
 }
 

@@ -11,7 +11,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import GenerateBarcode from './src/screens/GenerateBarcode';
 import ScanBarcode from './src/screens/ScanBarcode';
-// import ObjectionDetails from './src/screens/ObjectionDetails';
+import ObjectionDetails from './src/screens/ObjectionDetails';
 import ObjectionsSection from './src/screens/ObjectionsSection';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -46,7 +46,7 @@ function App() {
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         <Stack.Screen name="SectionNavigation" component={SectionNavigation} />
         <Stack.Screen name="ReportDetails" component={ReportDetails} />
-        {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
+        <Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

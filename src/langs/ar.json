@@ -65,11 +65,20 @@
     "choose-report": "اختر البلاغ",
     "reason-objection": "سبب الاعتراض",
     "report-code": "رمز البلاغ",
+    "objection-code": "رمز الاعتراض",
     "report-time": "وقت البلاغ",
+    "objection-time": "وقت الاعتراض",
     "report-description": "وصف البلاغ",
     "fault-percentage": "نسبة الخطأ",
     "report-date": "تاريخ البلاغ",
+    "objection-date": "تاريخ الاعتراض",
     "not-evaluated": "لم يتم حساب النسبة بعد",
-    "no-data": "لاتوجد بيانات"
+    "no-data": "لاتوجد بيانات",
+    "party-one-name": "اسم الطرف الأول",
+    "party-two-name": "اسم الطرف الثاني",
+    "party-one-percentage": "نسبة خطأ الطرف الأول",
+    "party-two-percentage": "نسبة خطأ الطرف الثاني",
+    "accident-location": "موقع الحادث",
+    "notes": "ملاحظات"
 
 }
