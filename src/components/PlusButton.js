@@ -176,7 +176,7 @@ const PlusButton = ({navigation}) => {
                     <TouchableOpacity
                     className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
                     underlayColor='#fff'
-                    onPress={() => {setisConfirmationModalVisible(false)}}>
+                    onPress={() => {setisConfirmationModalVisible(false); navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "الاعتراضات" : "Objections"})}}>
                         <SText text='go-objections' classes="text-white py-2 font-bold text-center"/>
                     </TouchableOpacity>
                     <TouchableOpacity
