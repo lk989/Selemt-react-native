@@ -1,32 +1,31 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button, StyleSheet } from "react-native";
 import SText from "../../components/SText";
 import Layout from "../../components/Layout";
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon } from 'react-native-elements'
+import axios from "axios";
+import { BASE_URL } from "../../config/config";
+import { getLocales } from 'expo-localization';
 
 
-function ReportDetails({ navigation }) {
+function ReportDetails({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [selectedReportCode, setSelectedReportCode] = useState("");
   const [textInput, setTextInput] = useState("");
   const [imageUri, setImageUri] = useState(null);
+  let appLocale = getLocales()[0].languageCode;
+  const report = route.params.report;
+  const closedStatus = route.params.closedStatus;
 
-  const reportCodes = [
-    { label: "Code 1", value: "code1" },
-    { label: "Code 2", value: "code2" },
-    { label: "Code 3", value: "code3" },
-  ];
-
-  const getCurrentTime = () => {
-    const date = new Date();
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-    const meridiem = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-    const formattedMinute = minute < 10 ? `0${minute}` : minute;
-    return `${formattedHour}:${formattedMinute} ${meridiem}`;
+  const formatDate = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toDateString(); // Returns the date portion only
+  };
+  const formatTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString(); // Returns the date portion only
   };
 
   const handleRaiseObjection = () => {
@@ -65,51 +64,68 @@ function ReportDetails({ navigation }) {
 
   return (
     <Layout>
-      <View className="bg-white rounded-2xl gap-6 pb-6">
-        <View className="flex-row">
-          <View className="bg-light-green rounded-full">
-            <Text className=" px-3 py-1 text-xs">قيد المعالجة</Text>
+      <View className="bg-white rounded-2xl space-y-6 p-6">
+        <View className="flex-row justify-between">
+          <View className="flex-row">
+            <SText text='report-code' classes="text-green font-bold text-lg"/>
+            <Text className="text-green font-bold text-lg mx-2">#{report.id}</Text>
+          </View>
+          <View className="rounded-md flex-row items-center" style={{ backgroundColor: report.accident.status.color}}>
+            <Text className=" px-4 text-xs rounded-sm">{appLocale == 'ar' ? report.accident.status.name_ar : report.accident.status.name_en}</Text>
           </View>
         </View>
 
-        <View >
-        <Text className="text-lg font-semibold">0001# رمز البلاغ</Text>
-        </View>
+        <View className="flex-row justify-between">
+          <View className="flex-1 space-y-2">
+            <SText text='report-time' classes="font-semibold text-sm text-black"/>
+            <Text className="text-gray">{formatTime(report.created_at)}</Text>
+          </View>
 
-        {/* for "وقت البلاغ" and time */}
-        <View>
-          <Text>وقت البلاغ</Text>
-          <Text>{getCurrentTime()}</Text>
-        </View>
-
-        {/* for "تاريخ البلاغ" and date */}
-        <View>
-          <Text>تاريخ البلاغ</Text>
-          <Text>{new Date().toLocaleDateString()}</Text>
+          <View className="flex-1 space-y-2">
+            <SText text='report-date' classes="font-semibold text-sm text-black"/>
+            <Text className="text-gray">{formatDate(report.created_at)}</Text>
+          </View>
         </View>
 
         {/* for "تاريخ البلاغ" and date */}
         <View>
-          <Text >وصف البلاغ</Text>
-          <Text>وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ</Text>
+          <View className="flex-1 space-y-2">
+            <SText text='report-description' classes="font-semibold text-sm text-black"/>
+            <Text className="text-gray">{report.description}</Text>
+          </View>
         </View>
 
-        {/* تحميل تقرير الحادث */}
-        <TouchableOpacity className="bg-light-green mx-6 rounded" underlayColor="#fff">
-          <SText text="download-report" classes="text-center py-2" />
-        </TouchableOpacity>
-
-        {/* رفع اعتراض */}
-        <TouchableOpacity
-          onPress={handleRaiseObjection}
-          className="border border-green mx-6 mb-8 rounded"
-          underlayColor="#fff">
-          <SText text="Raise-objection" classes="text-center text-green py-2" />
-        </TouchableOpacity>
-
+        {closedStatus == report.accident.status_id ?
+          (<View className="space-y-8">
+            <View>
+              <View className="flex-1 space-y-2">
+                <SText text='fault-percentage' classes="font-semibold text-sm text-black"/>
+                <Text className="text-gray">%{report.party == '1' ? report.accident.party_one_percentage.fault_percentage : report.accident.party_two_percentage.fault_percentage}</Text>
+              </View>
+            </View>
+            <View className="spacy-y-4">
+              <TouchableOpacity className="bg-light-green rounded">
+                <SText text="download-report" classes="text-center py-3 font-semibold text-black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleRaiseObjection}
+                className="border border-green my-3 rounded">
+                <SText text="Raise-objection" classes="text-center text-green font-semibold py-3" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          )
+          :
+          (<View>
+            <View className="flex-1 space-y-2">
+              <SText text='fault-percentage' classes="font-semibold text-sm text-black"/>
+              <SText text='not-evaluated' classes="text-gray"/>
+            </View>
+          </View>)
+        }
 
         {/* Modal for inputting text */}
-        <Modal
+        {/* <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible}
@@ -121,7 +137,6 @@ function ReportDetails({ navigation }) {
                 <Text style={{ color: 'gray', fontSize: 18 }}>اغلاق</Text>
               </TouchableOpacity>
 
-              {/* Title */}
               <View className="items-center space-y-8">
                 <Text className="text-green font-bold text-xl pb-4">رفع اعتراض جديد</Text>
               </View>
@@ -154,7 +169,7 @@ function ReportDetails({ navigation }) {
               
             </View>
           </View>
-        </Modal>
+        </Modal> */}
 
         {/* Confirmation modal */}
         <Modal

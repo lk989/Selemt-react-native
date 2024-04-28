@@ -63,6 +63,13 @@
     "view-objection-details": "عرض تفاصيل الاعتراض",
     "submit": "تسليم",
     "choose-report": "اختر البلاغ",
-    "reason-objection": "سبب الاعتراض"
+    "reason-objection": "سبب الاعتراض",
+    "report-code": "رمز البلاغ",
+    "report-time": "وقت البلاغ",
+    "report-description": "وصف البلاغ",
+    "fault-percentage": "نسبة الخطأ",
+    "report-date": "تاريخ البلاغ",
+    "not-evaluated": "لم يتم حساب النسبة بعد",
+    "no-data": "لاتوجد بيانات"
 
 }

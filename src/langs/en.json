@@ -63,7 +63,14 @@
     "view-objection-details": "View objection details",
     "submit": "Submit",
     "choose-report": "Choose report",
-    "reason-objection": "Reason for objection"
+    "reason-objection": "Reason for objection",
+    "report-code": "Report code",
+    "report-time": "Report time",
+    "report-description": "Report description",
+    "fault-percentage": "Fault percentage",
+    "not-evaluated": "The percentage has not been evaluated yet",
+    "report-date": "Report date",
+    "no-data": "No data available"
     
 
 }

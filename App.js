@@ -45,6 +45,7 @@ function App() {
         <Stack.Screen name="CarInformation" component={carInformation} />
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         <Stack.Screen name="SectionNavigation" component={SectionNavigation} />
+        <Stack.Screen name="ReportDetails" component={ReportDetails} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
     </NavigationContainer>
