@@ -11,6 +11,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../config/config';
 import { CameraView, Camera } from "expo-camera/next";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 
 function AccidentInformation({ route, navigation }) {
@@ -26,7 +27,9 @@ function AccidentInformation({ route, navigation }) {
   const [disabledAccident, setDisabledAccident] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [isConfirmationModalVisible, setisConfirmationModalVisible] = useState(false);
   const [imageUri, setImageUri] = useState(null);
+  const [confirmationText, setConfirmationText] = useState('');
   const [formData, setFormData] = useState({
     ...prevFormData.prevFormData,
     ...prevFormData,
@@ -36,7 +39,7 @@ function AccidentInformation({ route, navigation }) {
     movement: '',
     description: '',
     damagedAreas: [],
-    image: null
+    // image: {}
   });
 
   const selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
@@ -62,6 +65,14 @@ function AccidentInformation({ route, navigation }) {
     { label: appLocale == 'ar' ? "الجانب الخلفي الايمن" : "Back right", value: 'back_right' },
     { label: appLocale == 'ar' ? "الجانب الخلفي الايسر" : "Back left", value: 'back_left' },
   ];
+
+  const successToast = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      topOffset: 70
+    });
+  }
 
   useEffect(() => {
     const checkPermission = async () => {
@@ -145,13 +156,29 @@ function AccidentInformation({ route, navigation }) {
       const photo = await cameraRef.current.takePictureAsync();
       setImageUri(photo.uri);
       setShowCamera(false);
-      handleInputChange('image', photo.uri)
+      // formData["image"] = {
+      //   uri: photo.uri,
+      //   name: `photo.jpg`,
+      //   type: `image/jpg`
+      // };
     }
   };
 
   const handleSubmit = () => {
     console.log(formData);
-
+      axios.post(`${BASE_URL}create-accident-statement`,formData, {
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(function (response) {
+          setConfirmationText(response.data.message);
+          setisConfirmationModalVisible(true);
+        })
+        .catch(function (error) {
+            console.error("Error:", error.response.data.message);
+        });
   };
 
   return (
@@ -258,7 +285,7 @@ function AccidentInformation({ route, navigation }) {
             )}
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleSubmit} className={`${disabledAccident ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} disabled={disabledAccident}>
+        <TouchableOpacity onPress={handleSubmit} className={`${disabledAccident ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} > 
           <SText text='next' classes="text-white text-center font-semibold"/>
         </TouchableOpacity>
       </View>
@@ -287,6 +314,31 @@ function AccidentInformation({ route, navigation }) {
               </TouchableOpacity>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={isConfirmationModalVisible}
+        onRequestClose={() => setisConfirmationModalVisible(false)}
+        animationType="slide"
+        presentationStyle="overFullScreen"
+        transparent>
+        <View className="relative flex justify-end h-full shadow-2xl">
+            <View className="bg-white rounded-2xl shadow-lg flex p-2 my-auto mx-4">
+              <Text id='confirmation-message' classes="text-black py-4 font-bold text-lg text-center">{confirmationText}</Text>
+              <SText text='choose-operation' classes="text-black py-4 font-bold text-lg text-center"/>
+              <TouchableOpacity
+              className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
+              underlayColor='#fff'
+              onPress={() => {setisConfirmationModalVisible(false)}}>
+                <SText text='go-reports' classes="text-white py-2 font-bold text-lg text-center"/>
+              </TouchableOpacity>
+              <TouchableOpacity
+              className="bg-white border border-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
+              underlayColor='#fff'
+              onPress={() => {setisConfirmationModalVisible(false); navigation.navigate('Home')}}>
+                <SText text='go-home' classes="text-green py-2 font-bold text-lg text-center"/>
+              </TouchableOpacity>
+            </View>
         </View>
       </Modal>
     </Layout>

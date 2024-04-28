@@ -21,6 +21,7 @@ import ReportsSection from './src/screens/ReportsSection';
 import ReportDetails from './src/screens/ReportDetails';
 import carInformation from './src/screens/carInformation';
 import AccidentInformation from './src/screens/AccidentInformation';
+import SectionNavigation from './src/navigation/SectionNavigation';
 
 // import CustomDrawerContent from './src/components/CustomDrawerContent';
 
@@ -43,6 +44,7 @@ function App() {
         <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
         <Stack.Screen name="CarInformation" component={carInformation} />
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
+        <Stack.Screen name="SectionNavigation" component={SectionNavigation} />
         {/*<Stack.Screen name="ObjectionDetails" component={ObjectionDetails} />*/}
       </Stack.Navigator>
     </NavigationContainer>

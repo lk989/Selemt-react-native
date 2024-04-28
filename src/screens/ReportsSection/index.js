@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
+import PlusButton from '../../components/PlusButton';
+import SText from '../../components/SText';
+import axios from 'axios';
+import { BASE_URL } from '../../config/config';
+import { getLocales } from 'expo-localization';
 
 
 
 const SegmentedControl = ({ navigation }) => {
-  const [activeSegment, setActiveSegment] = useState('Reports'); // 'data' or 'objections'
-  const listItems = [
-    { id: '#0001', time: '00:51 AM', date: '23 / 01 / 2024', text: 'وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ وصف البلاغ'},
-    { id: '#0002', time: '00:51 AM', date: '23 / 01 / 2024', text: 'Some other text' },
-    // ... other items
-    
-  ];
-  const getCurrentTime = () => {
-    const date = new Date();
+  let appLocale = getLocales()[0].languageCode;
+ 
+  const [reports, setReports] = useState([]);
+
+  const getCurrentTime = (date) => {
     const hour = date.getHours();
     const minute = date.getMinutes();
     const meridiem = hour >= 12 ? 'PM' : 'AM';
@@ -22,79 +23,55 @@ const SegmentedControl = ({ navigation }) => {
     return `${formattedHour}:${formattedMinute} ${meridiem}`;
   };
 
+  useEffect(() => {
+    axios.get(`${BASE_URL}reports`, {
+      params: {
+        user_id: '2'
+      }
+    })
+      .then(response => {
+        setReports(response.data.reports);
+      })
+      .catch(error => console.error('Error fetching reports:', error.response.data.message));
+  }, []); 
+
+  const formatDate = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toDateString(); // Returns the date portion only
+  };
+  const formatTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString(); // Returns the date portion only
+  };
+
   return (
-    <>
-    <StatusBar barStyle="dark-content" />
-    <ScrollView  style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="bars" size={24} color="#000" style={styles.menuIcon} />
-        <Text style={styles.welcomeText}>اهلا بك محمد!</Text>
-      </View>
+    <View className="mt-5">
+      <ScrollView  style={styles.container}>
 
-      <View style={styles.segmentedControlContainer}>  
-      <TouchableOpacity
-            style={[
-              styles.segmentButton,
-              activeSegment === 'objections' ? styles.activeSegment : {},
-            ]}
-            onPress={() => {
-              setActiveSegment('objections');
-              navigation.navigate('ObjectionsSection');
-            }}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-                activeSegment === 'objections' ? styles.activeSegmentText : {},
-              ]}
-            >
-              الإعتراضات
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.segmentButton,
-              activeSegment === 'Reports' ? styles.activeSegment : {},
-            ]}
-            onPress={() => {
-              setActiveSegment('Reports');
-              navigation.navigate('ReportsSection');
-            }}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-                activeSegment === 'Reports' ? styles.activeSegmentText : {},
-              ]}
-            >
-              البلاغات
-            </Text>
-          </TouchableOpacity>
-    </View>
-
-    {listItems.map((item, index) => (
-  <View key={index} style={styles.card}>
-    <View style={styles.cardContent}>
-      <View style={styles.cardHeader}>
-        <Text style={styles.headerText}>حالة البلاغ</Text>
-      </View>
-      <Text style={styles.contentText}>{item.text}</Text>
-      <Text style={styles.timeText}>{}</Text>
-      <Text style={styles.dateText}>{item.date}</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')} style={styles.button}>
-        <Text style={styles.buttonText}>مشاهدة تفاصيل البلاغ</Text>
-      </TouchableOpacity>
-    </View>
-    <Text style={styles.idText}>{item.id}</Text>
-  </View>
+        {reports.map((report, index) => (
+          <View key={index} style={styles.card}>
+            <View>
+              <SText text='code' classes="mx-3 text-center font-bold"/>
+              <Text className="mx-3 text-center font-bold">#{report.id}</Text>
+            </View>
+            <View className="flex-1 mx-3 space-y-5">
+              <View className="flex-row">
+                <Text style={{...styles.headerText, backgroundColor: report.accident.status.color}} className="text-xs">{appLocale == 'ar' ? report.accident.status.name_ar : report.accident.status.name_en}</Text>
+              </View>
+              <Text style={styles.contentText}>{report.description}</Text>
+              <View className="flex-row justify-between">
+                <Text className="text-xs">{formatDate(report.created_at)}</Text>
+                <Text className="text-xs">{formatTime(report.created_at)}</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')} style={styles.button}>
+                <SText text='view-report-details' classes="font-semibold"/>
+              </TouchableOpacity>
+            </View>
+          </View>
         ))}
-   
       </ScrollView >
-      <TouchableOpacity style={styles.addButton}>
-        <Icon name="plus" size={24} color="#FFF" />
-      </TouchableOpacity>
-    </>
+      <PlusButton navigation={navigation}/>
+    </View>
   );
 };
 
@@ -102,27 +79,6 @@ const styles = StyleSheet.create({
   container: {
   backgroundColor:'#F0F0F0',
   },
-
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#fff',
-  },
-  menuIcon: {
-    marginRight: 16,
-    color : '#016E46',
-    marginTop: 16,
-  },
-  welcomeText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color : '#016E46',
-    marginTop: 20,
-  },
-
 
     segmentedControlContainer: {
       flexDirection: 'row',
@@ -154,43 +110,20 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align children vertically in the center
     backgroundColor: '#FFF',
     borderRadius: 10,
-    padding: 20,
+    padding: 8,
+    paddingTop: 16,
+    paddingBottom: 16,
     marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
     elevation: 3,
-
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 10,
   },
   headerText: {
-    backgroundColor: '#ABC7BD',
-    fontWeight: 'bold',
-    paddingHorizontal: 10, // Horizontal padding for left and right
-    paddingVertical: 5, // Vertical padding for top and bottom
-    borderRadius: 5, // Rounded corners for the highlight effect
+    paddingHorizontal: 20, // Horizontal padding for left and right
+    paddingVertical: 4, // Vertical padding for top and bottom
+    borderRadius: 6, // Rounded corners for the highlight effect
     overflow: 'hidden', // Ensures the background does not bleed outside the border radius
     alignSelf: 'flex-start', // Ensures the background only covers the text plus padding
-    marginRight: 10, // If you wan
-  },
-  contentText: {
-   marginBottom : 15,
-  },
-  timeText: {
-   
-  },
-  dateText: {
-    marginBottom : 10, 
-  
-  },
-  idText: {
-    fontWeight: 'bold',
-
   },
   button: {
     backgroundColor: '#ABC7BD', // Green background for the button
@@ -199,32 +132,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  buttonText:{
-    fontWeight: 'bold',
-  },
-  cardContent: {
-    flex: 1, // Take up all available space
-    marginRight: 10,
-  },
- addButton: {
-  position: 'absolute',
-  bottom: 20,
-  left: 20,
-  width: 56,
-  height: 56,
-  borderRadius: 28,
-  backgroundColor: '#016E46',
-  justifyContent: 'center',
-  alignItems: 'center',
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 2,
-  },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
-},
 });
 
 
