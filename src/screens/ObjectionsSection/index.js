@@ -39,7 +39,8 @@ const SegmentedControl = ({ navigation }) => {
     <View className="mt-5">
       <ScrollView  style={styles.container}>
 
-        {objections.map((objection, index) => (
+        {objections.length > 0 ?
+         objections.map((objection, index) => (
           <View key={index} style={styles.card}>
             <View>
               <SText text='code' classes="mx-3 text-center font-bold"/>
@@ -59,9 +60,13 @@ const SegmentedControl = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        ))}
+        ))
+      :
+      <View>
+        <SText text='no-data' classes="text-gray my-4 text-center"/>
+      </View>
+      }
       </ScrollView >
-      <PlusButton navigation={navigation}/>
     </View>
   );
 }
@@ -109,13 +114,13 @@ const styles = StyleSheet.create({
       shadowOffset: { width: 0, height: 1 },
       elevation: 3,
     },
-    headerText: {
-      paddingHorizontal: 20, // Horizontal padding for left and right
-      paddingVertical: 4, // Vertical padding for top and bottom
-      borderRadius: 6, // Rounded corners for the highlight effect
-      overflow: 'hidden', // Ensures the background does not bleed outside the border radius
-      alignSelf: 'flex-start', // Ensures the background only covers the text plus padding
-    },
+  headerText: {
+    paddingHorizontal: 20, // Horizontal padding for left and right
+    paddingVertical: 4, // Vertical padding for top and bottom
+    borderRadius: 6, // Rounded corners for the highlight effect
+    overflow: 'hidden', // Ensures the background does not bleed outside the border radius
+    alignSelf: 'flex-start', // Ensures the background only covers the text plus padding
+  },
     button: {
       backgroundColor: '#ABC7BD', // Green background for the button
       padding: 10,
