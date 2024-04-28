@@ -10,14 +10,18 @@ import { getLocales } from 'expo-localization';
 
 
 function ReportDetails({ route, navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
-  const [selectedReportCode, setSelectedReportCode] = useState("");
-  const [textInput, setTextInput] = useState("");
-  const [imageUri, setImageUri] = useState(null);
+  const [isObjectionModalVisible, setIsObjectionModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+  const [disabledObjection, setDisabledObjection] = useState(true);
   let appLocale = getLocales()[0].languageCode;
+  const [confirmationText, setConfirmationText] = useState('');
+  const reasonPlaceholder = appLocale == 'ar' ? "اكتب سبب الاعتراض هنا ..." : "Write your objection reason here ...";
   const report = route.params.report;
   const closedStatus = route.params.closedStatus;
+  const [formData, setFormData] = useState({
+    reason: '',
+    report: report.accident_id,
+  });
 
   const formatDate = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -29,37 +33,24 @@ function ReportDetails({ route, navigation }) {
   };
 
   const handleRaiseObjection = () => {
-    setModalVisible(true);
+    setIsObjectionModalVisible(true);
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-  };
-
-  const handleTextInputChange = (text) => {
-    setTextInput(text);
-  };
-
-  const handleReportCodeChange = (value) => {
-    setSelectedReportCode(value);
-  };
-
-  const handleImageUpload = () => {
-    // Implement image upload functionality here
-    console.log("Upload image");
+  const handleTextInputChange = (name, text) => {
+    setDisabledObjection(text.trim() == '')
+    formData[name] = text;
   };
 
   const handleSubmit = () => {
-    // Handle submission of text input, report code, and image here
-    console.log("Submitted text:", textInput);
-    console.log("Selected report code:", selectedReportCode);
-    console.log("Uploaded image URI:", imageUri);
-    setModalVisible(false);
-    setConfirmationModalVisible(true);
-  };
-
-  const handleConfirmOK = () => {
-    setConfirmationModalVisible(false);
+    setIsObjectionModalVisible(false);
+    axios.post(`${BASE_URL}create-objection`,{formData: formData, userId: '2'})
+    .then(function (response) {
+        setConfirmationText(response.data.message);
+        setIsConfirmationModalVisible(true);
+    })
+    .catch(function (error) {
+        console.error("Error:", error.response.data.message);
+    });
   };
 
   return (
@@ -107,11 +98,13 @@ function ReportDetails({ route, navigation }) {
               <TouchableOpacity className="bg-light-green rounded">
                 <SText text="download-report" classes="text-center py-3 font-semibold text-black" />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleRaiseObjection}
-                className="border border-green my-3 rounded">
-                <SText text="Raise-objection" classes="text-center text-green font-semibold py-3" />
-              </TouchableOpacity>
+              {!report.accident.has_objections && (
+                <TouchableOpacity
+                  onPress={handleRaiseObjection}
+                  className="border border-green my-3 rounded">
+                  <SText text="Raise-objection" classes="text-center text-green font-semibold py-3" />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
           )
@@ -124,76 +117,70 @@ function ReportDetails({ route, navigation }) {
           </View>)
         }
 
-        {/* Modal for inputting text */}
-        {/* <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={handleCloseModal}
-        >
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-            <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, width: '80%' }}>
-              <TouchableOpacity onPress={handleCloseModal} style={{ alignSelf: 'flex-end', padding: 10 }}>
-                <Text style={{ color: 'gray', fontSize: 18 }}>اغلاق</Text>
-              </TouchableOpacity>
-
-              <View className="items-center space-y-8">
-                <Text className="text-green font-bold text-xl pb-4">رفع اعتراض جديد</Text>
-              </View>
-
-              <Text className="text-green text-l pb-2">اختر رمز البلاغ</Text>
-              <RNPickerSelect
-                onValueChange={(value) => handleReportCodeChange(value)}
-                items={reportCodes}
-                placeholder={{ label: 'اختر رمز البلاغ', value: null }}
-                style={{ inputIOS: { borderWidth: 1, borderColor: "gray", padding: 10, width: '100%', marginBottom: 20 } }}
-              />
-
-              <Text className="text-green text-l pb-2">سبب الاعتراض</Text>
-              <TextInput
-                multiline
-                onChangeText={handleTextInputChange}
-                value={textInput}
-                placeholder="اكتب سبب الاعتراض"
-                style={{ borderWidth: 1, borderColor: "gray", padding: 10, width: '100%', marginBottom: 20 }}
-              />
-
-              <TouchableOpacity onPress={handleImageUpload} style={{ marginBottom: 20 }}>
-                <Text style={{ color: 'blue' }}>Upload file</Text>
-              </TouchableOpacity>
-              {imageUri && <Image source={{ uri: imageUri }} style={{ width: 100, height: 100, marginBottom: 20 }} />}
-
-              <TouchableOpacity onPress={handleSubmit} className="bg-light-green mx-6 rounded" underlayColor="#fff">
-                <SText text="raise-objection" classes="text-center py-2" />
-              </TouchableOpacity>
-              
-            </View>
-          </View>
-        </Modal> */}
-
-        {/* Confirmation modal */}
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={confirmationModalVisible}
-          onRequestClose={handleConfirmOK}
-        >
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-            <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, width: '80%' }}>
-              <View className="items-center space-y-4">
-              <Icon name='check' type='evilicon' color='green' size='60'/>
-                <Text className="text-black font-bold text-xl pb-1">تم رفع الاعتراض بنجاح</Text>
-                <Text className="text-green text-l pb-5">رمز الاعتراض: {selectedReportCode}</Text>
-              </View>
-              <TouchableOpacity onPress={handleConfirmOK} className="bg-light-green mx-6 rounded" underlayColor="#fff">
-                <SText text="back-to-objections" classes="text-center py-2" />
-              </TouchableOpacity>
+            visible={isObjectionModalVisible}
+            onRequestClose={() => setIsObjectionModalVisible(false)}
+            animationType="slide"
+            presentationStyle="pageSheet"
+            transparent>
+            <View className="relative flex justify-end h-full">
+                <View className="bg-white rounded-t-2xl shadow-lg flex p-5">
+                  <SText text='Raise-objection' classes="text-black py-4 font-bold text-lg text-center mt-6"/>
+                    <View>
+                        <SText text='reason-objection' classes="font-semibold mb-2 text-black"/>
+                        <TextInput
+                            style={styles.textArea}
+                            onChangeText={(text) => handleTextInputChange('reason', text)}
+                            // value={formData.accidentDetails}
+                            placeholder={reasonPlaceholder}
+                            multiline={true}
+                            numberOfLines={4}
+                        />
+                    </View>
+                    <TouchableOpacity
+                        className={`${disabledObjection ? "bg-light-green" : "bg-green"} my-4 rounded-md py-1`}
+                        underlayColor='#fff'
+                        onPress={handleSubmit}>
+                            <SText text='submit' classes="text-center text-s text-white font-bold p-2"/>
+                    </TouchableOpacity>
+                </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+          <Modal
+                visible={isConfirmationModalVisible}
+                onRequestClose={() => setIsConfirmationModalVisible(false)}
+                animationType="slide"
+                presentationStyle="overFullScreen"
+                transparent>
+                <View className="relative flex justify-end h-full shadow-2xl">
+                    <View className="bg-white rounded-2xl shadow-lg flex p-2 my-auto mx-4">
+                    <Text className="text-black py-4 font-bold text-lg text-center">{confirmationText}</Text>
+                    <TouchableOpacity
+                    className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
+                    underlayColor='#fff'
+                    onPress={() => {setIsConfirmationModalVisible(false); navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "الاعتراضات" : "Objections"})}}>
+                        <SText text='go-objections' classes="text-white py-2 font-bold text-center"/>
+                    </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
       </View>
     </Layout>
   );
 }
+
+const styles = StyleSheet.create({
+  textArea: {
+    borderWidth: 1,
+    borderColor: '#dcdcdc', // Light grey border
+    padding: 10,
+    marginVertical: 5, // Add some vertical spacing
+    borderRadius: 5, // Slightly rounded corners
+    fontSize: 16,
+    textAlignVertical: 'top', // Start the text from the top on Android
+    height: 100, // Set a fixed height or make it dynamic as per your needs
+  }
+});
+
 
 export default ReportDetails;
