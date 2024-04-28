@@ -56,7 +56,14 @@
     "vehicle-image": "Vehicle images after accident",
     "tap-to-retake": "Tap the picture to change it",
     "go-reports": "Go to reports section",
-    "go-home": "Back to homepage"
+    "go-objections": "Go to objections section",
+    "go-home": "Back to homepage",
+    "code": "Code",
+    "view-report-details": "View report details",
+    "view-objection-details": "View objection details",
+    "submit": "Submit",
+    "choose-report": "Choose report",
+    "reason-objection": "Reason for objection"
     
 
 }
