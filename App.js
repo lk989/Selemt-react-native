@@ -19,7 +19,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AccidentPersonalInfo from './src/screens/AccidentPersonalInfo';
 import ReportsSection from './src/screens/ReportsSection';
 import ReportDetails from './src/screens/ReportDetails';
-import carInformation from './src/screens/carInformation';
+import carInformation from './src/screens/CarInformation';
 import AccidentInformation from './src/screens/AccidentInformation';
 import SectionNavigation from './src/navigation/SectionNavigation';
 
