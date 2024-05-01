@@ -1,21 +1,28 @@
-import { View, Text, Image, FlatList, TouchableOpacity, Button, Modal } from "react-native";
-import SText from "../../components/SText";
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, Button } from 'react-native';
+import SText,{ setLocale, t }from "../../components/SText";
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements'
 import Layout from "../../components/Layout";
 import CurrDay from "../../components/CurrDay";
-import CurrDate from '../../components/CurrDate'
-import CurrLocation from '../../components/CurrLocation'
-import React, { useState, useEffect } from 'react';
+import CurrDate from '../../components/CurrDate';
+import CurrLocation from '../../components/CurrLocation';
 import PlusButton from "../../components/PlusButton";
-import * as Location from 'expo-location';
 import { getLocales } from 'expo-localization';
+import { I18nManager } from 'react-native';
 
 
 
 function Home({ navigation }) {
-  let appLocale = getLocales()[0].languageCode;
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [locale, setLocaleState] = useState(getLocales()[0].languageCode);
+
+  const toggleLanguage = () => {
+    const newLocale = locale.startsWith('en') ? 'ar' : 'en';
+    setLocale(newLocale);
+    setLocaleState(newLocale);
+  
+
+  };
     return (
       <Layout navigation={navigation}>
           <View className="flex-row justify-between">
@@ -94,9 +101,15 @@ function Home({ navigation }) {
                 </View>
               </View>
             </View>
+             {/* Language toggle button */}
+      <View>
+        <Button title={t('switch-language')} onPress={toggleLanguage} />
+      </View>
           <PlusButton navigation={navigation}/>
           </View>
       </Layout>
     );
+    
 }
+
 export default Home;
