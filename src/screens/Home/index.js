@@ -85,18 +85,18 @@ function Home({ navigation }) {
               </View>
             </View>
             <View className="flex-row gap-5">
-              <View className="flex-1">
+              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "البلاغات" : "Reports"})}>
                 <View className="bg-white rounded-lg p-3">
                   <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
                   <SText text='reports' classes="text-xl px-2 py-1"/>
                 </View>
-              </View>
-              <View className="flex-1">
+              </TouchableOpacity>
+              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "الاعتراضات" : "Objections"})}>
                 <View className="bg-white rounded-lg p-3">
                   <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
                   <SText text='objections' classes="text-xl px-2 py-1"/>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
       </Layout>
