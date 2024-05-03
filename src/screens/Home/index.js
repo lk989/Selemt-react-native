@@ -13,7 +13,6 @@ import { I18nManager } from 'react-native';
 import * as Location from 'expo-location';
 import { ImportsNotUsedAsValues } from "typescript";
 import PushNotification from "../../components/PushNotification";
-import { getLocales } from 'expo-localization';
 import axios from 'axios';
 
 
@@ -26,11 +25,7 @@ function Home({ navigation }) {
     setLocale(newLocale);
     setLocaleState(newLocale);
   }
-}
 
-
-
-function Home({ navigation }) {
   let appLocale = getLocales()[0].languageCode;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const showPlus = true;

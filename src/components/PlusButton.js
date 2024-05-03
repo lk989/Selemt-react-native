@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Modal, StyleSheet, TextInput, Text } from "react-native";
+import { View, TouchableOpacity, Modal, StyleSheet, TextInput, Text, Alert } from "react-native";
 import { Icon } from 'react-native-elements'
 import React, { useState, useEffect } from 'react';
 import SText from "./SText";
@@ -70,6 +70,25 @@ const PlusButton = ({navigation}) => {
     setDisabledObjection(!allInputsFilled);
   }
 
+
+  //باقي نكتبها باللغتين
+  const handleScanBarcode = () => {
+    Alert.alert(
+      'Important',
+      'Please make sure to allow access to your location and camera for the next steps.',
+      [
+        {
+          text: "I didn't check",
+          onPress: () => {navigation.navigate('Home')},
+        },
+        {
+          text: 'I checked',
+          onPress: () => {},
+        },
+      ]
+    );
+  };
+
     return (
         <View className="absolute bottom-10 mx-10">
             <TouchableOpacity onPress={() => setIsBarcodeModalVisible(true)}>
@@ -88,13 +107,21 @@ const PlusButton = ({navigation}) => {
                 <TouchableOpacity
                 className="bg-green mx-6 my-2 rounded"
                 underlayColor='#fff'
-                onPress={() => {setIsOperationModalVisible(false); navigation.navigate('GenerateBarcode')}}>
+                onPress={() => {
+                  handleScanBarcode();
+                  setIsOperationModalVisible(false);
+                  navigation.navigate('GenerateBarcode');
+                }}>
                     <SText text='generate-barcode' classes="text-center text-white py-2"/>
                 </TouchableOpacity>
                 <TouchableOpacity
                     className="border border-green mx-6 mb-8 rounded"
                     underlayColor='#fff'
-                    onPress={() => {setIsOperationModalVisible(false); navigation.navigate('ScanBarcode')}}>
+                    onPress={() => {
+                      handleScanBarcode();
+                      setIsOperationModalVisible(false);
+                      navigation.navigate('ScanBarcode');
+                    }}>
                     <SText text='scan-barcode' classes="text-center text-green py-2"/>
                 </TouchableOpacity>
                 </View>
