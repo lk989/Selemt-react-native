@@ -30,9 +30,15 @@ function Login({ navigation }) {
     .then(function (response) {
       let message = response.data.message;
       let otp = response.data.verification;
-      // console.log(response.data)
-      navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Login' })
-    })
+      let userId = response.data.user.id; 
+            AsyncStorage.setItem('userId', userId)
+              .then(() => {
+                navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Signup' });
+              })
+              .catch(error => {
+                console.error('Failed to save userId', error);
+              });
+          })
     .catch(function (error) {
       showErrorLoginToast(error.response.data.message);
       setDisabledLogin(true);

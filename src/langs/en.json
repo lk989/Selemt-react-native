@@ -56,7 +56,32 @@
     "vehicle-image": "Vehicle images after accident",
     "tap-to-retake": "Tap the picture to change it",
     "go-reports": "Go to reports section",
-    "go-home": "Back to homepage"
+    "go-objections": "Go to objections section",
+    "go-home": "Back to homepage",
+    "code": "Code",
+    "view-report-details": "View report details",
+    "view-objection-details": "View objection details",
+    "submit": "Submit",
+    "choose-report": "Choose report",
+    "reason-objection": "Reason for objection",
+    "switch-language": "Switch Language",
+
+    "report-code": "Report code",
+    "objection-code": "Objection code",
+    "report-time": "Report time",
+    "objection-time": "Objection time",
+    "report-description": "Report description",
+    "fault-percentage": "Fault percentage",
+    "not-evaluated": "The percentage has not been evaluated yet",
+    "report-date": "Report date",
+    "objection-date": "Objection date",
+    "no-data": "No data available",
+    "party-one-name": "Party one",
+    "party-two-name": "Party two",
+    "party-one-percentage": "Party one percentage",
+    "party-two-percentage": "Party two percentage",
+    "accident-location": "Accident location",
+    "notes": "Notes"
     
 
 }

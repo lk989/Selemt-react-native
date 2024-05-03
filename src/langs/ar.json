@@ -56,6 +56,31 @@
     "vehicle-image": "صور المركبة بعد الحادث",
     "tap-to-retake": "اضغط على الصورةة لتغييرها",
     "go-reports": "اذهب إلى قسم البلاغات",
-    "go-home": "العودة إلى الصفحة الرئيسية"
+    "go-objections": "اذهب إلى قسم الاعتراضات",
+    "go-home": "العودة إلى الصفحة الرئيسية",
+    "code": "الرمز",
+    "view-report-details": "عرض تفاصيل البلاغ",
+    "view-objection-details": "عرض تفاصيل الاعتراض",
+    "submit": "تسليم",
+    "choose-report": "اختر البلاغ",
+    "reason-objection": "سبب الاعتراض",
+    "switch-language": "تغيير اللغة",
+
+    "report-code": "رمز البلاغ",
+    "objection-code": "رمز الاعتراض",
+    "report-time": "وقت البلاغ",
+    "objection-time": "وقت الاعتراض",
+    "report-description": "وصف البلاغ",
+    "fault-percentage": "نسبة الخطأ",
+    "report-date": "تاريخ البلاغ",
+    "objection-date": "تاريخ الاعتراض",
+    "not-evaluated": "لم يتم حساب النسبة بعد",
+    "no-data": "لاتوجد بيانات",
+    "party-one-name": "اسم الطرف الأول",
+    "party-two-name": "اسم الطرف الثاني",
+    "party-one-percentage": "نسبة خطأ الطرف الأول",
+    "party-two-percentage": "نسبة خطأ الطرف الثاني",
+    "accident-location": "موقع الحادث",
+    "notes": "ملاحظات"
 
 }
