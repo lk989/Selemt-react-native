@@ -71,7 +71,7 @@ const PlusButton = ({navigation}) => {
   }
 
     return (
-        <View className="my-4">
+        <View className="absolute bottom-10 mx-10">
             <TouchableOpacity onPress={() => setIsBarcodeModalVisible(true)}>
                 <Icon name='plus' type='feather' color='#016E46' size={18} reverse/>
             </TouchableOpacity>

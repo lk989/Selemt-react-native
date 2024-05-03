@@ -13,6 +13,7 @@ const SegmentedControl = ({ navigation }) => {
   let appLocale = getLocales()[0].languageCode;
  
   const [reports, setReports] = useState([]);
+  const [closedStatus, setClosedStatus] = useState('');
 
   useEffect(() => {
     axios.get(`${BASE_URL}reports`, {
@@ -23,6 +24,7 @@ const SegmentedControl = ({ navigation }) => {
     })
       .then(response => {
         setReports(response.data.reports);
+        setClosedStatus(response.data.closed_status);
       })
       .catch(error => console.error('Error fetching reports:', error.response.data.message));
   }, []); 
@@ -40,7 +42,8 @@ const SegmentedControl = ({ navigation }) => {
     <View className="mt-5">
       <ScrollView  style={styles.container}>
 
-        {reports.map((report, index) => (
+        {reports.length > 0 ?
+        reports.map((report, index) => (
           <View key={index} style={styles.card}>
             <View>
               <SText text='code' classes="mx-3 text-center font-bold"/>
@@ -55,14 +58,18 @@ const SegmentedControl = ({ navigation }) => {
                 <Text className="text-xs">{formatDate(report.created_at)}</Text>
                 <Text className="text-xs">{formatTime(report.created_at)}</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('ReportDetails')} style={styles.button}>
+              <TouchableOpacity onPress={() => navigation.navigate('ReportDetails', {report: report, closedStatus: closedStatus})} style={styles.button}>
                 <SText text='view-report-details' classes="font-semibold"/>
               </TouchableOpacity>
             </View>
           </View>
-        ))}
+        ))
+      :
+      <View>
+        <SText text='no-data' classes="text-gray my-4 text-center"/>
+      </View>
+      }
       </ScrollView >
-      <PlusButton navigation={navigation}/>
     </View>
   );
 };
@@ -111,8 +118,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   headerText: {
-    paddingHorizontal: 20, // Horizontal padding for left and right
-    paddingVertical: 4, // Vertical padding for top and bottom
+    paddingHorizontal: 16, // Horizontal padding for left and right
+    paddingVertical: 3, // Vertical padding for top and bottom
     borderRadius: 6, // Rounded corners for the highlight effect
     overflow: 'hidden', // Ensures the background does not bleed outside the border radius
     alignSelf: 'flex-start', // Ensures the background only covers the text plus padding

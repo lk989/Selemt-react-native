@@ -14,15 +14,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
     "web": {
       "favicon": "./src/assets/images/favicon.png"
     },
@@ -42,6 +33,12 @@
           "recordAudioAndroid": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "92b813d4-5a85-4dba-82c9-f8f14fbdfc67"
+      }
+    },
+    "owner": "mawdah"
   }
 }
