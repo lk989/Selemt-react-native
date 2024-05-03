@@ -12,16 +12,33 @@ import * as Location from 'expo-location';
 import { ImportsNotUsedAsValues } from "typescript";
 import PushNotification from "../../components/PushNotification";
 import { getLocales } from 'expo-localization';
-
+import axios from 'axios';
 
 
 function Home({ navigation }) {
   let appLocale = getLocales()[0].languageCode;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const showPlus = true;
+
+  const sendPushNotification = async () => {
+    const apiUrl = 'https://app.nativenotify.com/api/notification';
+    const pushData = {
+      appId: 21001,
+      appToken: 'wbQMKL75qxKvw4vb1Y0uFw',
+      title: 'Push title here as a string',
+      body: 'Push message here as a string',
+      dateSent: '4-29-2024 11:31PM',
+    };
+
+    try {
+      const response = await axios.post(apiUrl, pushData);
+      console.log('Push notification sent:', response.data);
+    } catch (error) {
+      console.error('Error sending push notification:', error);
+    }
+  };
     return (
       <Layout navigation={navigation} showPlus={showPlus}>
-        {/* <PushNotification/> */}
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-2 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />

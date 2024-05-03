@@ -9,7 +9,7 @@ const sendPushNotification = async () => {
     appToken: 'wbQMKL75qxKvw4vb1Y0uFw',
     title: 'Push title here as a string',
     body: 'Push message here as a string',
-    dateSent: '4-27-2024 8:31PM',
+    dateSent: '4-29-2024 11:31PM',
   };
   
   try {
