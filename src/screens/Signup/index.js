@@ -44,14 +44,8 @@ function Signup({ navigation }) {
           .then(function (response) {
             let message = response.data.message;
             let otp = response.data.verification;
+            navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Signup' });
             let userId = response.data.user.id; 
-            AsyncStorage.setItem('userId', userId)
-              .then(() => {
-                navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Signup' });
-              })
-              .catch(error => {
-                console.error('Failed to save userId', error);
-              });
           })
           .catch(function (error) {
             showErrorRegisterToast(error.response.data.message);

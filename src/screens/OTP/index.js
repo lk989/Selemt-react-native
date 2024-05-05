@@ -6,6 +6,7 @@ import { BASE_URL } from '../../config/config';
 import Toast from 'react-native-toast-message';
 import {extractCleanNumber} from '../../utils/utils';
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function OTP({ route, navigation }) {
   const { otpData, message, screen } = route.params;
@@ -32,7 +33,14 @@ function OTP({ route, navigation }) {
       otp: otp
     })
     .then(function (response) {
-      navigation.navigate('Home')
+      let userId = response.data.user.id.toString(); 
+      AsyncStorage.setItem('userId', JSON.stringify(userId))
+      .then(() => {
+        navigation.navigate('Home')
+        })
+        .catch(error => {
+          console.error('Failed to save userId', error);
+        });
     })
     .catch(function (error) {
       showErrorOtpToast(error.response.data.message);
