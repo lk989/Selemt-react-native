@@ -12,7 +12,7 @@ const SText = (props) => {
 }
 
 const translations = {
-  en: require('../langs/en.json'),  // Ensure your path is correct
+  en: require('../langs/en.json'), 
   ar: require('../langs/ar.json'),
 };
 

@@ -1,30 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Button } from 'react-native';
-import SText,{ setLocale, t }from "../../components/SText";
+import SText from "../../components/SText";
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements'
 import Layout from "../../components/Layout";
 import CurrDay from "../../components/CurrDay";
 import CurrDate from '../../components/CurrDate';
 import CurrLocation from '../../components/CurrLocation';
-import PlusButton from "../../components/PlusButton";
 import { getLocales } from 'expo-localization';
-import { I18nManager } from 'react-native';
-import * as Location from 'expo-location';
-import { ImportsNotUsedAsValues } from "typescript";
 import PushNotification from "../../components/PushNotification";
 import axios from 'axios';
-
-
+import { BASE_URL } from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
-  const [locale, setLocaleState] = useState(getLocales()[0].languageCode);
-
-  const toggleLanguage = () => {
-    const newLocale = locale.startsWith('en') ? 'ar' : 'en';
-    setLocale(newLocale);
-    setLocaleState(newLocale);
-  }
 
   let appLocale = getLocales()[0].languageCode;
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -46,6 +35,29 @@ function Home({ navigation }) {
     } catch (error) {
       console.error('Error sending push notification:', error);
     }
+
+    useEffect(() => {
+      AsyncStorage.getItem('userId')
+      .then(userIdString => {
+        if (userIdString) {
+          const userId = JSON.parse(userIdString);
+          axios.get(`${BASE_URL}last-report`, {
+            params: {
+                user_id: '2'
+            }
+          })
+            .then(response => {
+              fetchedReports(response.data.reports);
+            })
+            .catch(error => console.error('Error fetching reports:', error.response.data.message));
+        } else {
+          console.log('No user ID found.');
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user ID:', error);
+      });
+    }, []); 
   };
     return (
       <Layout navigation={navigation} showPlus={showPlus}>
@@ -125,14 +137,9 @@ function Home({ navigation }) {
                 </View>
               </TouchableOpacity>
             </View>
-             {/* Language toggle button */}
-          <View>
-            <Button title={t('switch-language')} onPress={toggleLanguage} />
-          </View>
         </View>
       </Layout>
     );
-    
 }
 
 export default Home;
