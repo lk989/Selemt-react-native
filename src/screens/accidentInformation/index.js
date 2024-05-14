@@ -29,6 +29,7 @@ function AccidentInformation({ route, navigation }) {
   const [showCamera, setShowCamera] = useState(false);
   const [isConfirmationModalVisible, setisConfirmationModalVisible] = useState(false);
   const [imageUri, setImageUri] = useState(null);
+  const [image, setImage] = useState(null);
   const [confirmationText, setConfirmationText] = useState('');
   const [formData, setFormData] = useState({
     ...prevFormData.prevFormData,
@@ -39,7 +40,7 @@ function AccidentInformation({ route, navigation }) {
     movement: '',
     description: '',
     damagedAreas: [],
-    // image: {}
+    image: {}
   });
 
   const selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
@@ -153,9 +154,29 @@ function AccidentInformation({ route, navigation }) {
 
   const handleTakePicture = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
+      const photo = await cameraRef.current.takePictureAsync({base64: true});
       setImageUri(photo.uri);
       setShowCamera(false);
+      axios({
+        method: "POST",
+        url: "https://detect.roboflow.com/accident_detection-trmhu/1",
+        params: {
+            api_key: "rcXlc7gsf3g99MQGBOvg"
+        },
+        data: photo.base64,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+      })
+      .then(function(response) {
+        // if(response.data.predictions.length > 0){
+        // }
+          setImage(photo.base64);
+          console.log(response.data.predictions);
+      })
+      .catch(function(error) {
+          console.log(error.message);
+      });
       // formData["image"] = {
       //   uri: photo.uri,
       //   name: `photo.jpg`,
