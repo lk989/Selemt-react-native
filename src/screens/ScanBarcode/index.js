@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Linking, TouchableOpacity } from 'react-native';
+import { View, Alert } from 'react-native';
 import { CameraView, Camera } from "expo-camera/next";
 import Layout from "../../components/Layout";
 import SText from "../../components/SText";
@@ -24,18 +24,26 @@ const ScanBarcode = ({navigation}) => {
   const handleBarCodeScanned = async({ type, data }) => {
     setScanned(true);
     const userLocation = await AsyncStorage.getItem('userLocation');
-      axios.post(`${BASE_URL}validate-qr-code`, {data: data, userLocation: userLocation})
-          .then(function (response) {
-            if (response.data != 0) {
-                navigation.navigate('AccidentPersonalInfo', {accident_id: response.data, party: '2'});
-              }
-              else {
-                  alert('Invalid QR code !');
-              }
-        })
-        .catch(function (error) {
-            console.error("Error fetching QR code:", error.response.data.message);
-        });
+    axios.post(`${BASE_URL}validate-qr-code`, {data: data, userLocation: userLocation})
+      .then(function (response) {
+        if (response.data != 0) {
+          navigation.navigate('AccidentPersonalInfo', {accident_id: response.data, party: '2'});
+        }
+        else {
+          Alert.alert(
+            'Invalid QR code!',
+            '',
+            [
+              { text: 'Scan again', onPress: () => setScanned(false)},
+              { text: 'Cancel', onPress: () => navigation.navigate('Home'), style: 'cancel'},
+            ],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(function (error) {
+        console.error("Error fetching QR code:", error.response.data.message);
+      });
   };
 
   if (hasPermission === null) {
@@ -46,38 +54,29 @@ const ScanBarcode = ({navigation}) => {
   }
 
   return (
-      <Layout>
-            <View className="p-2 space-y-12">
-                <View className="bg-white rounded-lg shadow-sm w-full aspect-square mt-8">
-                      <CameraView
-                        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-                        barcodeScannerSettings={{
-                        barcodeTypes: ["qr", "pdf417"],
-                        }}
-                          width="100%" height="100%" 
-                    />
-                    
-                </View>
-                <View>
-                    <SText text='scan-barcode-title' classes="text-xl text-black font-bold text-justify" />
-                    <SText text='scan-barcode-description' classes="text-black text-lg font-medium text-justify py-4" />
-                    {scanned && (
-                        <TouchableOpacity onPress={() => setScanned(false)} className="border border-green rounded-md bg-white">
-                            <SText text='scan-again' classes="text-green font-medium text-justify py-3 text-center" />
-                        </TouchableOpacity>
-                    )}
-                </View>
-            </View>
-        </Layout>
+    <Layout>
+      <View className="p-2 space-y-12">
+        <View className="bg-white rounded-lg shadow-sm w-full aspect-square mt-8">
+          <CameraView
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            barcodeScannerSettings={{
+            barcodeTypes: ["qr", "pdf417"],
+            }}
+              width="100%" height="100%" 
+          />
+        </View>
+        <View>
+          <SText text='scan-barcode-title' classes="text-xl text-black font-bold text-justify" />
+          <SText text='scan-barcode-description' classes="text-black text-lg font-medium text-justify py-4" />
+          {/* {scanned && (
+            <TouchableOpacity onPress={() => setScanned(false)} className="border border-green rounded-md bg-white">
+              <SText text='scan-again' classes="text-green font-medium text-justify py-3 text-center" />
+            </TouchableOpacity>
+          )} */}
+        </View>
+      </View>
+    </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-});
 
 export default ScanBarcode;
