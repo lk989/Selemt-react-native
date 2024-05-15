@@ -1,36 +1,44 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from "react-native";
-import SText from "../../components/SText";
+// ? libraries imports
+import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import { useState } from "react";
-import {validPhone, extractCleanPhone} from '../../utils/utils';
-import axios from 'axios';
-import { BASE_URL } from '../../config/config';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import { getLocales } from "expo-localization";
+
+// ? functions and components imports
+import {validPhone, extractCleanPhone} from '../../utils/utils';
+import { BASE_URL } from '../../config/config';
+import SText from "../../components/SText";
 
 function Login({ navigation }) {
+
+  // ? save app locale to send to backend
+  let appLocale = getLocales()[0].languageCode == 'en' ? 'en' : 'ae';
+
   const [phone, setPhone] = useState('');
   const [disabledLogin, setDisabledLogin] = useState(true);
 
+  // ? validate before login
   const handleLogin = (phoneNumber) => {
     setPhone(extractCleanPhone(phoneNumber));
     setDisabledLogin(!validPhone(phoneNumber))
   };
 
+  // ? a toast when an error occurs
   const showErrorLoginToast = (message) => {
     Toast.show({
-      type: 'error',
-      text1: message,
-      topOffset: 70
+      type: 'error', text1: message, topOffset: 70
     });
   }
 
   const login = () => {
-    axios.post(`${BASE_URL}send-otp`, {
-      phone: phone,
-    })
+    // ? the header is to send the app locale
+    axios.post(`${BASE_URL}send-otp`, {phone: phone}, {headers: {
+      'Accept-Language': appLocale
+    }})
     .then(function (response) {
-      let message = response.data.message;
       let otp = response.data.verification;
-      navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Login' });
+      navigation.navigate('OTP', { otpData: otp, screen: 'Login' });
     })
     .catch(function (error) {
       showErrorLoginToast(error.response.data.message);
@@ -61,8 +69,8 @@ function Login({ navigation }) {
                 maxLength={9}
                 placeholder="5XXXXXXXX"
                 placeholderTextColor="#ABC7BD"
-                returnKeyType='done' // Display "Done" button on the keyboard
-                onSubmitEditing={login} // Call the login function when "Done" is pressed
+                returnKeyType='done'
+                onSubmitEditing={login}
               />
             </View>
           </View>

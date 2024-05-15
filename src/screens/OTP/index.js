@@ -9,7 +9,7 @@ import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function OTP({ route, navigation }) {
-  const { otpData, message, screen } = route.params;
+  const { otpData, screen } = route.params;
 
   const [otp, setOtp] = useState(''); 
   const [otpDisabled, setOtpDisabled] = useState(true); 
