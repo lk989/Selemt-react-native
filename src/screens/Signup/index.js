@@ -1,62 +1,58 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from "react-native";
-import SText from "../../components/SText";
+// ? libraries imports
+import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import { useState } from "react";
-import { validPhone, extractCleanPhone } from '../../utils/utils';
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
 import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+// ? components imports
+import SText from "../../components/SText";
+import { BASE_URL, appLocale } from '../../config/config';
+import { validPhone, extractCleanPhone, showErrorToast } from '../../utils/utils';
 
 function Signup({ navigation }) {
+
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [disabledSignup, setDisabledSignup] = useState(true);
 
+  const namePlaceholder = appLocale == 'en' ? 'Mohammed Alghamdi' : 'محمد الغامدي'
+
+  // ? checks name input
   const handleName = (nameInput) => {
     setName(nameInput)
     setDisabledSignup(!(nameInput.length > 0 && validPhone(phone)))
   }
 
+  // ? checks phone input
   const handlePhone = (phoneNumber) => {
     setPhone(extractCleanPhone(phoneNumber));
     setDisabledSignup(!(name.length > 0 && validPhone(phoneNumber)))
   }
 
-  const showErrorRegisterToast = (message) => {
-    Toast.show({
-      type: 'error',
-      text1: message,
-      topOffset: 70
-    });
-  }
-
   const signup = () => {
-    axios.post(`${BASE_URL}register`, {
-      phone: phone,
-      name: name
-    })
+    axios.post(`${BASE_URL}register`,
+      { phone: phone, name: name },
+      { headers: { 'Accept-Language': appLocale } })
       .then(function (response) {
         axios.post(`${BASE_URL}send-otp`, {
           phone: response.data.user.phone,
         })
           .then(function (response) {
-            let message = response.data.message;
             let otp = response.data.verification;
-            navigation.navigate('OTP', { otpData: otp, message: message, screen: 'Signup' });
-            let userId = response.data.user.id; 
+            navigation.navigate('OTP', { otpData: otp, screen: 'Signup' });
           })
           .catch(function (error) {
-            showErrorRegisterToast(error.response.data.message);
+            showErrorToast(error.response.data.message);
+            setDisabledSignup(true)
           });
-      })
+        })
       .catch(function (error) {
-        showErrorRegisterToast(error.response.data.message);
-      });
+        showErrorToast(error.response.data.message);
+        setDisabledSignup(true)
+      }
+    );
   }
 
-  const [phoneDisabled, setphoneDisabled] = useState(true);
   return (
     <View className="h-full">
       <View className="p-4 space-y-8 my-auto">
@@ -71,10 +67,9 @@ function Signup({ navigation }) {
               className="border border-light-green bg-white rounded-md py-3 px-2 text-green font-bold"
               onChangeText={handleName}
               value={name}
-              placeholder="محمد إبراهيم "
+              placeholder={namePlaceholder}
               placeholderTextColor="#ABC7BD"
-              returnKeyType='done' // Display "Done" button on the keyboard
-
+              returnKeyType='done' 
             />
           </View>
           <View className="w-full space-y-2">

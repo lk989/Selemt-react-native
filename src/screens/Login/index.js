@@ -3,18 +3,13 @@ import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import { useState } from "react";
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
-import { getLocales } from "expo-localization";
 
 // ? functions and components imports
-import {validPhone, extractCleanPhone} from '../../utils/utils';
-import { BASE_URL } from '../../config/config';
+import {validPhone, extractCleanPhone, showErrorToast} from '../../utils/utils';
+import { BASE_URL, appLocale } from '../../config/config';
 import SText from "../../components/SText";
 
 function Login({ navigation }) {
-
-  // ? save app locale to send to backend
-  let appLocale = getLocales()[0].languageCode == 'en' ? 'en' : 'ae';
-
   const [phone, setPhone] = useState('');
   const [disabledLogin, setDisabledLogin] = useState(true);
 
@@ -23,13 +18,6 @@ function Login({ navigation }) {
     setPhone(extractCleanPhone(phoneNumber));
     setDisabledLogin(!validPhone(phoneNumber))
   };
-
-  // ? a toast when an error occurs
-  const showErrorLoginToast = (message) => {
-    Toast.show({
-      type: 'error', text1: message, topOffset: 70
-    });
-  }
 
   const login = () => {
     // ? the header is to send the app locale
@@ -41,7 +29,7 @@ function Login({ navigation }) {
       navigation.navigate('OTP', { otpData: otp, screen: 'Login' });
     })
     .catch(function (error) {
-      showErrorLoginToast(error.response.data.message);
+      showErrorToast(error.response.data.message);
       setDisabledLogin(true);
     });
   };

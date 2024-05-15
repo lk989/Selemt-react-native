@@ -1,3 +1,5 @@
+import Toast from "react-native-toast-message";
+
 // ? validate entered phone number
 export function extractCleanPhone(phone){
     let cleanPhone = phone.replace(/\D/g, "");
@@ -16,4 +18,11 @@ export function validPhone(phone){
 export function extractCleanNumber(number){
   let cleanNumber = number.replace(/\D/g, "");
   return cleanNumber;
+}
+
+// ? taost error
+export function showErrorToast(message){
+  Toast.show({
+    type: 'error', text1: message, topOffset: 70
+  });
 }
