@@ -26,3 +26,15 @@ export function showErrorToast(message){
     type: 'error', text1: message, topOffset: 70
   });
 }
+
+// ? dateTime to date string
+export function formatDate(dateTimeString){
+  const date = new Date(dateTimeString);
+  return date.toDateString(); 
+};
+
+// ? dateTime to time string
+export function formatTime(dateTimeString){
+  const date = new Date(dateTimeString);
+  return date.toLocaleTimeString(); 
+};

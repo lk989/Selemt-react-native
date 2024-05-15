@@ -84,7 +84,10 @@
     "notes": "Notes",
     "resend-otp": "Resend OTP",
     "resend-otp-duration": "Resend in {{params}}",
-    "not-receive-otp": "Did not receive OTP? "
+    "not-receive-otp": "Did not receive OTP? ",
+    "no-rerports-yet": "You do not have any accident report yet",
+    "categories": "Categories",
+    "can-initiate-report": "You can initiate a new accident report by clicking the plus button"
     
 
 }

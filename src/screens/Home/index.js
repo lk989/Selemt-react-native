@@ -1,23 +1,25 @@
+// ? libraries imports
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Button } from 'react-native';
-import SText from "../../components/SText";
-import PieChart from 'react-native-pie-chart';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements'
+import axios from 'axios';
+
+// ? components imports
+import SText from "../../components/SText";
 import Layout from "../../components/Layout";
 import CurrDay from "../../components/CurrDay";
 import CurrDate from '../../components/CurrDate';
 import CurrLocation from '../../components/CurrLocation';
-import { getLocales } from 'expo-localization';
 import PushNotification from "../../components/PushNotification";
-import axios from 'axios';
-import { BASE_URL } from '../../config/config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL, appLocale } from '../../config/config';
+import ReportCard from '../../components/ReportCard';
 
 function Home({ navigation }) {
 
-  let appLocale = getLocales()[0].languageCode;
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const showPlus = true;
+  const [latestReport, setLatestReport] = useState({});
+  const [noReports, setNoReports] = useState({});
+  const [closedStatus, setClosedStatus] = useState('');
 
   const sendPushNotification = async () => {
     const apiUrl = 'https://app.nativenotify.com/api/notification';
@@ -35,32 +37,31 @@ function Home({ navigation }) {
     } catch (error) {
       console.error('Error sending push notification:', error);
     }
-
-    useEffect(() => {
-      AsyncStorage.getItem('userId')
-      .then(userIdString => {
-        if (userIdString) {
-          const userId = JSON.parse(userIdString);
-          axios.get(`${BASE_URL}last-report`, {
-            params: {
-                user_id: '2'
-            }
-          })
-            .then(response => {
-              fetchedReports(response.data.reports);
-            })
-            .catch(error => console.error('Error fetching reports:', error.response.data.message));
-        } else {
-          console.log('No user ID found.');
-        }
-      })
-      .catch(error => {
-        console.error('Error retrieving user ID:', error);
-      });
-    }, []); 
   };
+
+  useEffect(() => {
+    // ? fetching reports using user id
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        axios.get(`${BASE_URL}last-report`, {params: { user_id: JSON.parse(userIdString)}})
+          .then(response => {
+            setLatestReport(response.data.report);
+            setNoReports(response.data.report == null)
+            setClosedStatus(response.data.closed_status);
+          })
+          .catch(error => console.error(error.response.data.message));
+      } else {
+        console.log('No user ID found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
+  }, []); 
+
     return (
-      <Layout navigation={navigation} showPlus={showPlus}>
+      <Layout navigation={navigation} showPlus={true}>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-2 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />
@@ -72,65 +73,29 @@ function Home({ navigation }) {
               <CurrDay/>
             </View>
           </View>
-          <View className="bg-white rounded-2xl gap-6 pb-6">
-            <View className="flex-row">
-              <View className="bg-light-green rounded-full">
-                <Text className=" px-3 py-1 text-xs">تتم المعالجة</Text>
-              </View>
+          {(noReports) ? 
+            <View className="bg-white rounded-xl px-2 py-8 space-y-5">
+              <SText text='no-rerports-yet'
+                classes="py-2 text-center text-black font-bold"/>
+              <SText text='can-initiate-report'
+                classes="py-2 px-3 text-center text-green font-semibold"/>
             </View>
-            <Text className="text-lg font-semibold">رقم الحادث</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SectionNavigation', {initialName: "Reports"})}
-              className="bg-light-green mx-6 rounded"
-              underlayColor='#fff'>
-              <SText text='view-report-det' classes="text-center py-2"/>
-            </TouchableOpacity>
-          </View>
+          :
+            <View>
+              <ReportCard navigation={navigation} report={latestReport}
+                closedStatus={closedStatus} index="1"/>
+            </View>
+          }
           <View className="gap-y-1">
-            <SText text='last-updates' classes="font-bold"/>
-            <View className="flex-row gap-4">
-              {/* <LastUpdateCard/>
-              <LastUpdateCard/> */}
-              <View className="flex-1">
-                <View className="bg-white rounded-lg p-3">
-                    <View className="flex-row justify-between">
-                        <SText text='accident-evaluation' classes="font-semibold"/>
-                        <Text>#0001</Text>
-                    </View>
-                    <PieChart
-                        className="my-3"
-                        widthAndHeight={60}
-                        series={[120, 240]}
-                        sliceColor={['#016E46', '#ABC7BD']}
-                        coverRadius={0.55}
-                        coverFill={'#FFF'}
-                    />
-                </View>
-              </View>
-              <View className="flex-1">
-                <View className="bg-white rounded-lg p-3">
-                    <View className="flex-row justify-between">
-                        <SText text='accident-evaluation' classes="font-semibold"/>
-                        <Text>#0001</Text>
-                    </View>
-                    <PieChart
-                        className="my-3"
-                        widthAndHeight={60}
-                        series={[120, 240]}
-                        sliceColor={['#016E46', '#ABC7BD']}
-                        coverRadius={0.55}
-                        coverFill={'#FFF'}
-                    />
-                </View>
-              </View>
-            </View>
+          <SText text='categories' classes="font-bold"/>
             <View className="flex-row gap-5">
-              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {screen: appLocale == 'ar' ? "البلاغات" : "Reports"})}>
+              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {screen: appLocale == 'en' ? "Reports" : "البلاغات"})}>
                 <View className="bg-white rounded-lg p-3">
                   <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
                   <SText text='reports' classes="text-xl px-2 py-1"/>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {screen: appLocale == 'ar' ? "الاعتراضات" : "Objections"})}>
+              <TouchableOpacity className="flex-1" onPress={() => navigation.navigate('SectionNavigation', {screen: appLocale == 'en' ? "Objections" : "الاعتراضات"})}>
                 <View className="bg-white rounded-lg p-3">
                   <Icon name='comment-alert-outline' type='material-community' color='#ABC7BD' size={22} reverse/>
                   <SText text='objections' classes="text-xl px-2 py-1"/>

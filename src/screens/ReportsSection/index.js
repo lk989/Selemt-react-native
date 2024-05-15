@@ -29,15 +29,6 @@ const SegmentedControl = ({ navigation }) => {
       .catch(error => console.error('Error fetching reports:', error.response.data.message));
   }, []); 
 
-  const formatDate = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toDateString(); // Returns the date portion only
-  };
-  const formatTime = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toLocaleTimeString(); // Returns the date portion only
-  };
-
   return (
     <View className="mt-5">
       <ScrollView  style={styles.container}>

@@ -84,6 +84,8 @@
     "notes": "ملاحظات",
     "resend-otp": "إعادة إرسال رمز التحقق",
     "resend-otp-duration": "إعادة الإرسال في {{params}}",
-    "not-receive-otp": "لم يصلك رمز التحقق؟"
-
+    "not-receive-otp": "لم يصلك رمز التحقق؟",
+    "no-rerports-yet": "ليس لديك أي بلاغ بعد",
+    "categories": "الأقسام",
+    "can-initiate-report": "يمكنك رفع بلاغ جديد من خلال الضغط على علامة الزائد"
 }
