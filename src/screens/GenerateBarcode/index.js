@@ -1,17 +1,18 @@
+// ? libraries imports
 import { View, Image } from "react-native";
-import Layout from "../../components/Layout";
-import SText from "../../components/SText";
 import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
 import { SvgXml } from 'react-native-svg';
 import Base64 from 'Base64'
+
+// ? components imports
+import { BASE_URL } from '../../config/config';
+import Layout from "../../components/Layout";
+import SText from "../../components/SText";
 
 const GenerateBarcode = ({navigation}) => {
 
     const [qrCodeImage, setQrCodeImage] = useState(null);
-    const [qrCodeId, setQrCodeId] = useState(null);
-    const [qrCodeToken, setQrCodeToken] = useState(null);
     const qrCodeIdRef = useRef(null);
 
     useEffect(() => {
@@ -19,8 +20,6 @@ const GenerateBarcode = ({navigation}) => {
             .then(function (response) {
                 let svg = Base64.atob(response.data.qrCode)
                 setQrCodeImage(svg);
-                setQrCodeId(response.data.id);
-                setQrCodeToken(response.data.token);
                 qrCodeIdRef.current = response.data.id;
             })
             .catch(function (error) {
