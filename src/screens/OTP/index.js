@@ -36,7 +36,7 @@ function OTP({ route, navigation }) {
       let userId = response.data.user.id.toString(); 
       AsyncStorage.setItem('userId', JSON.stringify(userId))
       .then(() => {
-        navigation.navigate('Home')
+        navigation.navigate('HomeStack')
         })
         .catch(error => {
           console.error('Failed to save userId', error);
