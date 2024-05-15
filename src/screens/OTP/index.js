@@ -40,7 +40,8 @@ function OTP({ route, navigation }) {
       // ? save user's data in a session
       AsyncStorage.multiSet([
         ['userId', JSON.stringify(response.data.user.id.toString())],
-        ['userToken', response.data.token]
+        ['userToken', response.data.token],
+        ['userName', response.data.user.name]
       ])
       .then(() => {
         navigation.navigate('Home')

@@ -1,15 +1,29 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import { Icon } from 'react-native-elements';
-import SText,{ setLocale }from "./SText";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getLocales } from "expo-localization";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import SText,{ setLocale }from "./SText";
 
-const hello = () => {
-    console.log('object')
-};
 const Header = ({ navigation }) => {
-    let name = 'Lama Bugis';
+    const [name, setName] = useState('');
+
+    useEffect(() => {
+        // ? retreiving the user's name from the session
+        AsyncStorage.getItem('userName')
+        .then(userNameString => {
+          if (userNameString) {
+            setName(userNameString)
+          } else {
+            console.log('No user name found.');
+          }
+        })
+        .catch(error => {
+          console.error('Error retrieving user name:', error);
+        });
+      }, []); 
+
     const [locale, setLocaleState] = useState(getLocales()[0].languageCode);
     const toggleLanguage = () => {
         const newLocale = locale.startsWith('en') ? 'ar' : 'en';
