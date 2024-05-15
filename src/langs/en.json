@@ -81,7 +81,10 @@
     "party-one-percentage": "Party one percentage",
     "party-two-percentage": "Party two percentage",
     "accident-location": "Accident location",
-    "notes": "Notes"
+    "notes": "Notes",
+    "resend-otp": "Resend OTP",
+    "resend-otp-duration": "Resend in {{params}}",
+    "not-receive-otp": "Did not receive OTP? "
     
 
 }

@@ -81,6 +81,9 @@
     "party-one-percentage": "نسبة خطأ الطرف الأول",
     "party-two-percentage": "نسبة خطأ الطرف الثاني",
     "accident-location": "موقع الحادث",
-    "notes": "ملاحظات"
+    "notes": "ملاحظات",
+    "resend-otp": "إعادة إرسال رمز التحقق",
+    "resend-otp-duration": "إعادة الإرسال في {{params}}",
+    "not-receive-otp": "لم يصلك رمز التحقق؟"
 
 }

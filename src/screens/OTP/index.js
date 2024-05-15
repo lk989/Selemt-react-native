@@ -1,49 +1,56 @@
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from "react-native";
-import SText from "../../components/SText";
+// ? libraries imports
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
 import Toast from 'react-native-toast-message';
-import {extractCleanNumber} from '../../utils/utils';
 import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// ? components imports
+import {extractCleanNumber, showErrorToast} from '../../utils/utils';
+import { BASE_URL, appLocale } from '../../config/config';
+import SText from "../../components/SText";
+import CountdownTimer from "../../components/CountdownTimer";
 
 function OTP({ route, navigation }) {
+  // ? the screen is used to go back to using back arrow
   const { otpData, screen } = route.params;
 
+  const [otpGenerated, setOtpGenerated] = useState(otpData.value); 
   const [otp, setOtp] = useState(''); 
   const [otpDisabled, setOtpDisabled] = useState(true); 
 
+  // ? update OTP after resend
+  const updateOtp = (newOtp) => {
+    setOtpGenerated(newOtp);
+  };
+
+  // ? validate OTP before submit
   const handleOtp = (otp) => {
     setOtp(extractCleanNumber(otp));
     setOtpDisabled(otp.length != 4);
   };
 
-  const showErrorOtpToast = (message) => {
-    Toast.show({
-      type: 'error',
-      text1: message,
-      topOffset: 70
-    });
-  }
-
   const validateOtp = () => {
-    axios.post(`${BASE_URL}login`, {
-      phone: otpData.phone,
-      otp: otp
-    })
+    axios.post(`${BASE_URL}login`,
+      { phone: otpData.phone, otp: otp },
+      { headers: { 'Accept-Language': appLocale } }
+    )
     .then(function (response) {
-      let userId = response.data.user.id.toString(); 
-      AsyncStorage.setItem('userId', JSON.stringify(userId))
+      // ? save user's data in a session
+      AsyncStorage.multiSet([
+        ['userId', JSON.stringify(response.data.user.id.toString())],
+        ['userToken', response.data.token]
+      ])
       .then(() => {
         navigation.navigate('Home')
         })
         .catch(error => {
-          console.error('Failed to save userId', error);
+          console.error('Failed to save user data', error);
         });
     })
     .catch(function (error) {
-      showErrorOtpToast(error.response.data.message);
+      showErrorToast(error.response.data.message);
       setOtpDisabled(true);
     });
   };
@@ -60,7 +67,7 @@ function OTP({ route, navigation }) {
             <SText text='validate-phone' classes="text-green font-bold text-xl pb-4"/>
             <SText text='enter-otp' classes="text-black font-semibold"/>
             <Text className="text-green font-semibold">{'+966' + otpData.phone}</Text>
-            <Text className="text-xs">{otpData.value}</Text>
+            <Text className="text-xs">{otpGenerated}</Text>
             <View className="flex-row">
             <TextInput
               value={otp}
@@ -73,6 +80,7 @@ function OTP({ route, navigation }) {
             />
             </View>
           </View>
+          <CountdownTimer phone={otpData.phone} updateOtp={updateOtp}/>
           <TouchableOpacity className={`${otpDisabled ? 'bg-light-green' : 'bg-green'} rounded-md`} onPress={() => validateOtp()} disabled={otpDisabled}>
             <SText text='validate' classes="text-white text-center text-xl p-2"/>
           </TouchableOpacity>
