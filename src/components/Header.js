@@ -9,7 +9,7 @@ const hello = () => {
     console.log('object')
 };
 const Header = ({ navigation }) => {
-    let name = 'لمى بوقس';
+    let name = 'Lama Bugis';
     const [locale, setLocaleState] = useState(getLocales()[0].languageCode);
     const toggleLanguage = () => {
         const newLocale = locale.startsWith('en') ? 'ar' : 'en';

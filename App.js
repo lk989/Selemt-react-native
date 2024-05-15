@@ -1,10 +1,12 @@
 
+// ? libraries imports
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// ? screens imports
 import OTP from './src/screens/OTP';
-import HomeStack from './src/stacks/HomeStack';
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import Home from './src/screens/Home';
@@ -19,15 +21,17 @@ import AccidentInformation from './src/screens/AccidentInformation';
 import SectionNavigation from './src/navigation/SectionNavigation';
 import ProfileScreen from './src/screens/ProfileScreen';
 
+// ? a stack constant for navigation
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
+        {/* // ? disable gestureEnabled to stop users from sliding to previous screen */}
         <Stack.Screen name="Home" component={Home} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="ObjectionsSection" component={ObjectionsSection} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
