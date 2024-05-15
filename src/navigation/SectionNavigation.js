@@ -3,6 +3,7 @@ import ObjectionsSection from '../screens/ObjectionsSection';
 import Layout from '../components/Layout';
 import ReportsSection from '../screens/ReportsSection';
 import { getLocales } from 'expo-localization';
+import { useEffect } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,19 +19,10 @@ const SectionNavigation = ({ route, navigation }) => {
             tabBarOptions={{
                 activeTintColor: '#016E46', 
                 inactiveTintColor: 'gray', 
-                labelStyle: {
-                  fontSize: 12, 
-                  fontWeight: 'bold', 
-                },
-                style: {
-                    borderRadius: 10, 
-                },
-                indicatorStyle: {
-                  backgroundColor: '#016E46', 
-                  marginHorizontal: 5
-                },
-              }}
-              initialRouteName={initialRouteName}>
+                labelStyle: { fontSize: 12, fontWeight: 'bold' },
+                style: { borderRadius: 10 },
+                indicatorStyle: { backgroundColor: '#016E46', marginHorizontal: 5},
+              }}>
                 <Tab.Screen name={reportsLabel} component={ReportsSection} />
                 <Tab.Screen name={objectionsLabel} component={ObjectionsSection} />
             </Tab.Navigator>
