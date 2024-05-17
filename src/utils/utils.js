@@ -38,3 +38,17 @@ export function formatTime(dateTimeString){
   const date = new Date(dateTimeString);
   return date.toLocaleTimeString(); 
 };
+
+// ? date to string
+export function dateToString(date){
+  let day = String(date.getDate()).padStart(2, '0'); 
+  let month = String(date.getMonth() + 1).padStart(2, '0');
+  let year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+// ? string to date
+export function stringToDate(stringDate){
+  const [day, month, year] = stringDate.split('/').map(Number);
+  return new Date(year, month - 1, day); 
+};

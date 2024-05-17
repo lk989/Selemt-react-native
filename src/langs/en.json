@@ -87,7 +87,8 @@
     "not-receive-otp": "Did not receive OTP? ",
     "no-rerports-yet": "You do not have any accident report yet",
     "categories": "Categories",
-    "can-initiate-report": "You can initiate a new accident report by clicking the plus button"
+    "can-initiate-report": "You can initiate a new accident report by clicking the plus button",
+    "national_id": "National ID"
     
 
 }

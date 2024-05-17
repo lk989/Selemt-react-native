@@ -1,112 +1,124 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Platform}from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
+
 import Layout from "../../components/Layout";
 import SText from "../../components/SText";
-import {validPhone, extractCleanPhone} from '../../utils/utils';
-import { getLocales } from 'expo-localization';
+import { dateToString, stringToDate} from '../../utils/utils';
+import { BASE_URL, appLocale } from "../../config/config";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function AccidentPersonalInfo({ route, navigation }) {
-  let appLocale = getLocales()[0].languageCode;
-  let namePlaceholder = appLocale == 'ar' ? 'محمد أحمد الغامدي' : 'Mohammed Ahmad Alghamdi';
-  let selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
+
+  let namePlaceholder = appLocale == 'en' ? 'Mohammed Ahmad Alghamdi' : 'محمد أحمد الغامدي' ;
+  let selectPlaceholder = { label: appLocale == 'en' ? "Choose" : "اختر", value: '' };
   let licenseList = [
-    { label: appLocale == 'ar' ? "خاصة" : "Private", value: "private" },
-    { label: appLocale == 'ar' ? "عمومية" : "Public", value: "public" },
-    { label: appLocale == 'ar' ? "دولية" : "International", value: "international" },
+    { label: appLocale == 'en' ? "Private" : "خاصة", value: "private" },
+    { label: appLocale == 'en' ? "Public" : "عمومية", value: "public" },
+    { label: appLocale == 'en' ? "International" : "دولية", value: "international" },
   ];
   let genderList = [
-    { label: appLocale == 'ar' ? "ذكر" : "Male", value: "male" },
-    { label: appLocale == 'ar' ? "أنثى" : "Female", value: "female" },
+    { label: appLocale == 'en' ? "Male" : "ذكر", value: "male" },
+    { label: appLocale == 'en' ? "Female" : "أنثى", value: "female" },
   ];
   let insuranceList = [
-    { label: appLocale == 'ar' ? "نعم" : "Yes", value: "1" },
-    { label: appLocale == 'ar' ? "لا" : "No", value: "0" },
+    { label: appLocale == 'en' ? "Yes" : "نعم", value: "1" },
+    { label: appLocale == 'en' ? "No" : "لا", value: "0" },
   ];
-  let [disabledPersonal, setDisabledPersonal] = useState(true);
-  let maximumDate = new Date();
-  maximumDate.setFullYear(maximumDate.getFullYear() - 12);
 
-  const dateToString = (date) => {
-    let day = String(date.getDate()).padStart(2, '0'); 
-    let month = String(date.getMonth() + 1).padStart(2, '0');
-    let year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
-
-  const stringToDate = (stringDate) => {
-    const [day, month, year] = stringDate.split('/').map(Number);
-    return new Date(year, month - 1, day); 
-  };
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [disabledPersonal, setDisabledPersonal] = useState(true);
   const [formData, setFormData] = useState({
-    accident_id: route.params.accident_id,
-    party: route.params.party,
+    // ! do not forget to update this
+    accident_id: 1,
+    // accident_id: route.params.accident_id,
+    // party: route.params.party,
+    party: 1,
     name: "",
     dateOfBirth: dateToString(new Date()),
     phoneNumber: "",
     gender: "",
     drivingLicenceType: "",
     insuranceOwned: "",
+    nationalId: "",
   });
-  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    // ? fetching reports using user id
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        axios.get(`${BASE_URL}user-info`, {params: { user_id: JSON.parse(userIdString)}})
+          .then(response => {
+            const userData = response.data.user;
+            setFormData(prevFormData => ({
+              ...prevFormData,
+              name: userData.name,
+              phoneNumber: userData.phone,
+              dateOfBirth: (userData.date_of_birth !== null) ?
+              dateToString(new Date(userData.date_of_birth)) : dateToString(new Date()),
+              gender: (userData.sex !== null) ? userData.sex : '',
+              nationalId: (userData.national_id !== null) ? userData.national_id : '',
+            }));
+          })
+          .catch(error => console.error(error.response.data.message));
+      } else {
+        console.log('No user ID found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
+  }, []); 
+
+  let maximumDate = new Date();
+  maximumDate.setFullYear(maximumDate.getFullYear() - 12);
 
   const handleInputChange = (name, value) => {
+    // ? update the data
     let updatedFormData = { ...formData };
-    if (name === "phoneNumber") {
-      updatedFormData.phoneNumber = extractCleanPhone(value);
-    } else {
-      updatedFormData[name] = value;
-    }
+    updatedFormData[name] = value;
+    // ? checks if an input was empty
     const allInputsFilled = Object.values(updatedFormData).every(val => {
       if (typeof val === 'string') {
         return val.trim() !== '';
       }
-      return true; // Non-string values are considered filled
+      return true;
     });
-    let checkDisabled = allInputsFilled && validPhone(updatedFormData['phoneNumber']);
-    setDisabledPersonal(!checkDisabled);
+    // ? enable the button if there is no empty input
+    setDisabledPersonal(!allInputsFilled);
     setFormData(updatedFormData);
   };
 
   const handleDateChange = (event, selectedDate) => {
-    // const currentDate = selectedDate || formData.dateOfBirth;
     setShowDatePicker(Platform.OS === "ios");
     handleInputChange("dateOfBirth", dateToString(selectedDate));
   };
 
   const handleSubmit = () => {
-    // console.log(formData);
     navigation.navigate('CarInformation', {formData: formData})
   };
   
-
   return (
     <Layout>
-      <View style={styles.sectionContainer}>
+      <View className="rounded-md p-2 bg-white">
         <SText text='personal-information' classes="text-green text-lg font-bold p-4"/>
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='name' classes="font-semibold mb-2"/>
           <TextInput
-            style={styles.input}
+            className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black"
             onChangeText={(value) => handleInputChange("name", value)}
             value={formData.name}
             placeholder={namePlaceholder}
           />
         </View>
 
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='birthday' classes="font-semibold mb-2"/>
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-            <Text style={styles.textInput}>
+          <TouchableOpacity onPress={() => setShowDatePicker(true)} className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black">
+            <Text className="text-black">
               {formData.dateOfBirth}
             </Text>
           </TouchableOpacity>
@@ -128,19 +140,19 @@ function AccidentPersonalInfo({ route, navigation }) {
 
         </View>
 
-        <View style={styles.formGroup}>
-          <SText text='phone' classes="font-semibold mb-2"/>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
+          <SText text='national_id' classes="font-semibold mb-2"/>
           <TextInput
-            style={styles.input}
-            onChangeText={(value) => handleInputChange("phoneNumber", value)}
-            value={formData.phoneNumber}
-            placeholder="5XXXXXXXX"
+            className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black"
+            onChangeText={(value) => handleInputChange("nationalId", value)}
+            value={formData.nationalId}
+            placeholder="XXXXXXXXXX"
             keyboardType="numeric"
-            maxLength={9}
+            maxLength={10}
           />
         </View>
 
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='gender' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("gender", value)}
@@ -151,7 +163,7 @@ function AccidentPersonalInfo({ route, navigation }) {
           />
         </View>
 
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='license-type' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("drivingLicenceType", value)}
@@ -162,7 +174,7 @@ function AccidentPersonalInfo({ route, navigation }) {
           />
         </View>
 
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='has-insurance' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("insuranceOwned", value)}
@@ -181,95 +193,36 @@ function AccidentPersonalInfo({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  welcomeText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#016E46",
-    marginTop: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#F0F0F0",
-  },
-  formGroup: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 0,
-    flexDirection: "column", // Ensures the label and picker are stacked
-    alignItems: "stretch", // Stretches children to match the width of the container
-    padding: 10,
-  },
-  input: {
-    backgroundColor: "#FFF",
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    height: 15,
+    paddingVertical: 18,
+    paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: "#DDD",
+    borderColor: "#dcdcdc",
     borderRadius: 4,
-    padding: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
     fontSize: 16,
-    color: "#333",
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
-  textInput: {
-    fontSize: 16,
-    color: "#333",
-  },
-  sectionContainer: {
-    backgroundColor: "#FFFFFF", // Choose a suitable background color
-    borderRadius: 8,
-    margin: 'auto',
-    padding: 2,
-    shadowColor: "#000", // These shadow properties are for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 4, // elevation is for Android
-  },
-  picker: {
-    height: 10, // Set your desired height
-    width: "100%", // Ensure the Picker fills the container width
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "#dcdcdc",
+    borderRadius: 4,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    textAlign: "right", // if you want the text aligned to the right
   },
   placeholder: {
-    textAlign: "Right",
+    color: "#9EA0A4", // Placeholder text color
+  },
+  iconContainer: {
+    top: 5,
+    right: 15, // Adjust positioning as needed
   },
 });
-
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontSize: 16,
-      height: 15,
-      paddingVertical: 18,
-      paddingHorizontal: 10,
-      borderWidth: 1,
-      borderColor: "#dcdcdc",
-      borderRadius: 4,
-      color: "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-      fontSize: 16,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderWidth: 1,
-      borderColor: "#dcdcdc",
-      borderRadius: 4,
-      color: "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-      textAlign: "right", // if you want the text aligned to the right
-    },
   
-    placeholder: {
-      color: "#9EA0A4", // Placeholder text color
-    },
-  
-    iconContainer: {
-      top: 5,
-      right: 15, // Adjust positioning as needed
-    },
-  });
-  
-  export default AccidentPersonalInfo;
+export default AccidentPersonalInfo;
