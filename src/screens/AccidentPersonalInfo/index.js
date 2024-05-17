@@ -108,7 +108,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='name' classes="font-semibold mb-2"/>
           <TextInput
-            className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black"
+            className="bg-white border border-[#dddddd] rounded-md px-3 pb-3 text-black text-lg"
             onChangeText={(value) => handleInputChange("name", value)}
             value={formData.name}
             placeholder={namePlaceholder}
@@ -117,8 +117,8 @@ function AccidentPersonalInfo({ route, navigation }) {
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='birthday' classes="font-semibold mb-2"/>
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black">
-            <Text className="text-black">
+          <TouchableOpacity onPress={() => setShowDatePicker(true)} className="bg-white border border-[#dddddd] rounded-md ">
+            <Text className="text-black text-lg px-3 py-1.5">
               {formData.dateOfBirth}
             </Text>
           </TouchableOpacity>
@@ -143,7 +143,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='national_id' classes="font-semibold mb-2"/>
           <TextInput
-            className="bg-white border border-[#dddddd] rounded-md px-3 py-2.5 text-black"
+            className="bg-white border border-[#dddddd] rounded-md px-3 pb-3 text-black text-lg"
             onChangeText={(value) => handleInputChange("nationalId", value)}
             value={formData.nationalId}
             placeholder="XXXXXXXXXX"

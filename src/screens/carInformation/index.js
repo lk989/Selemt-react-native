@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Platform } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
+import { StyleSheet, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+
 import Layout from "../../components/Layout";
 import SText from '../../components/SText';
-import { getLocales } from 'expo-localization';
-
+import { appLocale } from '../../config/config';
 
 
 function CarInformation({ route, navigation }) {
   const prevFormData = route.params.formData;
 
-  let appLocale = getLocales()[0].languageCode;
-  let selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
-  let makePlaceholder = appLocale == 'ar' ? 'تويوتا' : 'Toyota';
-  let modelPlaceholder = appLocale == 'ar' ? 'كامري' : 'Camry';
+  let selectPlaceholder = { label: appLocale == 'en' ? "Choose" : "اختر", value: '' };
+  let makePlaceholder = appLocale == 'en' ? 'Toyota' : 'تويوتا';
+  let modelPlaceholder = appLocale == 'en' ? 'Camry' : 'كامري';
   let [disabledVehicle, setDisabledVehicle] = useState(true);
 
   let plateTypeList = [
-    { label: appLocale == 'ar' ? "سيارة خاصة" : "Private car", value: "private_car" },
-    { label: appLocale == 'ar' ? "سيارة عمومية (النقل الخاص)" : "Public transport", value: "public_transport" },
-    { label: appLocale == 'ar' ? "سيارة تجارية" : "Commercial vehicle", value: "commercial_vehicle" },
-    { label: appLocale == 'ar' ? "سيارة دبلوماسية" : "Embassy vehicle", value: "embassy_vehicle" },
+    { label: appLocale == 'en' ? "Private car" : "سيارة خاصة", value: "private_car" },
+    { label: appLocale == 'en' ? "Public transport" : "سيارة عمومية (النقل الخاص)", value: "public_transport" },
+    { label: appLocale == 'en' ? "Commercial vehicle" : "سيارة تجارية", value: "commercial_vehicle" },
+    { label: appLocale == 'en' ? "Embassy vehicle" : "سيارة دبلوماسية", value: "embassy_vehicle" },
   ];
 
-     //عشان يجيكم
   const [formData, setFormData] = useState({
     ...prevFormData,
     make: '',
@@ -34,22 +31,17 @@ function CarInformation({ route, navigation }) {
   });
 
   const handleInputChange = (name, value) => {
-    // setFormData(prevFormData => ({
-    //   ...prevFormData,
-    //   [name]: value
-    // }));
     let updatedFormData = { ...formData };
     updatedFormData[name] = value;
     const allInputsFilled = Object.values(updatedFormData).every(val => {
       if (typeof val === 'string') {
         return val.trim() !== '';
       }
-      return true; // Non-string values are considered filled
+      return true;
     });
     setFormData(updatedFormData);
     setDisabledVehicle(!allInputsFilled);
   };
-
 
   const handleSubmit = () => {
     navigation.navigate('AccidentInformation', {formData: formData})
@@ -57,36 +49,33 @@ function CarInformation({ route, navigation }) {
 
   return (
     <Layout>
-
-      <ScrollView style={styles.container}>
-
-        <View style={styles.sectionContainer}>
+        <View className="rounded-md p-2 bg-white">
           <SText text='vehicle-information' classes="text-green text-lg font-bold p-4"/>
             
-            <View style={styles.formGroup}>
+          <View className="mb-4 px-4 py-0 flex-col items-stretch">
             <SText text='make' classes="font-semibold mb-2"/>
             <TextInput
-              style={styles.input}
+              className="bg-white border border-[#dddddd] rounded-md px-3 pb-2 text-black text-lg"
               onChangeText={(value) => handleInputChange("make", value)}
               value={formData.make}
               placeholder={makePlaceholder}
             />
           </View>
 
-            <View style={styles.formGroup}>
+          <View className="mb-4 px-4 py-0 flex-col items-stretch">
             <SText text='model' classes="font-semibold mb-2"/>
             <TextInput
-              style={styles.input}
+              className="bg-white border border-[#dddddd] rounded-md px-3 pb-2 text-black text-lg"
               onChangeText={(value) => handleInputChange("model", value)}
               value={formData.model}
               placeholder={modelPlaceholder}
             />
           </View>
 
-            <View style={styles.formGroup}>
+          <View className="mb-4 px-4 py-0 flex-col items-stretch">
             <SText text='year' classes="font-semibold mb-2"/>
             <TextInput
-              style={styles.input}
+              className="bg-white border border-[#dddddd] rounded-md px-3 pb-2 text-black text-lg"
               onChangeText={(value) => handleInputChange("year", value)}
               value={formData.year}
               placeholder='2024'
@@ -96,7 +85,7 @@ function CarInformation({ route, navigation }) {
             
           </View>
 
-            <View style={styles.formGroup}>
+          <View className="mb-4 px-4 py-0 flex-col items-stretch">
             <SText text='plate-type' classes="font-semibold mb-2"/>
             <RNPickerSelect
                 onValueChange={(value) => handleInputChange('plateType', value)}
@@ -109,135 +98,42 @@ function CarInformation({ route, navigation }) {
             <SText text='next' classes="text-white text-center font-semibold"/>
           </TouchableOpacity>
         </View>
-
-   
-      </ScrollView>
     </Layout>
   );
 };
 
 const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontSize: 16,
-      height: 15,
-      paddingVertical: 18,
-      paddingHorizontal: 10,
-      borderWidth: 1,
-      borderColor: "#dcdcdc",
-      borderRadius: 4,
-      color: "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-      fontSize: 16,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderWidth: 1,
-      borderColor: "#dcdcdc",
-      borderRadius: 4,
-      color: "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-      textAlign: "right", // if you want the text aligned to the right
-    },
-  
-    placeholder: {
-      color: "#9EA0A4", // Placeholder text color
-    },
-  
-    iconContainer: {
-      top: 5,
-      right: 15, // Adjust positioning as needed
-    },
-  });
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#fff',
-  },
-  menuIcon: {
-    marginRight: 16,
-    color : '#016E46',
-    marginTop: 16,
-  },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color : '#016E46',
-    marginTop: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F0F0'
-  },
-  formGroup: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingVertical:0,
-    flexDirection: 'column', // Ensures the label and picker are stacked
-    alignItems: 'stretch',  // Stretches children to match the width of the container
-    padding: 10,       
-  },
-  input: {
-    backgroundColor: "#FFF",
+  inputIOS: {
+    fontSize: 16,
+    height: 15,
+    paddingVertical: 18,
+    paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: "#DDD",
+    borderColor: "#dcdcdc",
     borderRadius: 4,
-    padding: 8,
-    fontSize: 16,
-    color: "#333",
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
   },
-  button: {
-    backgroundColor: '#016E46',
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "#dcdcdc",
     borderRadius: 4,
-    marginHorizontal: 16,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  label: {
-    marginBottom: 5,
-    fontSize: 17,
-    textAlign: 'right',
-  },
-  textInput: {
-    // Styles for the date text inside the TouchableOpacity
-    fontSize: 16,
-    color: '#333',
-  },
-  sectionContainer: {
-    backgroundColor: "#FFFFFF", // Choose a suitable background color
-    borderRadius: 8,
-    margin: 'auto',
-    padding: 2,
-    shadowColor: "#000", // These shadow properties are for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 4, // elevation is for Android
-  },
-  sectionTitle: {
-    fontSize: 22,
-    color: '#016E46',
-    fontWeight: 'bold',
-    marginBottom: 16, // Add some space below the title
-    textAlign: 'right', // Center the title text
-  },
- 
-
-  placeholder : {
-    textAlign:'right',
-
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    textAlign: "right", // if you want the text aligned to the right
   },
 
+  placeholder: {
+    color: "#9EA0A4", // Placeholder text color
+  },
+
+  iconContainer: {
+    top: 5,
+    right: 15, // Adjust positioning as needed
+  },
 });
 
 export default CarInformation;
