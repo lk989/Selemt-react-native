@@ -90,7 +90,8 @@
     "can-initiate-report": "You can initiate a new accident report by clicking the plus button",
     "national_id": "National ID",
     "accident-not-recognized": "Accident was not recognized in the provided picture, please upload a clear picture.",
-    "report-created-successfuly": "Accident report was created successfuly"
+    "report-created-successfuly": "Accident report was created successfuly",
+    "objection-created-successfuly": "Objection was created successfuly"
     
 
 }

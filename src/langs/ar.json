@@ -90,5 +90,6 @@
     "can-initiate-report": "يمكنك رفع بلاغ جديد من خلال الضغط على علامة الزائد",
     "national_id": "رقم الهوية",
     "accident-not-recognized": "لم يتم التعرف على الحادث في الصورة، يرجى رفع صورة توضح مكان الحادث",
-    "report-created-successfuly": "تم إنشاء البلاغ بنجاح"
+    "report-created-successfuly": "تم إنشاء البلاغ بنجاح",
+    "objection-created-successfuly": "تم إنشاء الاعتراض بنجاح"
 }

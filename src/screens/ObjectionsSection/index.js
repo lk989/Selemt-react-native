@@ -1,39 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
-import { getLocales } from 'expo-localization';
-import PlusButton from '../../components/PlusButton';
+import { View, Text, TouchableOpacity, StyleSheet,ScrollView } from 'react-native';
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
+import { BASE_URL, appLocale } from '../../config/config';
 import SText from '../../components/SText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { formatDate, formatTime } from '../../utils/utils';
 
 
 const SegmentedControl = ({ navigation }) => {
-  let appLocale = getLocales()[0].languageCode;
- 
   const [objections, setObjections] = useState([]);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}objections`, {
-      params: {
-        // !! send a dynamic id here
-        user_id: '2'
+    // ? fetching all objections
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        axios.get(`${BASE_URL}objections`, {params: { user_id: JSON.parse(userIdString)}})
+          .then(response => {
+            setObjections(response.data.objections);
+            setClosedStatus(response.data.closed_status);
+          })
+          .catch(error => console.error('Error fetching objections:', error.response.data.message));
+      } else {
+        console.log('No user ID found.');
       }
     })
-      .then(response => {
-        setObjections(response.data.objections);
-      })
-      .catch(error => console.error('Error fetching objections:', error.response.data.message));
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
   }, []); 
-
-  const formatDate = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toDateString(); // Returns the date portion only
-  };
-  const formatTime = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toLocaleTimeString(); // Returns the date portion only
-  };
 
   return (
     <View className="mt-5">
@@ -48,14 +43,14 @@ const SegmentedControl = ({ navigation }) => {
             </View>
             <View className="flex-1 mx-3 space-y-5">
               <View className="flex-row">
-                <Text style={{...styles.headerText, backgroundColor: objection.status.color}} className="text-xs">{appLocale == 'ar' ? objection.status.name_ar : objection.status.name_en}</Text>
+                <Text style={{...styles.headerText, backgroundColor: objection.status.color}} className="text-xs">{appLocale == 'en' ? objection.status.name_en : objection.status.name_ar}</Text>
               </View>
               <Text style={styles.contentText}>{objection.reason}</Text>
               <View className="flex-row justify-between">
                 <Text className="text-xs">{formatDate(objection.created_at)}</Text>
                 <Text className="text-xs">{formatTime(objection.created_at)}</Text>
               </View>
-              <TouchableOpacity onPress={() => navigation.navigate('ObjectionDetails')} style={styles.button}>
+              <TouchableOpacity onPress={() => navigation.navigate('ObjectionDetails', {objection: objection})} style={styles.button}>
                 <SText text='view-objection-details' classes="font-semibold"/>
               </TouchableOpacity>
             </View>

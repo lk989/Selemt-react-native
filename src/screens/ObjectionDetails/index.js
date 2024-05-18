@@ -5,7 +5,7 @@ import Layout from "../../components/Layout";
 import { getLocales } from 'expo-localization';
 
 
-function ObjectionDetails({ navigation }) {
+function ObjectionDetails({ route, navigation }) {
     let appLocale = getLocales()[0].languageCode;
     const objection = route.params.objection;
 
@@ -17,7 +17,6 @@ function ObjectionDetails({ navigation }) {
       const date = new Date(dateTimeString);
       return date.toLocaleTimeString(); // Returns the date portion only
     };
-    console.log(objection.accident.party_two_name)
   
     return (
       <Layout>

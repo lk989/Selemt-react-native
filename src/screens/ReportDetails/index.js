@@ -2,35 +2,23 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button, StyleSheet } from "react-native";
 import SText from "../../components/SText";
 import Layout from "../../components/Layout";
-import RNPickerSelect from 'react-native-picker-select';
-import { Icon } from 'react-native-elements'
 import axios from "axios";
-import { BASE_URL } from "../../config/config";
-import { getLocales } from 'expo-localization';
+import { BASE_URL, appLocale } from "../../config/config";
+import { formatDate, formatTime } from "../../utils/utils";
 
 
 function ReportDetails({ route, navigation }) {
   const [isObjectionModalVisible, setIsObjectionModalVisible] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
   const [disabledObjection, setDisabledObjection] = useState(true);
-  let appLocale = getLocales()[0].languageCode;
   const [confirmationText, setConfirmationText] = useState('');
-  const reasonPlaceholder = appLocale == 'ar' ? "اكتب سبب الاعتراض هنا ..." : "Write your objection reason here ...";
+  const reasonPlaceholder = appLocale == 'en' ? "Write your objection reason here ..." : "اكتب سبب الاعتراض هنا ...";
   const report = route.params.report;
   const closedStatus = route.params.closedStatus;
   const [formData, setFormData] = useState({
     reason: '',
     report: report.accident_id,
   });
-
-  const formatDate = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toDateString(); // Returns the date portion only
-  };
-  const formatTime = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    return date.toLocaleTimeString(); // Returns the date portion only
-  };
 
   const handleRaiseObjection = () => {
     setIsObjectionModalVisible(true);
@@ -52,6 +40,7 @@ function ReportDetails({ route, navigation }) {
         console.error("Error:", error.response.data.message);
     });
   };
+  console.log(report.accident.party_one_percentage)
 
   return (
     <Layout>
@@ -62,7 +51,7 @@ function ReportDetails({ route, navigation }) {
             <Text className="text-green font-bold text-lg mx-2">#{report.id}</Text>
           </View>
           <View className="rounded-md flex-row items-center" style={{ backgroundColor: report.accident.status.color}}>
-            <Text className=" px-4 text-xs rounded-sm">{appLocale == 'ar' ? report.accident.status.name_ar : report.accident.status.name_en}</Text>
+            <Text className=" px-4 text-xs rounded-sm">{appLocale == 'en' ? report.accident.status.name_en : report.accident.status.name_ar}</Text>
           </View>
         </View>
 
@@ -87,28 +76,25 @@ function ReportDetails({ route, navigation }) {
         </View>
 
         {closedStatus == report.accident.status_id ?
+        // ? if accident has been evaluated
           (<View className="space-y-8">
             <View>
               <View className="flex-1 space-y-2">
                 <SText text='fault-percentage' classes="font-semibold text-sm text-black"/>
-                <Text className="text-gray">%{report.party == '1' ? report.accident.party_one_percentage.fault_percentage : report.accident.party_two_percentage.fault_percentage}</Text>
+                <Text className="text-gray">%{report.party == '1' ? report.accident.party_one_percentage : report.accident.party_two_percentage}</Text>
               </View>
             </View>
             <View className="spacy-y-4">
-              <TouchableOpacity className="bg-light-green rounded">
-                <SText text="download-report" classes="text-center py-3 font-semibold text-black" />
-              </TouchableOpacity>
               {!report.accident.has_objections && (
-                <TouchableOpacity
-                  onPress={handleRaiseObjection}
-                  className="border border-green my-3 rounded">
+                <TouchableOpacity onPress={handleRaiseObjection}
+                className="border border-green my-3 rounded">
                   <SText text="Raise-objection" classes="text-center text-green font-semibold py-3" />
                 </TouchableOpacity>
               )}
             </View>
-          </View>
-          )
+          </View>)
           :
+          // ? else
           (<View>
             <View className="flex-1 space-y-2">
               <SText text='fault-percentage' classes="font-semibold text-sm text-black"/>
@@ -123,8 +109,8 @@ function ReportDetails({ route, navigation }) {
             animationType="slide"
             presentationStyle="pageSheet"
             transparent>
-            <View className="relative flex justify-end h-full">
-                <View className="bg-white rounded-t-2xl shadow-lg flex p-5">
+            <View className="relative flex justify-center h-full">
+                <View className="bg-white rounded-2xl shadow-lg flex p-5">
                   <SText text='Raise-objection' classes="text-black py-4 font-bold text-lg text-center mt-6"/>
                     <View>
                         <SText text='reason-objection' classes="font-semibold mb-2 text-black"/>
@@ -147,23 +133,23 @@ function ReportDetails({ route, navigation }) {
             </View>
           </Modal>
           <Modal
-                visible={isConfirmationModalVisible}
-                onRequestClose={() => setIsConfirmationModalVisible(false)}
-                animationType="slide"
-                presentationStyle="overFullScreen"
-                transparent>
-                <View className="relative flex justify-end h-full shadow-2xl">
-                    <View className="bg-white rounded-2xl shadow-lg flex p-2 my-auto mx-4">
-                    <Text className="text-black py-4 font-bold text-lg text-center">{confirmationText}</Text>
-                    <TouchableOpacity
-                    className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
-                    underlayColor='#fff'
-                    onPress={() => {setIsConfirmationModalVisible(false); navigation.navigate('SectionNavigation', {initialName: appLocale == 'ar' ? "الاعتراضات" : "Objections"})}}>
-                        <SText text='go-objections' classes="text-white py-2 font-bold text-center"/>
-                    </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+          visible={isConfirmationModalVisible}
+          onRequestClose={() => setIsConfirmationModalVisible(false)}
+          animationType="slide"
+          presentationStyle="overFullScreen"
+          transparent>
+          <View className="relative flex justify-end h-full shadow-2xl">
+              <View className="bg-white rounded-2xl shadow-lg flex p-2 my-auto mx-4">
+                <SText text='objection-created-successfuly' classes="text-black py-4 font-bold text-lg text-center"/>
+                <TouchableOpacity
+                className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
+                underlayColor='#fff'
+                onPress={() => {setIsConfirmationModalVisible(false); navigation.navigate('Home')}}>
+                  <SText text='go-home' classes="text-white py-2 font-bold text-lg text-center"/>
+                </TouchableOpacity>
+              </View>
+          </View>
+        </Modal>
       </View>
     </Layout>
   );
@@ -178,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 5, // Slightly rounded corners
     fontSize: 16,
     textAlignVertical: 'top', // Start the text from the top on Android
-    height: 100, // Set a fixed height or make it dynamic as per your needs
+    height: 150, // Set a fixed height or make it dynamic as per your needs
   }
 });
 
