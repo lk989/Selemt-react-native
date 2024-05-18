@@ -45,7 +45,7 @@
     "plate-type": "Plate type",
     "no-access-cam":"No access to camera",
     "Requesting-for-camera-permission":"Requesting for camera permission",
-    "accident-information": "Accident details",
+    "accident-information": "Accident Details",
     "direction": "Direction",
     "street-type": "Street type",
     "lines-number": "Number of lines",
@@ -88,7 +88,9 @@
     "no-rerports-yet": "You do not have any accident report yet",
     "categories": "Categories",
     "can-initiate-report": "You can initiate a new accident report by clicking the plus button",
-    "national_id": "National ID"
+    "national_id": "National ID",
+    "accident-not-recognized": "Accident was not recognized in the provided picture, please upload a clear picture.",
+    "report-created-successfuly": "Accident report was created successfuly"
     
 
 }

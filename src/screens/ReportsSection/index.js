@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,ScrollView,StatusBar     } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
-import PlusButton from '../../components/PlusButton';
+import { View, Text, TouchableOpacity, StyleSheet,ScrollView} from 'react-native';
 import SText from '../../components/SText';
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
-import { getLocales } from 'expo-localization';
+import { BASE_URL, appLocale } from '../../config/config';
+import { formatDate, formatTime } from '../../utils/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 const SegmentedControl = ({ navigation }) => {
-  let appLocale = getLocales()[0].languageCode;
  
   const [reports, setReports] = useState([]);
   const [closedStatus, setClosedStatus] = useState('');
 
   useEffect(() => {
-    axios.get(`${BASE_URL}reports`, {
-      params: {
-        // !! send a dynamic id here
-        user_id: '2'
+    // ? fetching all reports
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        axios.get(`${BASE_URL}reports`, {params: { user_id: JSON.parse(userIdString)}})
+          .then(response => {
+            setReports(response.data.reports);
+            setClosedStatus(response.data.closed_status);
+          })
+          .catch(error => console.error('Error fetching reports:', error.response.data.message));
+      } else {
+        console.log('No user ID found.');
       }
     })
-      .then(response => {
-        setReports(response.data.reports);
-        setClosedStatus(response.data.closed_status);
-      })
-      .catch(error => console.error('Error fetching reports:', error.response.data.message));
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
   }, []); 
 
   return (
@@ -42,7 +46,7 @@ const SegmentedControl = ({ navigation }) => {
             </View>
             <View className="flex-1 mx-3 space-y-5">
               <View className="flex-row">
-                <Text style={{...styles.headerText, backgroundColor: report.accident.status.color}} className="text-xs">{appLocale == 'ar' ? report.accident.status.name_ar : report.accident.status.name_en}</Text>
+                <Text style={{...styles.headerText, backgroundColor: report.accident.status.color}} className="text-xs">{appLocale == 'en' ? report.accident.status.name_en : report.accident.status.name_ar}</Text>
               </View>
               <Text style={styles.contentText}>{report.description}</Text>
               <View className="flex-row justify-between">

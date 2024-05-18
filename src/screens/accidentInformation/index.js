@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  StyleSheet, View, Text, TextInput, TouchableOpacity, Image, FlatList, Modal
-} from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, FlatList, Modal} from 'react-native';
 import { Icon } from 'react-native-elements'
 import RNPickerSelect from 'react-native-picker-select';
-import Layout from '../../components/Layout';
-import SText from '../../components/SText';
 import { getLocales } from 'expo-localization';
 import axios from 'axios';
-import { BASE_URL } from '../../config/config';
 import { CameraView, Camera } from "expo-camera/next";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
+
+import Layout from '../../components/Layout';
+import SText from '../../components/SText';
+import { BASE_URL, appLocale } from '../../config/config';
 
 
 function AccidentInformation({ route, navigation }) {
-  let appLocale = getLocales()[0].languageCode;
   let prevFormData = route.params.formData;
 
   const cameraRef = useRef(null);
@@ -28,6 +25,7 @@ function AccidentInformation({ route, navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [isConfirmationModalVisible, setisConfirmationModalVisible] = useState(false);
+  const [accidentError, setAccidentError] = useState(false);
   const [imageUri, setImageUri] = useState(null);
   const [image, setImage] = useState(null);
   const [confirmationText, setConfirmationText] = useState('');
@@ -40,8 +38,8 @@ function AccidentInformation({ route, navigation }) {
     movement: '',
     description: '',
     damagedAreas: [],
-    image: {}
   });
+  let accidentImage = new FormData();
 
   const selectPlaceholder = { label: appLocale == 'ar' ? "اختر" : "Choose", value: '' };
   const descriptionPlaceholder = appLocale == 'ar' ? "اكتب وصف الحادث هنا ..." : "Descripe the accident here ...";
@@ -67,15 +65,8 @@ function AccidentInformation({ route, navigation }) {
     { label: appLocale == 'ar' ? "الجانب الخلفي الايسر" : "Back left", value: 'back_left' },
   ];
 
-  const successToast = (message) => {
-    Toast.show({
-      type: 'error',
-      text1: message,
-      topOffset: 70
-    });
-  }
-
   useEffect(() => {
+    // ? check camera permission once the screen is rendered
     const checkPermission = async () => {
       const permissionStatus = await AsyncStorage.getItem('cameraPermission');
       setHasPermission(permissionStatus === 'granted');
@@ -108,8 +99,8 @@ function AccidentInformation({ route, navigation }) {
   }, []); 
   
   const launchCamera = async () => {
+    // ? logic of showing camera
     if (hasPermission) {
-      // Launch camera logic
       setShowCamera(true);
     } else {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -122,10 +113,12 @@ function AccidentInformation({ route, navigation }) {
   };
 
   const handlePress = (option) => {
+    // ? logic of damaged areas buttons
     let updatedOptions = [...selectedOptions];
 
     if (updatedOptions.includes(option)) {
-        updatedOptions = updatedOptions.filter((updatedOption) => updatedOption !== option);
+        updatedOptions = updatedOptions.filter((updatedOption) =>
+          updatedOption !== option);
     } else {
         updatedOptions.push(option);
     }
@@ -136,20 +129,7 @@ function AccidentInformation({ route, navigation }) {
   const handleInputChange = (name, value) => {
     let updatedFormData = { ...formData };
     updatedFormData[name] = value;
-    const allInputsFilled = Object.values(updatedFormData).every(val => {
-      if (typeof val === 'string') {
-            return val.trim() !== '';
-      }
-      if (Array.isArray(val)) {
-          return val.length !== 0;
-      }
-      if (val === null) {
-          return false;
-      }
-      return true;
-    });
     setFormData(updatedFormData);
-    setDisabledAccident(!allInputsFilled);
   };
 
   const handleTakePicture = async () => {
@@ -160,33 +140,34 @@ function AccidentInformation({ route, navigation }) {
       axios({
         method: "POST",
         url: "https://detect.roboflow.com/accident_detection-trmhu/1",
-        params: {
-            api_key: "rcXlc7gsf3g99MQGBOvg"
-        },
+        params: {api_key: "rcXlc7gsf3g99MQGBOvg"},
         data: photo.base64,
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
+        headers: {"Content-Type": "application/x-www-form-urlencoded"}
       })
       .then(function(response) {
-        // if(response.data.predictions.length > 0){
-        // }
-          setImage(photo.base64);
-          console.log(response.data.predictions);
+          const allInputsFilled = Object.values(formData).every(val => {
+            if (typeof val === 'string') return val.trim() !== '';
+            if (Array.isArray(val)) return val.length !== 0;
+            if (val === null) return false;
+            return true;
+          });
+          setAccidentError(response.data.predictions.length == 0)
+          setDisabledAccident(!allInputsFilled || response.data.predictions.length == 0);
       })
       .catch(function(error) {
           console.log(error.message);
       });
-      // formData["image"] = {
+      // accidentImage.append({
       //   uri: photo.uri,
-      //   name: `photo.jpg`,
-      //   type: `image/jpg`
-      // };
+      //   name: 'photo.jpg',
+      //   type: 'image/jpg',
+      // });
     }
   };
 
   const handleSubmit = () => {
-      axios.post(`${BASE_URL}create-accident-statement`,formData, {
+    console.log(formData)
+      axios.post(`${BASE_URL}create-accident-statement`,{formData: formData}, {
         headers: {
           Accept: "application/json",
           'Content-Type': 'multipart/form-data',
@@ -203,11 +184,11 @@ function AccidentInformation({ route, navigation }) {
 
   return (
     <Layout>
-      <View style={styles.sectionContainer}>
+      <View className="rounded-md p-2 bg-white mb-8">
         <SText text='accident-information' classes="text-green text-lg font-bold p-4"/>
 
         {/* First Picker */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='direction' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange('direction', value)}
@@ -218,7 +199,7 @@ function AccidentInformation({ route, navigation }) {
         </View>
 
         {/* Second Picker */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='street-type' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange('streetType', value)}
@@ -229,7 +210,7 @@ function AccidentInformation({ route, navigation }) {
         </View>
 
         {/*  Third Picker */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='lines-number' classes="font-semibold mb-2"/>
           <RNPickerSelect
             onValueChange={(value) => handleInputChange('numberOfLines', value)}
@@ -240,7 +221,7 @@ function AccidentInformation({ route, navigation }) {
         </View>
 
         {/* forth Picker */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='movement-before' classes="font-semibold mb-2"/>
           <RNPickerSelect 
             onValueChange={(value) => handleInputChange('movement', value)}
@@ -251,10 +232,10 @@ function AccidentInformation({ route, navigation }) {
         </View>
 
         {/* Text Input */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='accident-description' classes="font-semibold mb-2"/>
           <TextInput
-            style={styles.textArea}
+            className="border border-[#dddddd] px-3 rounded-md text-lg h-40"
             onChangeText={(text) => handleInputChange('description', text)}
             value={formData.accidentDetails}
             placeholder={descriptionPlaceholder}
@@ -263,7 +244,7 @@ function AccidentInformation({ route, navigation }) {
           />
         </View>
     
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='choose-damaged-areas' classes="font-semibold mb-1"/>
           <SText text='choose-more-than-one' classes="text-xs text-light-green mb-1"/>
           <View>
@@ -292,7 +273,7 @@ function AccidentInformation({ route, navigation }) {
         </View>
 
         {/* Photo Upload */}
-        <View style={styles.formGroup}>
+        <View className="mb-4 px-4 py-0 flex-col items-stretch">
           <SText text='vehicle-image' classes="font-semibold mb-1" />
           {imageUri && (<SText text='tap-to-retake' classes="text-xs text-light-green mb-1"/>)}
           <TouchableOpacity onPress={launchCamera} style={styles.uploadBox}>
@@ -304,6 +285,11 @@ function AccidentInformation({ route, navigation }) {
               </View>
             )}
           </TouchableOpacity>
+          {accidentError ? 
+          <SText text='accident-not-recognized' classes="text-[#b91c1c]"/>
+          :
+          <></>
+          }
         </View>
         <TouchableOpacity onPress={handleSubmit} className={`${disabledAccident ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} > 
           <SText text='next' classes="text-white text-center font-semibold"/>
@@ -344,19 +330,12 @@ function AccidentInformation({ route, navigation }) {
         transparent>
         <View className="relative flex justify-end h-full shadow-2xl">
             <View className="bg-white rounded-2xl shadow-lg flex p-2 my-auto mx-4">
-              <Text id='confirmation-message' classes="text-black py-4 font-bold text-lg text-center">{confirmationText}</Text>
-              <SText text='choose-operation' classes="text-black py-4 font-bold text-lg text-center"/>
+              <SText text='report-created-successfuly' classes="text-black py-4 font-bold text-lg text-center"/>
               <TouchableOpacity
               className="bg-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
               underlayColor='#fff'
-              onPress={() => {setisConfirmationModalVisible(false)}}>
-                <SText text='go-reports' classes="text-white py-2 font-bold text-lg text-center"/>
-              </TouchableOpacity>
-              <TouchableOpacity
-              className="bg-white border border-green mx-8 my-1 rounded-full items-center px-4 py-0.5 mb-2"
-              underlayColor='#fff'
               onPress={() => {setisConfirmationModalVisible(false); navigation.navigate('Home')}}>
-                <SText text='go-home' classes="text-green py-2 font-bold text-lg text-center"/>
+                <SText text='go-home' classes="text-white py-2 font-bold text-lg text-center"/>
               </TouchableOpacity>
             </View>
         </View>
@@ -403,13 +382,10 @@ const pickerSelectStyles = StyleSheet.create({
 
 
 const styles = StyleSheet.create({
-
-
   selectedOptionButton: {
     backgroundColor: '#ABC7BD', // Light green background for selected state
   },
   buttonsContainer: {
-
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
@@ -433,91 +409,12 @@ const styles = StyleSheet.create({
   fontWeight: 'bold',
   color: 'black',
   },
-  textArea: {
-    borderWidth: 1,
-    borderColor: '#dcdcdc', // Light grey border
-    padding: 10,
-    marginVertical: 5, // Add some vertical spacing
-    borderRadius: 5, // Slightly rounded corners
-    fontSize: 16,
-    textAlignVertical: 'top', // Start the text from the top on Android
-    height: 100, // Set a fixed height or make it dynamic as per your needs
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#fff',
-  },
-  menuIcon: {
-    marginRight: 16,
-    color: '#016E46',
-    marginTop: 16,
-  },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#016E46',
-    marginTop: 20,
-  },
-  formGroup: {
-    flex: 1,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 0,
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    padding: 10,
-  },
-  input: {
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 4,
-    padding: 16,
-    fontSize: 13,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#016E46',
-    borderRadius: 4,
-    marginHorizontal: 16,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  label: {
-    marginBottom: 5,
-    fontSize: 17,
-    textAlign: 'right',
-  },
-  sectionContainer: {
-    backgroundColor: "#FFFFFF", // Choose a suitable background color
-    borderRadius: 8,
-    margin: 'auto',
-    marginBottom: 40,
-    padding: 2,
-    shadowColor: "#000", // These shadow properties are for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 4, // elevation is for Android
-  },
   sectionTitle: {
     fontSize: 22,
     color: '#016E46',
     fontWeight: 'bold',
     marginBottom: 16, // Add some space below the title
     textAlign: 'right', // Center the title text
-  },
-  placeholder: {
-    alignItems: 'center',
   },
   // Styles for the photo upload box
   uploadBox: {
