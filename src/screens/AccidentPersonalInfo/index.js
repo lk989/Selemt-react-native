@@ -31,8 +31,10 @@ function AccidentPersonalInfo({ route, navigation }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [disabledPersonal, setDisabledPersonal] = useState(true);
   const [formData, setFormData] = useState({
-    accident_id: route.params.accident_id,
-    party: route.params.party,
+    accident_id: 1,
+    // accident_id: route.params.accident_id,
+    // party: route.params.party,
+    party: 1,
     name: "",
     dateOfBirth: dateToString(new Date()),
     phoneNumber: "",
@@ -95,7 +97,12 @@ function AccidentPersonalInfo({ route, navigation }) {
   };
 
   const handleSubmit = () => {
-    navigation.navigate('CarInformation', {formData: formData})
+    if(formData.party == 1){
+      navigation.navigate('VehicleInformation', {formData: formData})
+    }
+    else{
+      navigation.navigate('CarInformation', {formData: formData})
+    }
   };
   
   return (
