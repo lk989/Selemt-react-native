@@ -21,9 +21,16 @@ export function extractCleanNumber(number){
 }
 
 // ? taost error
-export function showErrorToast(message){
+export function showErrorToast(message, topOffset = 70){
   Toast.show({
-    type: 'error', text1: message, topOffset: 70
+    type: 'error', text1: message, topOffset: topOffset
+  });
+}
+
+// ? taost success
+export function showSuccessToast(message, topOffset = 70){
+  Toast.show({
+    type: 'success', text1: message, topOffset: topOffset
   });
 }
 

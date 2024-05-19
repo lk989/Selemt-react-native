@@ -1,40 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
   StyleSheet,
   Modal,
   Button,
-  StatusBar,
-  ScrollView
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Icon } from 'react-native-elements'
 import Layout from "../../components/Layout";
+import SText from '../../components/SText';
+import { BASE_URL, appLocale } from '../../config/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { dateToString, showErrorToast, showSuccessToast } from '../../utils/utils';
+import Toast from 'react-native-toast-message';
 
 
 function ProfileScreen() {
-    const [profileData, setProfileData] = useState({
-        'name': 'John Doe',
-        'email': 'john.doe@example.com',
-        'phone': '+123456789',
-        'birthdate': '1990-01-01',
-      });
+  AsyncStorage.setItem('userId', '2')
+  const [profileData, setProfileData] = useState({
+    'name': '',
+    'phone': '',
+    'birthdate': '',
+  });
+
+  useEffect(() => {
+    // ? fetching reports using user id
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        axios.get(`${BASE_URL}user-info`, {params: { user_id: JSON.parse(userIdString)}})
+          .then(response => {
+            const userData = response.data.user;
+            setProfileData(prevFormData => ({
+              ...prevFormData,
+              name: userData.name,
+              phone: userData.phone,
+              birthdate: (userData.date_of_birth !== null) ?
+              dateToString(new Date(userData.date_of_birth)) : dateToString(new Date()),
+            }));
+          })
+          .catch(error => console.error(error.response.data.message));
+      } else {
+        console.log('No user ID found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
+  }, []); 
 
 // Function to return the correct label for each field
 const getLabel = (field) => {
     switch (field) {
       case 'name':
-        return 'الاسم';
-      case 'email':
-        return 'البريد الإلكتروني';
+        return appLocale == 'en' ? 'Name' : 'الاسم';
       case 'phone':
-        return 'رقم الجوال';
+        return appLocale == 'en' ? 'Phone' : 'رقم الجوال';
       case 'birthdate':
-        return 'تاريخ الميلاد';
+        return appLocale == 'en' ? 'Birthdate' : 'تاريخ الميلاد';
       default:
         return field;
     }
@@ -44,13 +71,11 @@ const getLabel = (field) => {
   const getIconName = (field) => {
     switch (field) {
       case 'name':
-        return 'user';
-      case 'email':
-        return 'envelope';
+        return 'person-outline';
       case 'phone':
-        return 'phone';
+        return 'call-outline';
       case 'birthdate':
-        return 'calendar-alt';
+        return 'calendar-outline';
       default:
         return 'question-circle'; // default icon if field is not recognized
     }
@@ -59,8 +84,6 @@ const getLabel = (field) => {
   const [editableField, setEditableField] = useState(null);
   const [tempValue, setTempValue] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  
 
   const handleEdit = (field) => {
     setEditableField(field);
@@ -74,188 +97,83 @@ const getLabel = (field) => {
       [editableField]: tempValue,
     }));
     setModalVisible(false);
+    AsyncStorage.getItem('userId')
+    .then(userIdString => {
+      if (userIdString) {
+        const updatedProfileData = {
+          ...profileData,
+          [editableField]: tempValue,
+        };
+        axios.post(`${BASE_URL}edit-user`,
+        { user_id: JSON.parse(userIdString), name: updatedProfileData['name'], birthdate: updatedProfileData['birthdate']},
+        { headers: { 'Accept-Language': appLocale } })
+          .then(response => {
+            showSuccessToast(response.data.message, 30)
+          })
+          .catch(error => {showErrorToast(error.response.data.message)
+            console.log(error.response.data.message)
+          });
+      } else {
+        console.log('No user ID found.');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving user ID:', error);
+    });
   };
-
-
-
   
   return (
-    <>
      <Layout>
-
-      <TouchableOpacity onPress={() => console.log('Edit profile image')}>
-        <Image
-  style={styles.profileImage}
-  //source={require('../../assets/images/profile-image.jpeg')}
-  source={require('../../assets/images/icon.png')}
-  />
-        </TouchableOpacity>
-
-      <ScrollView style={styles.container}>
-        <View style={styles.sectionContainer}>
+        <View className="rounded-md p-4 bg-white my-auto">
+          <SText text='profile-settings' classes="text-green text-lg font-bold p-4"/>
       
-
-      {Object.entries(profileData).map(([field, value]) => (
-                <View key={field} style={styles.fieldContainer}>
-                {/* Use a function to get the correct icon name based on the field */}
-                <Icon
-                name={getIconName(field)}
-                size={16}
-                color="#333"
-                
-              
-              
-                style={styles.fieldIcon}
-                />
-                <View style={styles.textContainer}>
-                <Text style={styles.fieldLabel}>{getLabel(field)}</Text>
-                <Text style={styles.fieldValue}>{value}</Text>
+          {Object.entries(profileData).map(([field, value]) => (
+            <View key={field} className="flex-row px-4 py-3 justify-between">
+              <View className="flex-row">
+                <Icon name={getIconName(field)} size={20} type="ionicon" color="#016E46" className=""/>
+                <View className="flex-col mx-3">
+                  <Text className="text-black font-bold">{getLabel(field)}</Text>
+                  <Text className="text-gray p-2">{value}</Text>
                 </View>
-                <TouchableOpacity style={styles.editIcon} onPress={() => handleEdit(field)}>
-                <Icon name="pencil-alt" size={16} color="#000" />
+              </View>
+              {field != 'phone' ? 
+                <TouchableOpacity className="" onPress={() => handleEdit(field)}>
+                  <Icon name="edit" type="feather" size={12} color="#000" />
                 </TouchableOpacity>
+              :
+              <></>
+              }
             </View>
-       ))}
-
-
+          ))}
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent
           visible={modalVisible}
           onRequestClose={() => setModalVisible(!modalVisible)}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
+          <View className="h-full ">
+            <View className="my-auto bg-white shadow-md shadow-gray mx-4 border border-light-gray rounded-2xl">
               <TextInput
-                style={styles.modalInput}
+                className="border border-[#dddddd] rounded-md p-3 m-4"
                 value={tempValue}
                 onChangeText={setTempValue}
                 autoFocus={true}
               />
-              <Button title="Save" onPress={saveEdit} />
-              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+              <View className="flex-row mx-4 mb-3 space-x-2">
+                <TouchableOpacity className="bg-green rounded-md flex-1" onPress={saveEdit}>
+                  <SText text='save' classes="text-white text-center font-semibold py-2"/>
+                </TouchableOpacity>
+                <TouchableOpacity className="bg-white border flex-1 border-green rounded-md" onPress={() => setModalVisible(false)}>
+                  <SText text='cancel' classes="text-green text-center font-semibold py-2"/>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
-   
       </View>
-      </ScrollView>
+      <Toast />
       </Layout>
-    </>
   );
 }
-
-const styles = StyleSheet.create({
-    
-  container: {
-    flex: 1,
-    padding: 2,
-  },
-
-  sectionContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 4,
-    margin: 16,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 4,
-  },
-
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#fff',
-  },
-  menuIcon: {
-    marginRight: 16,
-    color: '#016E46',
-    marginTop: 16,
-  },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#016E46',
-    marginTop: 20,
-  },
-
-  profileImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 60,
-    alignSelf: 'center',
-    marginBottom: 10,
-    margin: 16,
-    padding: 16,
-  },
-  fieldContainer: {
- 
-    flexDirection: 'row-reverse', // For right-to-left layout
-    alignItems: 'center',
-    justifyContent: 'space-between', // Aligns items to opposite ends
-    marginBottom: 20,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#ccc',
-    width: '100%', // Make sure it spans the full width
-  },
-  textContainer: {
-    padding: 8,
-    flex: 1, // Takes up the remaining space
-    alignItems: 'flex-end', // Aligns text to the right
-    marginTop: 25
-  },
-  fieldLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
-    
-     
-  },
-  fieldValue: {
-    fontSize: 12,
-    color: '#555',
-    padding: 7, // Makes the touch area larger
-  },
-  editIcon: {
-    padding: 10, // Makes the touch area larger
-    flexDirection: 'row', // Left-to-right layout
-    marginBottom: 20,
-    color: '#333',
-  },
-
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 70,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalInput: {
-    width: '100%',
-    borderBottomWidth: 1,
-    padding: 10,
-    marginBottom: 20,
-  },
-  // Add other styles as needed
-});
 
 export default ProfileScreen;
