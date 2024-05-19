@@ -4,9 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Modal,
-  Button,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements'
@@ -20,7 +18,6 @@ import Toast from 'react-native-toast-message';
 
 
 function ProfileScreen() {
-  AsyncStorage.setItem('userId', '2')
   const [profileData, setProfileData] = useState({
     'name': '',
     'phone': '',
