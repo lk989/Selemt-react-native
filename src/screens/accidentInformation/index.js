@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 import RNPickerSelect from 'react-native-picker-select';
 import { getLocales } from 'expo-localization';
 import axios from 'axios';
-import { CameraView, Camera } from "expo-camera/next";
+import { CameraView, Camera } from "expo-camera";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Layout from '../../components/Layout';

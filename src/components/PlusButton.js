@@ -2,7 +2,7 @@ import { View, TouchableOpacity, Modal, Alert, Linking } from "react-native";
 import { Icon } from 'react-native-elements'
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Camera } from "expo-camera/next";
+import { Camera } from "expo-camera";
 
 import SText from "./SText";
 

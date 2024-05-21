@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Alert } from 'react-native';
-import { CameraView, Camera } from "expo-camera/next";
+import { CameraView, Camera } from "expo-camera";
 import Layout from "../../components/Layout";
 import SText from "../../components/SText";
 import axios from "axios";

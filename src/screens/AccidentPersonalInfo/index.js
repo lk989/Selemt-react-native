@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Platform}from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Platform } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import Layout from "../../components/Layout";
 import SText from "../../components/SText";
-import { dateToString, stringToDate} from '../../utils/utils';
+import { dateToString, stringToDate } from '../../utils/utils';
 import { BASE_URL, appLocale } from "../../config/config";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function AccidentPersonalInfo({ route, navigation }) {
 
-  let namePlaceholder = appLocale == 'en' ? 'Mohammed Ahmad Alghamdi' : 'محمد أحمد الغامدي' ;
+  let namePlaceholder = appLocale == 'en' ? 'Mohammed Ahmad Alghamdi' : 'محمد أحمد الغامدي';
   let selectPlaceholder = { label: appLocale == 'en' ? "Choose" : "اختر", value: '' };
   let licenseList = [
     { label: appLocale == 'en' ? "Private" : "خاصة", value: "private" },
@@ -31,10 +31,10 @@ function AccidentPersonalInfo({ route, navigation }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [disabledPersonal, setDisabledPersonal] = useState(true);
   const [formData, setFormData] = useState({
-    accident_id: 1,
-    // accident_id: route.params.accident_id,
-    // party: route.params.party,
-    party: 1,
+    // accident_id: 1,
+    accident_id: route.params.accident_id,
+    party: route.params.party,
+    // party: 1,
     name: "",
     dateOfBirth: dateToString(new Date()),
     phoneNumber: "",
@@ -47,30 +47,30 @@ function AccidentPersonalInfo({ route, navigation }) {
   useEffect(() => {
     // ? fetching reports using user id
     AsyncStorage.getItem('userId')
-    .then(userIdString => {
-      if (userIdString) {
-        axios.get(`${BASE_URL}user-info`, {params: { user_id: JSON.parse(userIdString)}})
-          .then(response => {
-            const userData = response.data.user;
-            setFormData(prevFormData => ({
-              ...prevFormData,
-              name: userData.name,
-              phoneNumber: userData.phone,
-              dateOfBirth: (userData.date_of_birth !== null) ?
-              dateToString(new Date(userData.date_of_birth)) : dateToString(new Date()),
-              gender: (userData.sex !== null) ? userData.sex : '',
-              nationalId: (userData.national_id !== null) ? userData.national_id : '',
-            }));
-          })
-          .catch(error => console.error(error.response.data.message));
-      } else {
-        console.log('No user ID found.');
-      }
-    })
-    .catch(error => {
-      console.error('Error retrieving user ID:', error);
-    });
-  }, []); 
+      .then(userIdString => {
+        if (userIdString) {
+          axios.get(`${BASE_URL}user-info`, { params: { user_id: JSON.parse(userIdString) } })
+            .then(response => {
+              const userData = response.data.user;
+              setFormData(prevFormData => ({
+                ...prevFormData,
+                name: userData.name,
+                phoneNumber: userData.phone,
+                dateOfBirth: (userData.date_of_birth !== null) ?
+                  dateToString(new Date(userData.date_of_birth)) : dateToString(new Date()),
+                gender: (userData.sex !== null) ? userData.sex : '',
+                nationalId: (userData.national_id !== null) ? userData.national_id : '',
+              }));
+            })
+            .catch(error => console.error(error.response.data.message));
+        } else {
+          console.log('No user ID found.');
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user ID:', error);
+      });
+  }, []);
 
   let maximumDate = new Date();
   maximumDate.setFullYear(maximumDate.getFullYear() - 12);
@@ -97,20 +97,23 @@ function AccidentPersonalInfo({ route, navigation }) {
   };
 
   const handleSubmit = () => {
-    if(formData.party == 1){
-      navigation.navigate('VehicleInformation', {formData: formData})
+    // console.log("first", formData ? 'dd' : 'dsd')
+    if (formData) {
+      navigation.replace('VehicleInformation', { formData: formData })
     }
-    else{
-      navigation.navigate('CarInformation', {formData: formData})
-    }
+    // if(formData.party == 1){
+    // }
+    // else{
+    //   navigation.navigate('VehicleInformation', {formData: formData})
+    // }
   };
-  
+
   return (
     <Layout>
       <View className="rounded-md p-2 bg-white">
-        <SText text='personal-information' classes="text-green text-lg font-bold p-4"/>
+        <SText text='personal-information' classes="text-green text-lg font-bold p-4" />
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='name' classes="font-semibold mb-2"/>
+          <SText text='name' classes="font-semibold mb-2" />
           <TextInput
             className="bg-white border border-[#dddddd] rounded-md px-3 pb-3 text-black text-lg"
             onChangeText={(value) => handleInputChange("name", value)}
@@ -120,7 +123,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         </View>
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='birthday' classes="font-semibold mb-2"/>
+          <SText text='birthday' classes="font-semibold mb-2" />
           <TouchableOpacity onPress={() => setShowDatePicker(true)} className="bg-white border border-[#dddddd] rounded-md ">
             <Text className="text-black text-lg px-3 py-1.5">
               {formData.dateOfBirth}
@@ -137,7 +140,7 @@ function AccidentPersonalInfo({ route, navigation }) {
                 maximumDate={maximumDate}
               />
               <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                <SText text='done' classes="text-blue text-lg text-center"/>
+                <SText text='done' classes="text-blue text-lg text-center" />
               </TouchableOpacity>
             </View>
           )}
@@ -145,7 +148,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         </View>
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='national_id' classes="font-semibold mb-2"/>
+          <SText text='national_id' classes="font-semibold mb-2" />
           <TextInput
             className="bg-white border border-[#dddddd] rounded-md px-3 pb-3 text-black text-lg"
             onChangeText={(value) => handleInputChange("nationalId", value)}
@@ -157,7 +160,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         </View>
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='gender' classes="font-semibold mb-2"/>
+          <SText text='gender' classes="font-semibold mb-2" />
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("gender", value)}
             items={genderList}
@@ -168,7 +171,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         </View>
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='license-type' classes="font-semibold mb-2"/>
+          <SText text='license-type' classes="font-semibold mb-2" />
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("drivingLicenceType", value)}
             items={licenseList}
@@ -179,7 +182,7 @@ function AccidentPersonalInfo({ route, navigation }) {
         </View>
 
         <View className="mb-4 px-4 py-0 flex-col items-stretch">
-          <SText text='has-insurance' classes="font-semibold mb-2"/>
+          <SText text='has-insurance' classes="font-semibold mb-2" />
           <RNPickerSelect
             onValueChange={(value) => handleInputChange("insuranceOwned", value)}
             items={insuranceList}
@@ -189,8 +192,8 @@ function AccidentPersonalInfo({ route, navigation }) {
           />
         </View>
 
-        <TouchableOpacity onPress={handleSubmit} className={`${disabledPersonal ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} disabled={disabledPersonal}>
-          <SText text='next' classes="text-white text-center font-semibold"/>
+        <TouchableOpacity onPress={() => handleSubmit()} className={`${disabledPersonal ? "bg-light-green" : "bg-green"} m-4 rounded-md py-3`} disabled={disabledPersonal}>
+          <SText text='next' classes="text-white text-center font-semibold" />
         </TouchableOpacity>
       </View>
     </Layout>
@@ -228,5 +231,5 @@ const pickerSelectStyles = StyleSheet.create({
     right: 15, // Adjust positioning as needed
   },
 });
-  
+
 export default AccidentPersonalInfo;
