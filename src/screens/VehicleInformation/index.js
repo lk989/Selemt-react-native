@@ -146,7 +146,7 @@ const VehicleInformation = (props) => {
   console.log("🚀 ~ VehicleInformation ~ route:", route)
   return (
     <View>
-      <Text>VehicleInformation</Text>
+      <Text>VehsicleInformation</Text>
     </View>
   )
 }
