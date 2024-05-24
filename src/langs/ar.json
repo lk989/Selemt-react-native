@@ -94,5 +94,6 @@
     "objection-created-successfuly": "تم إنشاء الاعتراض بنجاح",
     "profile-settings": "إعدادات الملف الشخصي",
     "save": "حفظ",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "logout": "تسجيل الخروج"
 }

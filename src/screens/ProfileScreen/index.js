@@ -17,7 +17,7 @@ import { dateToString, showErrorToast, showSuccessToast } from '../../utils/util
 import Toast from 'react-native-toast-message';
 
 
-function ProfileScreen() {
+function ProfileScreen({ navigation }) {
   const [profileData, setProfileData] = useState({
     'name': '',
     'phone': '',
@@ -25,7 +25,6 @@ function ProfileScreen() {
   });
 
   useEffect(() => {
-    // ? fetching reports using user id
     AsyncStorage.getItem('userId')
     .then(userIdString => {
       if (userIdString) {
@@ -49,6 +48,21 @@ function ProfileScreen() {
       console.error('Error retrieving user ID:', error);
     });
   }, []); 
+
+  async function logout() {
+    const userIdString = await AsyncStorage.getItem('userId');
+    const userId = JSON.parse(userIdString);
+    const response = await fetch(`${BASE_URL}logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ user_id: userId })
+    });
+    if (response.status === 200) {
+      navigation.navigate('Login');
+    }
+  }
 
 // Function to return the correct label for each field
 const getLabel = (field) => {
@@ -167,6 +181,12 @@ const getLabel = (field) => {
             </View>
           </View>
         </Modal>
+        <View className="my-2 pt-4 border-t border-light-gray">
+        <TouchableOpacity className="flex-row items-center mx-5" onPress={logout}>
+          <Icon name="logout" size={20} color="#b91c1c" className=""/>
+          <SText text='logout' classes="text-green text-center font-semibold py-2 mx-3 text-[#b91c1c]"/>
+        </TouchableOpacity>
+        </View>
       </View>
       <Toast />
       </Layout>

@@ -31,7 +31,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OTP" component={OTP} />
@@ -41,7 +41,7 @@ function App() {
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
         <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
-        {/* <Stack.Screen name="CarInformation" component={CarInformation} /> */}
+        <Stack.Screen name="CarInformation" component={CarInformation} />
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         <Stack.Screen name="SectionNavigation" component={SectionNavigation} />
         <Stack.Screen name="ReportDetails" component={ReportDetails} />

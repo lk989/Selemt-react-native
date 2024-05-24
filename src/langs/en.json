@@ -94,6 +94,7 @@
     "objection-created-successfuly": "Objection was created successfuly",
     "profile-settings": "Profile settings",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "logout": "Lougout"
 
 }
