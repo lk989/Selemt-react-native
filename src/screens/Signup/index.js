@@ -1,5 +1,5 @@
 // ? libraries imports
-import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
@@ -54,7 +54,8 @@ function Signup({ navigation }) {
   }
 
   return (
-    <View className="h-full">
+    <KeyboardAvoidingView className="h-full" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="p-4 space-y-8 my-auto">
         <View className="items-center space-y-8">
           <Image source={require("../../assets/images/logo.png")} className="" />
@@ -69,7 +70,6 @@ function Signup({ navigation }) {
               value={name}
               placeholder={namePlaceholder}
               placeholderTextColor="#ABC7BD"
-              returnKeyType='done' 
             />
           </View>
           <View className="w-full space-y-2">
@@ -86,8 +86,6 @@ function Signup({ navigation }) {
                 maxLength={9}
                 placeholder="5XXXXXXXX"
                 placeholderTextColor="#ABC7BD"
-                returnKeyType='done' // Display "Done" button on the keyboard
-                onSubmitEditing={signup}
               />
             </View>
           </View>
@@ -102,8 +100,9 @@ function Signup({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      </TouchableWithoutFeedback>
       <Toast />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 export default Signup;

@@ -1,5 +1,5 @@
 // ? libraries imports
-import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
@@ -35,7 +35,8 @@ function Login({ navigation }) {
   };
 
     return (
-      <View className="h-full">
+      <KeyboardAvoidingView className="h-full" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="p-4 space-y-8 my-auto">
           <View className="items-center space-y-8">
             <Image source={require("../../assets/images/logo.png")} className=""/>
@@ -57,8 +58,6 @@ function Login({ navigation }) {
                 maxLength={9}
                 placeholder="5XXXXXXXX"
                 placeholderTextColor="#ABC7BD"
-                returnKeyType='done'
-                onSubmitEditing={login}
               />
             </View>
           </View>
@@ -66,8 +65,9 @@ function Login({ navigation }) {
           <SText text='sign-in' classes="text-white text-center text-xl p-2"/>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
         <Toast className="my-12" />
-      </View>
+      </KeyboardAvoidingView>
     );
 }
 export default Login;
