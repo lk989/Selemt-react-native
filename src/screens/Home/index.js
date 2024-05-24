@@ -1,6 +1,6 @@
 // ? libraries imports
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements'
 import axios from 'axios';
@@ -14,12 +14,14 @@ import CurrLocation from '../../components/CurrLocation';
 import PushNotification from "../../components/PushNotification";
 import { BASE_URL, appLocale } from '../../config/config';
 import ReportCard from '../../components/ReportCard';
+import { useFocusEffect } from '@react-navigation/native';
 
 function Home({ navigation }) {
 
   const [latestReport, setLatestReport] = useState({});
-  const [noReports, setNoReports] = useState({});
+  const [noReports, setNoReports] = useState(true);
   const [closedStatus, setClosedStatus] = useState('');
+  const intervalId = useRef(0);
 
   const sendPushNotification = async () => {
     const apiUrl = 'https://app.nativenotify.com/api/notification';
@@ -39,26 +41,25 @@ function Home({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    // ? fetching reports using user id
-    AsyncStorage.getItem('userId')
-    .then(userIdString => {
-      if (userIdString) {
-        axios.get(`${BASE_URL}last-report`, {params: { user_id: JSON.parse(userIdString)}})
-          .then(response => {
-            setLatestReport(response.data.report);
-            setNoReports(response.data.report == null)
-            setClosedStatus(response.data.closed_status);
-          })
-          .catch(error => console.error(error.response.data.message));
-      } else {
-        console.log('No user ID found.');
-      }
-    })
-    .catch(error => {
-      console.error('Error retrieving user ID:', error);
+  useFocusEffect(
+    React.useCallback(() => {
+      getLastReport();
+    }, [])
+  );
+  
+  async function getLastReport() {
+    const userIdString = await AsyncStorage.getItem('userId');
+    const userId = JSON.parse(userIdString);
+    const response = await fetch(`${BASE_URL}last-report?user_id=${userId}`, {method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
     });
-  }, []); 
+    const res = await response.json();
+    setLatestReport(res.report);
+    setNoReports(res.report === null)
+    setClosedStatus(res.closed_status);
+  }
 
     return (
       <Layout navigation={navigation} showPlus={true}>
