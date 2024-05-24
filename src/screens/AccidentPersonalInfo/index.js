@@ -97,15 +97,7 @@ function AccidentPersonalInfo({ route, navigation }) {
   };
 
   const handleSubmit = () => {
-    // console.log("first", formData ? 'dd' : 'dsd')
-    if (formData) {
-      navigation.replace('VehicleInformation', { formData: formData })
-    }
-    // if(formData.party == 1){
-    // }
-    // else{
-    //   navigation.navigate('VehicleInformation', {formData: formData})
-    // }
+    navigation.replace('CarInformation', { formData: formData })
   };
 
   return (
