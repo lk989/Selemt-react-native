@@ -43,7 +43,7 @@ function ReportDetails({ route, navigation }) {
   console.log(report.accident.party_one_percentage)
 
   return (
-    <Layout>
+    <Layout navigation={navigation} buttons={['back']}>
       <View className="bg-white rounded-2xl space-y-6 p-6">
         <View className="flex-row justify-between">
           <View className="flex-row">

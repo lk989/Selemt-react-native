@@ -18,7 +18,7 @@ const SectionNavigation = ({ navigation }) => {
   const objectionsLabel = appLocale == 'ar' ? "الاعتراضات" : "Objections";
 
   return (
-    <Layout navigation={navigation} showPlus={true}>
+    <Layout navigation={navigation} showPlus={true} buttons={['back']}>
       <Tab.Navigator
         tabBarOptions={{
           activeTintColor: '#016E46', 

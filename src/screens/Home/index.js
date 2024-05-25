@@ -62,7 +62,7 @@ function Home({ navigation }) {
   }
 
     return (
-      <Layout navigation={navigation} showPlus={true}>
+      <Layout navigation={navigation} showPlus={true} buttons={['lang', 'profile']}>
           <View className="flex-row justify-between">
             <View className="bg-white rounded-md flex-row px-2 py-1">
               <Icon name='navigation' type='feather' color='#ABC7BD' size={18} />

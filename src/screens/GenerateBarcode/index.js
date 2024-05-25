@@ -72,7 +72,7 @@ const GenerateBarcode = ({navigation}) => {
     // }, [flag]);
 
     return (
-        <Layout>
+        <Layout navigation={navigation} buttons={['home']}>
             <View className="p-2 space-y-12">
                 <View className="bg-white rounded-lg shadow-sm w-full aspect-square mt-8">
                     {qrCodeImage && (

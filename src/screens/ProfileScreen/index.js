@@ -134,7 +134,7 @@ const getLabel = (field) => {
   };
   
   return (
-     <Layout>
+     <Layout navigation={navigation} buttons={['lang', 'home']}>
         <View className="rounded-md p-4 bg-white my-auto">
           <SText text='profile-settings' classes="text-green text-lg font-bold p-4"/>
       
