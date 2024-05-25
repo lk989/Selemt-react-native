@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput, Image, Button, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import SText from "../../components/SText";
 import Layout from "../../components/Layout";
 import axios from "axios";
@@ -108,29 +108,31 @@ function ReportDetails({ route, navigation }) {
             onRequestClose={() => setIsObjectionModalVisible(false)}
             animationType="slide"
             presentationStyle="pageSheet"
-            transparent>
-            <View className="relative flex justify-center h-full">
-                <View className="bg-white rounded-2xl shadow-lg flex p-5">
-                  <SText text='Raise-objection' classes="text-black py-4 font-bold text-lg text-center mt-6"/>
-                    <View>
-                        <SText text='reason-objection' classes="font-semibold mb-2 text-black"/>
-                        <TextInput
-                            style={styles.textArea}
-                            onChangeText={(text) => handleTextInputChange('reason', text)}
-                            // value={formData.accidentDetails}
-                            placeholder={reasonPlaceholder}
-                            multiline={true}
-                            numberOfLines={4}
-                        />
-                    </View>
-                    <TouchableOpacity
-                        className={`${disabledObjection ? "bg-light-green" : "bg-green"} my-4 rounded-md py-1`}
-                        underlayColor='#fff'
-                        onPress={handleSubmit}>
-                            <SText text='submit' classes="text-center text-s text-white font-bold p-2"/>
-                    </TouchableOpacity>
+          transparent>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View className="relative flex justify-center h-full">
+            <View className="bg-white rounded-2xl shadow-lg flex p-5">
+              <SText text='Raise-objection' classes="text-black py-4 font-bold text-lg text-center mt-6"/>
+                <View>
+                    <SText text='reason-objection' classes="font-semibold mb-2 text-black"/>
+                    <TextInput
+                        style={styles.textArea}
+                        onChangeText={(text) => handleTextInputChange('reason', text)}
+                        // value={formData.accidentDetails}
+                        placeholder={reasonPlaceholder}
+                        multiline={true}
+                        numberOfLines={4}
+                    />
                 </View>
+                <TouchableOpacity
+                    className={`${disabledObjection ? "bg-light-green" : "bg-green"} my-4 rounded-md py-1`}
+                    underlayColor='#fff'
+                    onPress={handleSubmit}>
+                        <SText text='submit' classes="text-center text-s text-white font-bold p-2"/>
+                </TouchableOpacity>
             </View>
+        </View>
+          </TouchableWithoutFeedback>
           </Modal>
           <Modal
           visible={isConfirmationModalVisible}
