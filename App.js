@@ -40,7 +40,7 @@ function App() {
         <Stack.Screen name="ObjectionsSection" component={ObjectionsSection} />
         <Stack.Screen name="GenerateBarcode" component={GenerateBarcode} />
         <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
-        <Stack.Screen name="AccidentPersonalInfo" component={AccidentPersonalInfo} />
+        <Stack.Screen name="AccidentPersonalInfo" options={{ gestureEnabled: false }} component={AccidentPersonalInfo} />
         <Stack.Screen name="CarInformation" component={CarInformation} />
         <Stack.Screen name="AccidentInformation" component={AccidentInformation} />
         <Stack.Screen name="SectionNavigation" component={SectionNavigation} />
