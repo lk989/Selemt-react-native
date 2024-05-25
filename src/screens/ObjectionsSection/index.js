@@ -4,29 +4,31 @@ import axios from 'axios';
 import { BASE_URL, appLocale } from '../../config/config';
 import SText from '../../components/SText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { formatDate, formatTime } from '../../utils/utils';
+import { formatDate, formatTime, showErrorToast } from '../../utils/utils';
+import Toast from 'react-native-toast-message';
 
 
-const SegmentedControl = ({ navigation }) => {
+const ObjectionsSection = ({ navigation }) => {
   const [objections, setObjections] = useState([]);
 
   useEffect(() => {
     // ? fetching all objections
     AsyncStorage.getItem('userId')
-    .then(userIdString => {
+      .then(userIdString => {
+      console.log(JSON.parse(userIdString))
       if (userIdString) {
         axios.get(`${BASE_URL}objections`, {params: { user_id: JSON.parse(userIdString)}})
           .then(response => {
             setObjections(response.data.objections);
             setClosedStatus(response.data.closed_status);
           })
-          .catch(error => console.error('Error fetching objections:', error.response.data.message));
+          .catch(error => showErrorToast('Error fetching objections:', error.response.data.message));
       } else {
-        console.log('No user ID found.');
+        showErrorToast('No user ID found.');
       }
     })
     .catch(error => {
-      console.error('Error retrieving user ID:', error);
+      showErrorToast('Error retrieving user ID:', error);
     });
   }, []); 
 
@@ -62,6 +64,7 @@ const SegmentedControl = ({ navigation }) => {
       </View>
       }
       </ScrollView >
+      <Toast/>
     </View>
   );
 }
@@ -126,4 +129,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default SegmentedControl;
+export default ObjectionsSection;

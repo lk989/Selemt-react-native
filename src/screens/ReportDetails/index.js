@@ -4,7 +4,9 @@ import SText from "../../components/SText";
 import Layout from "../../components/Layout";
 import axios from "axios";
 import { BASE_URL, appLocale } from "../../config/config";
-import { formatDate, formatTime } from "../../utils/utils";
+import { formatDate, formatTime, showErrorToast } from "../../utils/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 
 function ReportDetails({ route, navigation }) {
@@ -31,17 +33,27 @@ function ReportDetails({ route, navigation }) {
 
   const handleSubmit = () => {
     setIsObjectionModalVisible(false);
-    axios.post(`${BASE_URL}create-objection`,{formData: formData, userId: '2'})
-    .then(function (response) {
-        setConfirmationText(response.data.message);
-        setIsConfirmationModalVisible(true);
-    })
-    .catch(function (error) {
-        console.error("Error:", error.response.data.message);
-    });
-  };
-  console.log(report.accident.party_one_percentage)
-
+    AsyncStorage.getItem('userId')
+      .then(userIdString => {
+        if (userIdString) {
+          axios.post(`${BASE_URL}create-objection`, { 
+                userId: JSON.parse(userIdString), 
+                formData: formData 
+            })
+            .then(response => {
+              setConfirmationText(response.data.message);
+              setIsConfirmationModalVisible(true);
+            })
+            .catch(error => console.log(error.response.data.message));
+        } else {
+          console.log('No user ID found.');
+        }
+      })
+      .catch(error => {
+        console.error('Error retrieving user ID:', error);
+      });
+    // console.log(formData, 'hgv')
+  }
   return (
     <Layout navigation={navigation} buttons={['back']}>
       <View className="bg-white rounded-2xl space-y-6 p-6">
@@ -75,7 +87,7 @@ function ReportDetails({ route, navigation }) {
           </View>
         </View>
 
-        {closedStatus == report.accident.status_id ?
+        {report.accident.status_id >= closedStatus ?
         // ? if accident has been evaluated
           (<View className="space-y-8">
             <View>
@@ -153,6 +165,7 @@ function ReportDetails({ route, navigation }) {
           </View>
         </Modal>
       </View>
+      <Toast/>
     </Layout>
   );
 }
